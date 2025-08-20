@@ -14,7 +14,7 @@
     <description>晓寒管理系统后端Cloud</description>
 
     <modules>
-<!--        <module>xh-auth</module>-->
+        <module>xh-auth</module>
     </modules>
 
     <properties>
