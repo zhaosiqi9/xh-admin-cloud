@@ -10,18 +10,18 @@ spring:
   cloud:
     nacos:
       # nacos 服务地址
-      server-addr: @nacos.server@
-      username: @nacos.username@
-      password: @nacos.password@
+      server-addr: 127.0.0.1:8848
+      username: nacos
+      password: nacos
       discovery:
         # 注册组
-        group: @nacos.discovery.group@
+        group: DEFAULT_GROUP
         namespace: ${spring.profiles.active}
       config:
         import-check:
           enabled: false
         # 配置组
-        group: @nacos.config.group@
+        group: DEFAULT_GROUP
         namespace: ${spring.profiles.active}
         file-extension: yml
   config:
