@@ -9,4 +9,7 @@ import com.xh.common.core.entity.SysUserRecord;
  * @since : 2025/8/22 16:46
  */
 public interface SysUserRecordService extends MPJBaseService<SysUserRecord> {
+    
+    SysUserRecord findByLoginAccount(String loginAccount, boolean enable);
+    
 }

@@ -55,6 +55,21 @@ public abstract class AbstractSysUserRepository {
         return root;
     }
 
+    public SysUserAggregate findByLoginAccount(String loginAccount, boolean enable) {
+        if (loginAccount == null) {
+            return null;
+        }
+        SysUserRecord sysUserRecord = sysUserRecordService.findByLoginAccount(loginAccount, enable);
+
+        if (sysUserRecord == null) {
+            return null;
+        }
+        SysUserAggregate root = new SysUserAggregate();
+        root.setSysUser(sysUserRecord2EntityMapper.toEntity(sysUserRecord));
+        root.setRootId(sysUserRecord.getId());
+        return root;
+    }
+
     public SysUserAggregate save(SysUserAggregate root) {
         return Optional.of(root).map(t -> {
             Long rootId = saveSysUser(t.getSysUser());
@@ -97,5 +112,4 @@ public abstract class AbstractSysUserRepository {
     private boolean deleteSysUser(Long rootId) {
         return Optional.ofNullable(rootId).map(t -> sysUserRecordService.removeById(t)).orElse(false);
     }
-
 }

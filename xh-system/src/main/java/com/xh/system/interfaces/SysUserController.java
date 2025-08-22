@@ -2,6 +2,8 @@ package com.xh.system.interfaces;
 
 import com.xh.common.core.web.RestResponse;
 import com.xh.system.api.contract.RemoteSysUserContract;
+import com.xh.system.api.request.GetUserInfoRequest;
+import com.xh.system.api.response.GetUserInfoResponse;
 import com.xh.system.api.response.LoginUserInfoVO;
 import com.xh.system.application.service.SysLoginService;
 import com.xh.system.application.service.SysUserService;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Tag(name = "用户管理")
 @RestController
@@ -34,7 +37,12 @@ public class SysUserController implements RemoteSysUserContract {
 
 
     @Override
-    public void getUserInfo(Map<String, Object> params) {
-        System.out.println(12345);
+    public GetUserInfoResponse getUserInfo(GetUserInfoRequest request) {
+        return Optional.ofNullable(request).map(t -> sysUserService.getUserInfo(t)).orElse(null);
+    }
+
+    @Override
+    public boolean updateUserInfo(GetUserInfoResponse request) {
+        return Optional.ofNullable(request).map(t -> sysUserService.updateUserInfo(t)).orElse(false);
     }
 }
