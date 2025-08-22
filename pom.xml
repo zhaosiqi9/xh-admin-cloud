@@ -313,6 +313,10 @@
                 <nacos.username>nacos</nacos.username>
                 <nacos.password>nacos</nacos.password>
                 <logstash.address>127.0.0.1:4560</logstash.address>
+                <mysql.server.host>localhost</mysql.server.host>
+                <mysql.server.port>3306</mysql.server.port>
+                <mysql.username>root</mysql.username>
+                <mysql.password>guirong</mysql.password>
             </properties>
         </profile>
     </profiles>

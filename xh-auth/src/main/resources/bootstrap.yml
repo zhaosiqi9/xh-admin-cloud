@@ -29,7 +29,6 @@ spring:
       - optional:nacos:application-common.yml
       - optional:nacos:${spring.application.name}.yml
   
-  
   data:
     redis:
       host: localhost
