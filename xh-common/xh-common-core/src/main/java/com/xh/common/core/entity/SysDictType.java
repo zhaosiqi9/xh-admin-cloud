@@ -11,10 +11,10 @@ import lombok.EqualsAndHashCode;
 @Schema(title = "数据字典类型")
 @EqualsAndHashCode(callSuper = true)
 public class SysDictType extends BaseEntity {
-    
+
     @Schema(title = "字典类型名称")
     private String name;
-    
+
     @Schema(title = "是否可修改")
     private Boolean modifiable;
 }

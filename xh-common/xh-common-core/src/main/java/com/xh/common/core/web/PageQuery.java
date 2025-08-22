@@ -109,7 +109,7 @@ public class PageQuery<T> {
                     prop = CommonUtil.toLowerUnderscore(filter.getProp());
                 }
                 ComparatorEnum condition = filter.getCondition();
-                str +=  "`%s` ".formatted(prop);
+                str += "`%s` ".formatted(prop);
                 switch (condition) {
                     case eq:
                         str += "= " + filter.getValue(1);
@@ -147,48 +147,6 @@ public class PageQuery<T> {
         }
         return whereCon.toString();
     }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @Data
-    public static class FilterRow {
-        private Boolean enabled;
-        private String type;
-        private String logic;
-        private String prop;
-        private String alias;
-        private ComparatorEnum condition;
-        private Object value1;
-        private Object value2;
-        private List<FilterRow> children;
-
-        private Object getValue(int flag) {
-            Object value = this.value1;
-            if (flag == 2) {
-                value = this.value2;
-            }
-            if (value == null) return "null";
-            if ("number".equals(type) || value instanceof Boolean) {
-                return value;
-            }
-            return "'" + value + "'";
-        }
-
-        private String getInValues() {
-            String[] values = CommonUtil.getString(this.value1).split(",");
-            StringBuilder sb = new StringBuilder();
-            if ("number".equals(type)) {
-                for (String value : values) {
-                    sb.append(",").append(value);
-                }
-            } else {
-                for (String value : values) {
-                    sb.append(",'").append(value).append("'");
-                }
-            }
-            return sb.substring(1);
-        }
-    }
-
 
     public enum ComparatorEnum {
         /**
@@ -233,11 +191,53 @@ public class PageQuery<T> {
         bt
     }
 
+
     /**
      * 排序方向
      */
     public enum OrderDirection {
         asc,
         desc
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @Data
+    public static class FilterRow {
+        private Boolean enabled;
+        private String type;
+        private String logic;
+        private String prop;
+        private String alias;
+        private ComparatorEnum condition;
+        private Object value1;
+        private Object value2;
+        private List<FilterRow> children;
+
+        private Object getValue(int flag) {
+            Object value = this.value1;
+            if (flag == 2) {
+                value = this.value2;
+            }
+            if (value == null) return "null";
+            if ("number".equals(type) || value instanceof Boolean) {
+                return value;
+            }
+            return "'" + value + "'";
+        }
+
+        private String getInValues() {
+            String[] values = CommonUtil.getString(this.value1).split(",");
+            StringBuilder sb = new StringBuilder();
+            if ("number".equals(type)) {
+                for (String value : values) {
+                    sb.append(",").append(value);
+                }
+            } else {
+                for (String value : values) {
+                    sb.append(",'").append(value).append("'");
+                }
+            }
+            return sb.substring(1);
+        }
     }
 }

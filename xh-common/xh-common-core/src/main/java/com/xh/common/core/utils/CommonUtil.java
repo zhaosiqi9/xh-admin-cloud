@@ -5,7 +5,7 @@ import com.xh.common.core.web.PageQuery;
 /**
  * @author : gr
  * @version 1.0.0
- * @date : 2025/8/22 08:36
+ * @since : 2025/8/22 08:36
  */
 public class CommonUtil {
     public static boolean isNotEmpty(String whereCon) {

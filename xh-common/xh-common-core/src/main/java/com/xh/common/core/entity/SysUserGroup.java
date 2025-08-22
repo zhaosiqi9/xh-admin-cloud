@@ -23,7 +23,7 @@ public class SysUserGroup extends BaseEntity {
     @Schema(title = "岗位信息")
     @TableField(exist = false)
     private List<SysUserJob> jobData;
-    
+
     @Schema(title = "用户组成员")
     @TableField(exist = false)
     private List<SysUserGroupMember> memberData;

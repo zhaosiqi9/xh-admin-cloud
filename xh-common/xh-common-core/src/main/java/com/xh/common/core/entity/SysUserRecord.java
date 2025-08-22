@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 @TableName("sys_user")
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SysUser extends BaseEntity {
+public class SysUserRecord extends BaseEntity {
 
     @Schema(title = "用户代码")
     private String code;

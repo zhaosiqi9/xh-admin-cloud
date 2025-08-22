@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
 public class SysRoleMenu extends BaseEntity {
     @Schema(title = "角色id")
     private Integer sysRoleId;
-    
+
     @Schema(title = "菜单id")
     private Integer sysMenuId;
 }

@@ -1,0 +1,48 @@
+server:
+  port: 9002
+
+spring:
+  application:
+    name: xh-system
+  profiles:
+    # 环境配置
+    active: dev
+  cloud:
+    nacos:
+      # nacos 服务地址
+      server-addr: @nacos.server@
+      username: @nacos.username@
+      password: @nacos.password@
+      discovery:
+        # 注册组
+        group: @nacos.discovery.group@
+        namespace: ${spring.profiles.active}
+      config:
+        import-check:
+          enabled: false
+        # 配置组
+        group: @nacos.config.group@
+        namespace: ${spring.profiles.active}
+        file-extension: yml
+  config:
+    import:
+      - optional:nacos:application-common.yml
+      - optional:nacos:${spring.application.name}.yml
+  
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+      timeout: 60000
+      lettuce:
+        cluster:
+          refresh:
+            adaptive: true
+            period: 20
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+

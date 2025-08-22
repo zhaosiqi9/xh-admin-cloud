@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * @author : gr
  * @version 1.0.0
- * @date : 2025/8/22 12:10
+ * @since : 2025/8/22 12:10
  */
 @Data
 public class DataPermissionEntity extends BaseEntity implements Serializable {

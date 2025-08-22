@@ -2,8 +2,10 @@ package com.xh.auth;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
+@EnableFeignClients(basePackages = {"com.xh"})
 public class XhAuthApplication {
 
     public static void main(String[] args) {

@@ -18,16 +18,16 @@ public class SysRole extends BaseEntity {
     @Schema(title = "角色具有的权限")
     @TableField(exist = false)
     List<SysRoleMenu> roleMenus;
-    
+
     @Schema(title = "角色名称")
     private String name;
-    
+
     @Schema(title = "上级角色")
     private Integer parentId;
-    
+
     @Schema(title = "启用状态")
     private Boolean enabled;
-    
+
     @Schema(title = "上级角色名称")
     @TableField(exist = false)
     private String parentName;
