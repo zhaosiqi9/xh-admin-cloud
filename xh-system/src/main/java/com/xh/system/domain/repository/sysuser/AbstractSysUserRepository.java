@@ -1,15 +1,16 @@
 package com.xh.system.domain.repository.sysuser;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xh.system.domain.aggregate.SysUserAggregate;
 import com.xh.system.domain.constant.sysuser.SysUserConstant;
-import com.xh.system.domain.entity.SysRole;
 import com.xh.system.domain.entity.SysUser;
 import com.xh.system.domain.mapstract.sysuser.SysUserEntity2POMapper;
 import com.xh.system.domain.mapstract.sysuser.SysUserPOEntityMapper;
 import com.xh.system.domain.repository.sysuser.factory.SysUserRepositoryFactory;
-import com.xh.system.infrastructure.mysql.po.SysRolePO;
+import com.xh.system.infrastructure.mysql.po.SysUserJobPO;
 import com.xh.system.infrastructure.mysql.po.SysUserPO;
 import com.xh.system.infrastructure.mysql.service.SysRolePOService;
+import com.xh.system.infrastructure.mysql.service.SysUserJobPOService;
 import com.xh.system.infrastructure.mysql.service.SysUserPOService;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
@@ -32,6 +33,8 @@ public abstract class AbstractSysUserRepository {
     private SysUserPOService sysUserPOService;
     @Resource
     private SysRolePOService sysRolePOService;
+    @Resource
+    private SysUserJobPOService sysUserJobPOService;
 
     @Resource
     private SysUserPOEntityMapper sysUserPOEntityMapper;
@@ -68,10 +71,11 @@ public abstract class AbstractSysUserRepository {
         }
         return sysUserPOEntityMapper.toEntity(sysUserPO);
     }
-    
-    protected List<SysRole> findRoleListByRootId(Long rootId) {
-        List<SysRolePO> sysRolePOS = sysRolePOService.list(sysRolePOService.query().eq(SysRolePO::getUserId, rootId));
-        return sysRolePOS.stream().map(sysRolePO -> sysRolePOEntityMapper.toEntity(sysRolePO)).toList();
+
+    protected List<SysUserJobPO> findUserJobListByRootId(Long rootId) {
+        List<SysUserJobPO> sysUserJobList = sysUserJobPOService.list(new LambdaQueryWrapper<SysUserJobPO>().eq(SysUserJobPO::getUserId, rootId));
+//        return sysRolePOS.stream().map(sysRolePO -> sysRolePOEntityMapper.toEntity(sysRolePO)).toList();
+        return null;
     }
 
     public SysUserAggregate findByLoginAccount(String loginAccount, boolean enable) {

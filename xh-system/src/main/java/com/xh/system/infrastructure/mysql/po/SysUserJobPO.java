@@ -18,7 +18,7 @@ public class SysUserJobPO extends BaseEntity {
     private Integer type;
 
     @Schema(title = "用户id或者用户组的id")
-    private Integer userId;
+    private Long userId;
 
     @Schema(title = "机构id")
     private Integer sysOrgId;
