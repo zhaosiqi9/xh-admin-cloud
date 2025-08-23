@@ -11,6 +11,10 @@
 
     <modules>
         <module>xh-common-core</module>
+        <module>xh-common-mybatis</module>
+        <module>xh-common-jwt</module>
+        <module>xh-common-security</module>
+        <module>xh-common-redis</module>
     </modules>
 
     <artifactId>xh-common</artifactId>

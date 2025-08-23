@@ -1,0 +1,3 @@
+com\alibaba\nacos\config\ActuatorAuthFilter.class
+com\alibaba\nacos\config\SecurityConfig.class
+com\alibaba\nacos\Nacos.class

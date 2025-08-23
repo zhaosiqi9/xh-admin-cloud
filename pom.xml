@@ -13,11 +13,12 @@
     <description>晓寒管理系统后端Cloud</description>
 
     <modules>
-        <module>xh-auth</module>
-        <module>xh-nacos</module>
-        <module>xh-gateway</module>
-        <module>xh-common</module>
         <module>xh-api</module>
+        <module>xh-auth</module>
+        <module>xh-common</module>
+        <module>xh-gateway</module>
+        <module>xh-middleware</module>
+        <module>xh-system</module>
     </modules>
 
     <properties>

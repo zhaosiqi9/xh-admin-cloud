@@ -58,13 +58,6 @@
             <artifactId>hutool-core</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.xh</groupId>
-            <artifactId>xh-common-core</artifactId>
-            <version>${revision}</version>
-        </dependency>
-
-
     </dependencies>
 
 
