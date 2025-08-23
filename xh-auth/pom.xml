@@ -93,6 +93,30 @@
             <version>${revision}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.xh</groupId>
+            <artifactId>xh-common-security</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.xh</groupId>
+            <artifactId>xh-common-jwt</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.xh</groupId>
+            <artifactId>xh-common-redis</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.xh</groupId>
+            <artifactId>xh-common-mybatis</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
 
     </dependencies>
 
