@@ -33,6 +33,6 @@ public class SysUserWithRoleRepositoryImpl extends AbstractSysUserRepository {
         root.setRootId(rootId);
         return root;
     }
-    
-    
+
+
 }

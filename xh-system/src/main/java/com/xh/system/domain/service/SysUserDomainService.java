@@ -26,15 +26,37 @@ public class SysUserDomainService {
     }
 
     public SysUserAggregate getRootByLoginAccount(String loginAccount, boolean enable, SysUserConstant.SysUserRootType type) {
-        return Optional.ofNullable(loginAccount).map(t -> getRepository(type).findByLoginAccount(loginAccount,  enable)).orElse(null);
+        return Optional.ofNullable(loginAccount).map(t -> getRepository(type).findByLoginAccount(loginAccount, enable)).orElse(null);
     }
 
-    public boolean updateUserInfo(SysUser sysUser) {
-        return Optional.ofNullable(sysUser).map(t -> {
-            SysUserAggregate root = new SysUserAggregate();
-            root.setSysUser(t);
-            getRepository(SysUserConstant.SysUserRootType.DEFAULT).update(root);
-            return true;
-        }).orElse(false);
+    public void clearFailuresNum(SysUserAggregate root, Long rootId, SysUserConstant.SysUserRootType type) {
+        root = Optional.ofNullable(root).orElse(getRoot(rootId, type));
+        SysUser sysUser = root.getSysUser();
+        sysUser.setFailuresNum(0);
+        sysUser.setLockMsg(null);
+
+        SysUserAggregate newRoot = new SysUserAggregate();
+        newRoot.setRootId(sysUser.getId());
+        newRoot.setSysUser(sysUser);
+
+        getRepository(type).update(newRoot);
+    }
+
+    public void loginFailUpdateInfo(SysUserAggregate root,
+                                    Long rootId,
+                                    Integer failuresNum,
+                                    Integer status,
+                                    String lockMsg,
+                                    SysUserConstant.SysUserRootType type) {
+        root = Optional.ofNullable(root).orElse(getRoot(rootId, type));
+        SysUser sysUser = Optional.ofNullable(root.getSysUser()).orElseThrow(() -> new RuntimeException("用户不存在"));
+        sysUser.setFailuresNum(failuresNum);
+        sysUser.setStatus(status);
+        sysUser.setLockMsg(lockMsg);
+
+        SysUserAggregate newRoot = new SysUserAggregate();
+        newRoot.setRootId(sysUser.getId());
+        newRoot.setSysUser(sysUser);
+        getRepository(type).update(newRoot);
     }
 }

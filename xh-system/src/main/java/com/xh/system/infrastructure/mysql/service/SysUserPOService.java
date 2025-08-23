@@ -9,7 +9,7 @@ import com.xh.system.infrastructure.mysql.po.SysUserPO;
  * @since : 2025/8/22 16:46
  */
 public interface SysUserPOService extends MPJBaseService<SysUserPO> {
-    
+
     SysUserPO findByLoginAccount(String loginAccount, boolean enable);
-    
+
 }

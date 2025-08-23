@@ -16,6 +16,7 @@ public class RestResponse<T> implements Serializable {
     private String status;
     @Schema(title = "响应的消息内容")
     private String message;
+
     private T data;
 
     /**

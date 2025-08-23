@@ -10,6 +10,7 @@ import java.util.Base64;
 public class ActuatorAuthFilter implements Filter {
 
     private final String username;
+
     private final String password;
 
     public ActuatorAuthFilter(String username, String password) {

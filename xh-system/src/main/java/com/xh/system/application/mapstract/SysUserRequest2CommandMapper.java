@@ -17,10 +17,10 @@ import org.mapstruct.factory.Mappers;
 public interface SysUserRequest2CommandMapper {
 
     SysUserRequest2CommandMapper INSTANCE = Mappers.getMapper(SysUserRequest2CommandMapper.class);
-    
+
     @Mapping(target = "type", source = "type")
     UpdateUserInfoCommand updateUserInfoRequest2Command(UpdateUserInfoRequest request);
-    
+
     @Mapping(target = "type", source = "type")
     GetUserInfoCommand getUserInfoRequest2Command(GetUserInfoRequest request);
 }

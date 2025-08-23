@@ -55,6 +55,6 @@ public class UpdateUserInfoCommand {
 
     @Schema(title = "是否已删除")
     private Boolean deleted;
-    
+
     private SysUserConstant.SysUserRootType type;
 }

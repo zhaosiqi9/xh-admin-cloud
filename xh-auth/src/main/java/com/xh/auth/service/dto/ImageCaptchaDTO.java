@@ -1,4 +1,4 @@
-package com.xh.auth.api.response;
+package com.xh.auth.service.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

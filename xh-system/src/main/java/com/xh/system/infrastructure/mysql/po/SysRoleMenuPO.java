@@ -13,8 +13,9 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class SysRoleMenuPO extends BaseEntity {
     @Schema(title = "角色id")
-    private Integer sysRoleId;
+    private Long sysRoleId;
 
     @Schema(title = "菜单id")
-    private Integer sysMenuId;
+    private Long sysMenuId;
+    
 }

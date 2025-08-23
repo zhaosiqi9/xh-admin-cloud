@@ -1,6 +1,5 @@
 package com.xh.system.infrastructure.mysql.po;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -22,8 +21,4 @@ public class SysOrgPO {
 
     @Schema(title = "启用状态")
     private Boolean enabled;
-
-    @Schema(title = "上级机构名称")
-    @TableField(exist = false)
-    private String parentName;
 }

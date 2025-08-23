@@ -22,18 +22,22 @@ public class PageQuery<T> {
      * 是否分页
      */
     private Boolean isPage = true;
+
     /**
      * 当前页
      */
     private int currentPage = 1;
+
     /**
      * 页面大小
      */
     private int pageSize = 20;
+
     /**
      * 可以携带自定义参数
      */
     private T param;
+
     /**
      * 高级组合查询
      */
@@ -204,13 +208,21 @@ public class PageQuery<T> {
     @Data
     public static class FilterRow {
         private Boolean enabled;
+
         private String type;
+
         private String logic;
+
         private String prop;
+
         private String alias;
+
         private ComparatorEnum condition;
+
         private Object value1;
+
         private Object value2;
+
         private List<FilterRow> children;
 
         private Object getValue(int flag) {

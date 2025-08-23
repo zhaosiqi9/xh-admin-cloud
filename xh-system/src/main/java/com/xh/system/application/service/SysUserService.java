@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 /**
  * @author : gr
@@ -34,14 +35,27 @@ public class SysUserService {
     }
 
     public GetUserInfoResponse getUserInfo(GetUserInfoCommand command) {
-        SysUserAggregate root = sysUserDomainService.getRootByLoginAccount(command.getUserName(), command.isEnabled(), command.getType());
+        SysUserAggregate root =
+                Optional.ofNullable(sysUserDomainService.getRootByLoginAccount(command.getUserName(), command.isEnabled(), command.getType())).orElseThrow(() -> new RuntimeException("用户不存在"));
         log.info("root:{}", JSON.toJSONString(root));
-        return SysUserEntity2ResponseMapper.INSTANCE.toGetUserInfoResponse(root.getSysUser());
+        return SysUserEntity2ResponseMapper.INSTANCE.toGetUserInfoResponse(root);
     }
 
-    public boolean updateUserInfo(UpdateUserInfoCommand command) {
-//        SysUser entity = SysUserRequest2CommandMapper.INSTANCE.toEntity(request);
-//        return sysUserDomainService.updateUserInfo(entity);
+    public boolean clearFailuresNum(UpdateUserInfoCommand command) {
+        SysUserAggregate root = Optional.ofNullable(sysUserDomainService.getRoot(command.getId(), command.getType())).orElseThrow(() -> new RuntimeException("用户不存在"));
+        sysUserDomainService.clearFailuresNum(root, command.getId(), command.getType());
         return true;
     }
+
+    public boolean loginFailUpdateInfo(UpdateUserInfoCommand command) {
+        SysUserAggregate root = Optional.ofNullable(sysUserDomainService.getRoot(command.getId(), command.getType())).orElseThrow(() -> new RuntimeException("用户不存在"));
+        sysUserDomainService.loginFailUpdateInfo(root,
+                command.getId(),
+                command.getFailuresNum(),
+                command.getStatus(),
+                command.getLockMsg(),
+                command.getType());
+        return true;
+    }
+
 }

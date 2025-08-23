@@ -12,12 +12,12 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class GetUserInfoRequest {
-    
+
     private Long userId;
-    
+
     private String userName;
-    
+
     private boolean enabled = true;
-    
+
     private SysUserConstant.GetUpdateUserInfoType type;
 }

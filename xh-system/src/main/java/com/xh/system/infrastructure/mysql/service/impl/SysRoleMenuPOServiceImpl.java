@@ -13,5 +13,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SysRoleMenuPOServiceImpl extends MPJBaseServiceImpl<SysRoleMenuPOMapper, SysRoleMenuPO> implements SysRoleMenuPOService {
-    
+
 }

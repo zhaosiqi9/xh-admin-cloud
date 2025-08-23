@@ -13,5 +13,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SysUserGroupMemberPOServiceImpl extends MPJBaseServiceImpl<SysUserGroupMemberPOMapper, SysUserGroupMemberPO> implements SysUserGroupMemberPOService {
-    
+
 }

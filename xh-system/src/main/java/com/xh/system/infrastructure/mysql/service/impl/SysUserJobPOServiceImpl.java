@@ -13,5 +13,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SysUserJobPOServiceImpl extends MPJBaseServiceImpl<SysUserJobPOMapper, SysUserJobPO> implements SysUserJobPOService {
-    
+
 }

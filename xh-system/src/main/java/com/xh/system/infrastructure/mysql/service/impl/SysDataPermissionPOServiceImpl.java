@@ -13,5 +13,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SysDataPermissionPOServiceImpl extends MPJBaseServiceImpl<SysDataPermissionPOMapper, SysDataPermissionPO> implements SysDataPermissionPOService {
-    
+
 }

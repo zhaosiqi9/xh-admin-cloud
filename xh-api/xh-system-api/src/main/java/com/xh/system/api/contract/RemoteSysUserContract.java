@@ -17,7 +17,11 @@ public interface RemoteSysUserContract {
 
     @PostMapping("get-user-info")
     GetUserInfoResponse getUserInfo(@RequestBody GetUserInfoRequest request);
-    
-    @PostMapping("update-user-info")
-    boolean updateUserInfo(@RequestBody UpdateUserInfoRequest request);
+
+    @PostMapping("clear-failures-num")
+    boolean clearFailuresNum(@RequestBody UpdateUserInfoRequest request);
+
+    @PostMapping("login-fail-update-info")
+    boolean loginFailUpdateInfo(@RequestBody UpdateUserInfoRequest request);
+
 }

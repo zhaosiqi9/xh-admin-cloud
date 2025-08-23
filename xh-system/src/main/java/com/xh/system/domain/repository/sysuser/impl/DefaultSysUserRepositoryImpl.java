@@ -19,8 +19,8 @@ public class DefaultSysUserRepositoryImpl extends AbstractSysUserRepository {
 
     @Override
     protected SysUserConstant.SysUserRootType getType() {
-        return SysUserConstant.SysUserRootType. DEFAULT;
+        return SysUserConstant.SysUserRootType.DEFAULT;
     }
-    
+
 
 }

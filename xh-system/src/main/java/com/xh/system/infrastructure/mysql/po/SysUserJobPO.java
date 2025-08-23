@@ -21,10 +21,10 @@ public class SysUserJobPO extends BaseEntity {
     private Long userId;
 
     @Schema(title = "机构id")
-    private Integer sysOrgId;
+    private Long sysOrgId;
 
     @Schema(title = "角色id")
-    private Integer sysRoleId;
+    private Long sysRoleId;
 
     @Schema(title = "是否启用1：是，0：否")
     private Boolean enabled;

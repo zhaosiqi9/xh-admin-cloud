@@ -1,8 +1,10 @@
 package com.xh.system.domain.aggregate;
 
 import cn.hutool.core.collection.CollUtil;
+import com.xh.system.domain.entity.SysOrg;
 import com.xh.system.domain.entity.SysRole;
 import com.xh.system.domain.entity.SysUser;
+import com.xh.system.domain.entity.SysUserJob;
 import lombok.Data;
 
 import java.util.List;
@@ -20,4 +22,8 @@ public class SysUserAggregate {
     private SysUser sysUser;
 
     private List<SysRole> sysRoleList = CollUtil.newArrayList();
+
+    private List<SysUserJob> sysUserJobList = CollUtil.newArrayList();
+
+    private List<SysOrg> sysOrgList = CollUtil.newArrayList();
 }

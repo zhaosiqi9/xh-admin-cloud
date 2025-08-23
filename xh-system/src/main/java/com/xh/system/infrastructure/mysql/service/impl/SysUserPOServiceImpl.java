@@ -20,7 +20,7 @@ public class SysUserPOServiceImpl extends MPJBaseServiceImpl<SysUserPOMapper, Sy
 
     @Override
     public SysUserPO findByLoginAccount(String loginAccount, boolean enable) {
-        if (loginAccount==null) {
+        if (loginAccount == null) {
             return null;
         }
         LambdaQueryWrapper<SysUserPO> lambdaQueryWrapper = new LambdaQueryWrapper<>();

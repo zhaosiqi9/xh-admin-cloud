@@ -1,14 +1,19 @@
 package com.xh.system.domain.repository.sysuser;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xh.system.domain.aggregate.SysUserAggregate;
 import com.xh.system.domain.constant.sysuser.SysUserConstant;
+import com.xh.system.domain.entity.SysOrg;
+import com.xh.system.domain.entity.SysRole;
 import com.xh.system.domain.entity.SysUser;
+import com.xh.system.domain.entity.SysUserJob;
 import com.xh.system.domain.mapstract.sysuser.SysUserEntity2POMapper;
-import com.xh.system.domain.mapstract.sysuser.SysUserPOEntityMapper;
+import com.xh.system.domain.mapstract.sysuser.SysUserPO2EntityMapper;
 import com.xh.system.domain.repository.sysuser.factory.SysUserRepositoryFactory;
 import com.xh.system.infrastructure.mysql.po.SysUserJobPO;
 import com.xh.system.infrastructure.mysql.po.SysUserPO;
+import com.xh.system.infrastructure.mysql.service.SysOrgPOService;
 import com.xh.system.infrastructure.mysql.service.SysRolePOService;
 import com.xh.system.infrastructure.mysql.service.SysUserJobPOService;
 import com.xh.system.infrastructure.mysql.service.SysUserPOService;
@@ -18,7 +23,9 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author : gr
@@ -31,17 +38,21 @@ public abstract class AbstractSysUserRepository {
 
     @Resource
     private SysUserPOService sysUserPOService;
+
     @Resource
     private SysRolePOService sysRolePOService;
+
     @Resource
     private SysUserJobPOService sysUserJobPOService;
 
     @Resource
-    private SysUserPOEntityMapper sysUserPOEntityMapper;
+    private SysOrgPOService sysOrgPOService;
+
+    @Resource
+    private SysUserPO2EntityMapper sysUserPO2EntityMapper;
 
     @Resource
     private SysUserEntity2POMapper sysUserEntity2POMapper;
-
 
     protected abstract SysUserConstant.SysUserRootType getType();
 
@@ -69,13 +80,34 @@ public abstract class AbstractSysUserRepository {
         if (sysUserPO == null) {
             return null;
         }
-        return sysUserPOEntityMapper.toEntity(sysUserPO);
+        return sysUserPO2EntityMapper.user2Entity(sysUserPO);
     }
 
-    protected List<SysUserJobPO> findUserJobListByRootId(Long rootId) {
+    protected List<SysUserJob> findUserJobListByRootId(Long rootId) {
         List<SysUserJobPO> sysUserJobList = sysUserJobPOService.list(new LambdaQueryWrapper<SysUserJobPO>().eq(SysUserJobPO::getUserId, rootId));
-//        return sysRolePOS.stream().map(sysRolePO -> sysRolePOEntityMapper.toEntity(sysRolePO)).toList();
-        return null;
+        return sysUserPO2EntityMapper.userJob2EntityList(sysUserJobList);
+    }
+
+    protected List<SysRole> findUserRoleListByRootId(Long rootId, List<SysUserJob> userJobList) {
+        if (CollUtil.isEmpty(userJobList)) {
+            userJobList = findUserJobListByRootId(rootId);
+        }
+        List<Long> roleIdList = userJobList.stream().map(SysUserJob::getSysRoleId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+        if (CollUtil.isEmpty(roleIdList)) {
+            return CollUtil.newArrayList();
+        }
+        return sysUserPO2EntityMapper.userRole2EntityList(sysRolePOService.listByIds(roleIdList));
+    }
+
+    protected List<SysOrg> findUserOrgListByRootId(Long rootId, List<SysUserJob> userJobList) {
+        if (CollUtil.isEmpty(userJobList)) {
+            userJobList = findUserJobListByRootId(rootId);
+        }
+        List<Long> orgIdList = userJobList.stream().map(SysUserJob::getSysOrgId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+        if (CollUtil.isEmpty(orgIdList)) {
+            return CollUtil.newArrayList();
+        }
+        return sysUserPO2EntityMapper.userOrg2EntityList(sysOrgPOService.listByIds(orgIdList));
     }
 
     public SysUserAggregate findByLoginAccount(String loginAccount, boolean enable) {
@@ -88,7 +120,7 @@ public abstract class AbstractSysUserRepository {
             return null;
         }
         SysUserAggregate root = new SysUserAggregate();
-        root.setSysUser(sysUserPOEntityMapper.toEntity(sysUserPO));
+        root.setSysUser(sysUserPO2EntityMapper.user2Entity(sysUserPO));
         root.setRootId(sysUserPO.getId());
         return root;
     }

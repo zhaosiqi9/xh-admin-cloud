@@ -50,10 +50,20 @@ public class SysUserController implements RemoteSysUserContract {
     }
 
     @Override
-    public boolean updateUserInfo(UpdateUserInfoRequest request) {
+    public boolean clearFailuresNum(UpdateUserInfoRequest request) {
         return Optional.ofNullable(request)
                 .map(t -> sysUserRequest2CommandMapper.updateUserInfoRequest2Command(t))
-                .map(t -> sysUserService.updateUserInfo(t))
+                .map(t -> sysUserService.clearFailuresNum(t))
                 .orElse(false);
     }
+
+    @Override
+    public boolean loginFailUpdateInfo(UpdateUserInfoRequest request) {
+        return Optional.ofNullable(request)
+                .map(t -> sysUserRequest2CommandMapper.updateUserInfoRequest2Command(t))
+                .map(t -> sysUserService.loginFailUpdateInfo(t))
+                .orElse(false);
+
+    }
+    
 }

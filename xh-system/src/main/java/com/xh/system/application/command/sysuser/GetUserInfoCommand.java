@@ -10,12 +10,12 @@ import lombok.Data;
  */
 @Data
 public class GetUserInfoCommand {
-    
+
     private Long userId;
-    
+
     private String userName;
-    
+
     private boolean enabled = true;
-    
+
     private SysUserConstant.SysUserRootType type;
 }

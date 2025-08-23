@@ -19,7 +19,9 @@ public class SysUserConstant {
         ORG("job", "用户+部门信息"),
         ORG_ROLE("org_role", "用户+部门+角色信息"),
         ;
+
         private final String type;
+
         private final String description;
 
         SysUserRootType(String type, String description) {

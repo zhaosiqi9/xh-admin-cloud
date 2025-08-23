@@ -9,5 +9,5 @@ import com.xh.system.infrastructure.mysql.po.SysRolePO;
  * @since : 2025/8/23 09:04
  */
 public interface SysRolePOService extends MPJBaseService<SysRolePO> {
-    
+
 }

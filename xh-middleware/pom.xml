@@ -11,9 +11,9 @@
     <packaging>pom</packaging>
 
     <name>xh-middleware</name>
-    
+
     <modules>
         <module>xh-nacos</module>
     </modules>
-   
+
 </project>

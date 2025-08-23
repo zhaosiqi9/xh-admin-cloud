@@ -9,5 +9,5 @@ import com.xh.system.infrastructure.mysql.po.SysUserJobPO;
  * @since : 2025/8/23 10:30
  */
 public interface SysUserJobPOService extends MPJBaseService<SysUserJobPO> {
-    
+
 }

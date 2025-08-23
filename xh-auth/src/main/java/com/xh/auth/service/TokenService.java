@@ -4,23 +4,40 @@ import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.secure.BCrypt;
 import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.stp.parameter.SaLoginParameter;
 import cn.hutool.captcha.AbstractCaptcha;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.useragent.UserAgent;
+import cn.hutool.http.useragent.UserAgentUtil;
 import com.xh.auth.api.request.LoginRequest;
-import com.xh.auth.api.response.ImageCaptchaDTO;
-import com.xh.auth.api.response.LoginUserInfoVO;
+import com.xh.auth.constant.LoginUtil;
+import com.xh.auth.mapstruct.Entity2DTOMapper;
+import com.xh.auth.service.dto.*;
+import com.xh.auth.util.RequestUtil;
 import com.xh.common.core.utils.CommonUtil;
 import com.xh.common.core.web.MyException;
 import com.xh.system.api.constant.sysuser.SysUserConstant;
+import com.xh.system.api.contract.RemoteSysMenuContract;
 import com.xh.system.api.contract.RemoteSysUserContract;
 import com.xh.system.api.request.GetUserInfoRequest;
 import com.xh.system.api.request.UpdateUserInfoRequest;
 import com.xh.system.api.response.GetUserInfoResponse;
+import com.xh.system.api.response.GetUserInfoResponseJob;
+import com.xh.system.api.response.GetUserInfoResponseUser;
+import com.xh.system.api.response.UserPermissionResponse;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author : gr
@@ -31,22 +48,32 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class TokenService {
 
+    private static final String ROLE_PERMISSIONS_PREFIX = "role:permissions:";
     @Resource
     private RemoteSysUserContract remoteUserContract;
 
     @Resource
     private RedisTemplate redisTemplate;
+    @Autowired
+    private Entity2DTOMapper entity2DTOMapper;
+    @Resource
+    private RemoteSysMenuContract remoteMenuContract;
 
     public ImageCaptchaDTO getImageCaptcha(String captchaKey) {
         return null;
     }
 
     public LoginUserInfoVO login(LoginRequest request) {
+
+        HttpServletRequest currentRequest = RequestUtil.getCurrentRequest();
+
         val username = request.getUsername();
         val captchaKey = request.getCaptchaKey();
         val captchaCode = request.getCaptchaCode();
         val password = request.getPassword();
-        GetUserInfoResponse userInfo = remoteUserContract.getUserInfo(new GetUserInfoRequest().setUserName(username));
+        GetUserInfoResponse userInfoResponse =
+                remoteUserContract.getUserInfo(new GetUserInfoRequest().setUserName(username).setEnabled(true).setType(SysUserConstant.GetUpdateUserInfoType.ORG_ROLE));
+        GetUserInfoResponseUser sysUser = userInfoResponse.getUser();
 
         SaSession session = null;
         try {
@@ -55,7 +82,7 @@ public class TokenService {
             log.info("用户未登录需要重新登录~");
         }
         //尝试登录
-        if (session == null && CommonUtil.isNotEmpty(username)) {
+        if (session == null && StrUtil.isNotBlank(username)) {
 
             if (request.isDemo()) {
                 if (CommonUtil.isEmpty(captchaKey)) throw new MyException("非法登录");
@@ -72,10 +99,9 @@ public class TokenService {
                 if (!verify) throw new MyException("验证码错误");
             }
 
-            GetUserInfoResponse sysUser = remoteUserContract.getUserInfo(new GetUserInfoRequest().setUserName(username).setEnabled(true));
 
             if (sysUser == null) throw new MyException("账号不存在");
-            if (CommonUtil.getString(sysUser.getStatus()).equals("2"))
+            if (sysUser.getStatus() == 2)
                 throw new MyException(sysUser.getLockMsg());
             boolean matches = BCrypt.checkpw(password, sysUser.getPassword());
             if (!matches) {
@@ -98,17 +124,107 @@ public class TokenService {
                     }
                     throw new MyException("密码错误！您还可以尝试%s次。".formatted(maxTryNum - failuresNum));
                 } finally {
-                    remoteUserContract.updateUserInfo(new UpdateUserInfoRequest().initFromResponse(sysUser.getUser(), SysUserConstant.GetUpdateUserInfoType.DEFAULT));
+                    remoteUserContract.loginFailUpdateInfo(new UpdateUserInfoRequest().initFromResponse(sysUser, SysUserConstant.GetUpdateUserInfoType.DEFAULT));
                 }
             } else {
                 //失败次数置零
-                sysUser.setFailuresNum(0);
-                sysUser.setLockMsg(null);
-                remoteUserContract.updateUserInfo(new UpdateUserInfoRequest().initFromResponse(sysUser.getUser(), SysUserConstant.GetUpdateUserInfoType.DEFAULT));
+                remoteUserContract.clearFailuresNum(new UpdateUserInfoRequest().initFromResponse(sysUser, SysUserConstant.GetUpdateUserInfoType.DEFAULT));
             }
 
+            //获取用户岗位角色
+            List<GetUserInfoResponseJob> roles = userInfoResponse.getJobList();
+            if (roles.isEmpty()) {
+                throw new MyException("该用户未分配角色，无法登录!");
+            }
+
+            SaLoginParameter loginParameter = new SaLoginParameter();
+            loginParameter.setDeviceType("WEB");
+            //如果账号不允许重复登录，则将已登录的强制下线
+            loginParameter.setIsConcurrent(sysUser.getAllowRepeat());
+            // 登录
+            StpUtil.login(sysUser.getId(), loginParameter);
+
+            session = StpUtil.getSession();
+
+            // 刷新用户信息和权限缓存
+            SysUserDTO sysUserDTO = new SysUserDTO();
+            BeanUtils.copyProperties(sysUser, sysUserDTO);
+            SysLoginUserInfoDTO loginUserInfoDTO = new SysLoginUserInfoDTO();
+            loginUserInfoDTO.setUser(sysUserDTO);
+            loginUserInfoDTO.setRoles(entity2DTOMapper.toSysOrgRoleDTOList(roles));
+            session.set(LoginUtil.SYS_USER_KEY, loginUserInfoDTO);
+
+            UserAgent ua = UserAgentUtil.parse(request.getUserAgent());
+            OnlineUserDTO onlineUserDTO = new OnlineUserDTO();
+            onlineUserDTO.setToken(StpUtil.getTokenValue());
+            onlineUserDTO.setUserId(sysUser.getId());
+            onlineUserDTO.setUserCode(sysUser.getCode());
+            onlineUserDTO.setUserName(sysUser.getName());
+            if (ua != null) {
+                onlineUserDTO.setLoginBrowser(ua.getBrowser().getName());
+                onlineUserDTO.setBrowserVersion(ua.getVersion());
+                onlineUserDTO.setLoginBrowser(ua.getBrowser().getName());
+                onlineUserDTO.setLoginOs(ua.getOs().getName());
+                onlineUserDTO.setIsMobile(ua.isMobile());
+            }
+            onlineUserDTO.setLoginIp(currentRequest.getHeader("X-Real-IP"));
+            onlineUserDTO.setLoginAddress(RequestUtil.getIpRegion2(onlineUserDTO.getLoginIp()));
+            onlineUserDTO.setLocale(request.getLocale());
+            onlineUserDTO.setLocaleLabel(request.getLocaleLabel());
+
+            SysOrgRoleDTO orgRole = entity2DTOMapper.toSysOrgRoleDTO(roles.get(0)); //默认当前使用角色为第一个角色
+            onlineUserDTO.setOrgId(orgRole.getSysOrgId());
+            onlineUserDTO.setRoleId(orgRole.getSysRoleId());
+            onlineUserDTO.setOrgName(orgRole.getOrgName());
+            onlineUserDTO.setRoleName(orgRole.getRoleName());
+            onlineUserDTO.setLoginTime(LocalDateTime.now());
+            StpUtil.getTokenSession().set(LoginUtil.SYS_USER_KEY, onlineUserDTO);
+            return getCurrentLoginUserVO(true);
+        }
+        return getCurrentLoginUserVO(false);
+    }
+
+    /**
+     * 获取当前token的用户角色信息
+     *
+     * @param refresh 是否刷新缓存
+     */
+    private LoginUserInfoVO getCurrentLoginUserVO(Boolean refresh) {
+        try {
+            SaSession session = StpUtil.getSession();
+            SaSession tokenSession = StpUtil.getTokenSession();
+            LoginUserInfoVO loginUserInfo = null;
+            if (session != null && tokenSession != null) {
+                SysLoginUserInfoDTO loginUserInfoDTO = session.getModel(LoginUtil.SYS_USER_KEY, SysLoginUserInfoDTO.class);
+                loginUserInfo = new LoginUserInfoVO();
+                loginUserInfo.setTokenName(StpUtil.getTokenName());
+                loginUserInfo.setTokenValue(StpUtil.getTokenValue());
+                loginUserInfo.setUser(loginUserInfoDTO.getUser());
+                OnlineUserDTO onlineUser = tokenSession.getModel(LoginUtil.SYS_USER_KEY, OnlineUserDTO.class);
+                List<SysOrgRoleDTO> roles = loginUserInfoDTO.getRoles();
+                for (SysOrgRoleDTO role : roles) {
+                    role.setActive(Objects.equals(onlineUser.getRoleId(), role.getSysRoleId()) && Objects.equals(onlineUser.getOrgId(), role.getSysOrgId()));
+                }
+                loginUserInfo.setRoles(roles);
+                loginUserInfo.setMenus(getRolePermissions(onlineUser.getRoleId(), refresh));
+            }
+            return loginUserInfo;
+        } catch (NotLoginException e) {
             return null;
         }
-        return null;
     }
+
+    private List<SysMenuDTO> getRolePermissions(Long roleId, Boolean refresh) {
+        ValueOperations<String, Object> operations = redisTemplate.opsForValue();
+        if (refresh == Boolean.FALSE) {
+            RolePermissionsDTO rolePermissions = (RolePermissionsDTO) operations.get(ROLE_PERMISSIONS_PREFIX + roleId);
+            if (rolePermissions != null) {
+                return rolePermissions.getPermissions();
+            }
+        }
+        List<UserPermissionResponse> permissions = remoteMenuContract.rolePermissionList(roleId);
+        List<SysMenuDTO> list = Entity2DTOMapper.INSTANCE.permissionList2SysMenuDTOList(permissions);
+        return list;
+    }
+
 }

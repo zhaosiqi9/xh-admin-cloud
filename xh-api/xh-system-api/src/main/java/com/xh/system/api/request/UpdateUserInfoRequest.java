@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class UpdateUserInfoRequest {
     @Schema(title = "主键ID")
     protected Long id;
+
     SysUserConstant.GetUpdateUserInfoType type;
     @Schema(title = "用户代码")
     private String code;
