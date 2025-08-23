@@ -2,7 +2,7 @@ package com.xh.system.infrastructure.mysql.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.yulichang.base.MPJBaseServiceImpl;
-import com.xh.system.infrastructure.mysql.mapper.SysUserMapper;
+import com.xh.system.infrastructure.mysql.mapper.SysUserPOMapper;
 import com.xh.system.infrastructure.mysql.po.SysUserPO;
 import com.xh.system.infrastructure.mysql.service.SysUserPOService;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.Optional;
  * @since : 2025/8/22 16:46
  */
 @Service
-public class SysUserPOServiceImpl extends MPJBaseServiceImpl<SysUserMapper, SysUserPO> implements SysUserPOService {
+public class SysUserPOServiceImpl extends MPJBaseServiceImpl<SysUserPOMapper, SysUserPO> implements SysUserPOService {
 
     @Override
     public SysUserPO findByLoginAccount(String loginAccount, boolean enable) {

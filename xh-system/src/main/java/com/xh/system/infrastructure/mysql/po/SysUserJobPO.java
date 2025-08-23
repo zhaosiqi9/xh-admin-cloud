@@ -1,7 +1,8 @@
-package com.xh.common.core.entity;
+package com.xh.system.infrastructure.mysql.po;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.xh.common.core.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,7 +12,7 @@ import lombok.EqualsAndHashCode;
 @TableName("sys_user_job")
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SysUserJob extends BaseEntity {
+public class SysUserJobPO extends BaseEntity {
 
     @Schema(title = "数据类型", allowableValues = {"1", "2"}, description = "1：用户，2：用户组")
     private Integer type;

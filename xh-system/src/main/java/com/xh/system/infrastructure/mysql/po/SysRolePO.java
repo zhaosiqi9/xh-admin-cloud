@@ -3,7 +3,6 @@ package com.xh.system.infrastructure.mysql.po;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.xh.common.core.entity.BaseEntity;
-import com.xh.common.core.entity.SysRoleMenu;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,7 +18,7 @@ public class SysRolePO extends BaseEntity {
 
     @Schema(title = "角色具有的权限")
     @TableField(exist = false)
-    List<SysRoleMenu> roleMenus;
+    List<SysRoleMenuPO> roleMenus;
 
     @Schema(title = "角色名称")
     private String name;

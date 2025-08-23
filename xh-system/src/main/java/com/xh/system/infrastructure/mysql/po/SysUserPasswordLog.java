@@ -1,6 +1,7 @@
-package com.xh.common.core.entity;
+package com.xh.system.infrastructure.mysql.po;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.xh.common.core.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

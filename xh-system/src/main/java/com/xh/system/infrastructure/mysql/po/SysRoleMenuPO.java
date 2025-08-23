@@ -1,6 +1,7 @@
-package com.xh.common.core.entity;
+package com.xh.system.infrastructure.mysql.po;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.xh.common.core.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,7 +11,7 @@ import lombok.EqualsAndHashCode;
 @TableName("sys_role_menu")
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SysRoleMenu extends BaseEntity {
+public class SysRoleMenuPO extends BaseEntity {
     @Schema(title = "角色id")
     private Integer sysRoleId;
 

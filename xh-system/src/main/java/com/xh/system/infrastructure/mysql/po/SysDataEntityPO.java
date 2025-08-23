@@ -1,4 +1,4 @@
-package com.xh.common.core.entity;
+package com.xh.system.infrastructure.mysql.po;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -7,9 +7,9 @@ import lombok.Data;
 
 
 @Schema(title = "系统数据实体")
-@TableName
+@TableName("sys_data_entity")
 @Data
-public class SysDataEntity {
+public class SysDataEntityPO {
 
     @Schema(title = "主键ID")
     @TableId

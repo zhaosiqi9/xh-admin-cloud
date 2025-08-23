@@ -1,6 +1,7 @@
-package com.xh.common.core.entity;
+package com.xh.system.infrastructure.mysql.po;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.xh.common.core.entity.DataPermissionEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,7 +11,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @Schema(title = "系统文件")
 @EqualsAndHashCode(callSuper = true)
-public class SysFile extends DataPermissionEntity {
+public class SysFilePO extends DataPermissionEntity {
 
     @Schema(title = "对象存储key")
     private String object;

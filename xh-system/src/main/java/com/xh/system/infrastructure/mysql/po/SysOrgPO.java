@@ -1,4 +1,4 @@
-package com.xh.common.core.entity;
+package com.xh.system.infrastructure.mysql.po;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -9,7 +9,7 @@ import lombok.Data;
 @Schema(title = "系统机构")
 @TableName("sys_org")
 @Data
-public class SysOrg {
+public class SysOrgPO {
 
     @Schema(title = "机构代码")
     private String code;
