@@ -1,26 +1,19 @@
 package com.xh.system.api.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author : gr
  * @version 1.0.0
- * @since : 2025/8/23 00:04
+ * @since : 2025/8/23 10:02
  */
 @Data
-@Builder
-public class GetUserInfoResponse {
-
-    private GetUserInfoResponseUser user;
-    
-    private List<GetUserInfoResponseRole> roleList = new ArrayList<>();
-    
+@Accessors(chain = true)
+public class GetUserInfoResponseUser {
     @Schema(title = "主键ID")
     protected Long id;
     @Schema(title = "用户代码")

@@ -2,9 +2,9 @@ package com.xh.system.infrastructure.mysql.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.yulichang.base.MPJBaseServiceImpl;
-import com.xh.common.core.entity.SysUserRecord;
 import com.xh.system.infrastructure.mysql.mapper.SysUserMapper;
-import com.xh.system.infrastructure.mysql.service.SysUserRecordService;
+import com.xh.system.infrastructure.mysql.po.SysUserPO;
+import com.xh.system.infrastructure.mysql.service.SysUserPOService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,17 +16,17 @@ import java.util.Optional;
  * @since : 2025/8/22 16:46
  */
 @Service
-public class SysUserRecordServiceImpl extends MPJBaseServiceImpl<SysUserMapper, SysUserRecord> implements SysUserRecordService {
+public class SysUserPOServiceImpl extends MPJBaseServiceImpl<SysUserMapper, SysUserPO> implements SysUserPOService {
 
     @Override
-    public SysUserRecord findByLoginAccount(String loginAccount, boolean enable) {
+    public SysUserPO findByLoginAccount(String loginAccount, boolean enable) {
         if (loginAccount==null) {
             return null;
         }
-        LambdaQueryWrapper<SysUserRecord> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(SysUserRecord::getCode, loginAccount);
-        lambdaQueryWrapper.eq(SysUserRecord::getEnabled, enable);
-        List<SysUserRecord> list = this.list(lambdaQueryWrapper);
+        LambdaQueryWrapper<SysUserPO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(SysUserPO::getCode, loginAccount);
+        lambdaQueryWrapper.eq(SysUserPO::getEnabled, enable);
+        List<SysUserPO> list = this.list(lambdaQueryWrapper);
         return Optional.ofNullable(list).map(t -> {
             if (t.size() > 1) {
                 throw new RuntimeException("登录账号重复");

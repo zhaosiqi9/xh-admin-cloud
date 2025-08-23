@@ -1,8 +1,8 @@
 package com.xh.system.domain.repository.sysuser.impl;
 
-import com.xh.system.domain.constant.SysUserConstant;
+import com.xh.system.domain.constant.sysuser.SysUserConstant;
 import com.xh.system.domain.repository.sysuser.AbstractSysUserRepository;
-import com.xh.system.infrastructure.mysql.service.SysUserRecordService;
+import com.xh.system.infrastructure.mysql.service.SysUserPOService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +15,11 @@ import org.springframework.stereotype.Service;
 public class DefaultSysUserRepositoryImpl extends AbstractSysUserRepository {
 
     @Resource
-    private SysUserRecordService sysUserRecordService;
+    private SysUserPOService sysUserPOService;
 
     @Override
-    protected SysUserConstant getType() {
-        return SysUserConstant.DEFAULT;
+    protected SysUserConstant.SysUserRootType getType() {
+        return SysUserConstant.SysUserRootType. DEFAULT;
     }
     
 

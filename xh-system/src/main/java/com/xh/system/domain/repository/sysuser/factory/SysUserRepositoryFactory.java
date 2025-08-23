@@ -1,6 +1,6 @@
 package com.xh.system.domain.repository.sysuser.factory;
 
-import com.xh.system.domain.constant.SysUserConstant;
+import com.xh.system.domain.constant.sysuser.SysUserConstant;
 import com.xh.system.domain.repository.sysuser.AbstractSysUserRepository;
 
 import java.util.HashMap;
@@ -18,6 +18,6 @@ public class SysUserRepositoryFactory {
 
     public static AbstractSysUserRepository getRepository(String type) {
         AbstractSysUserRepository repository = SYS_USER_REPOSITORY_MAP.get(type);
-        return Optional.ofNullable(repository).orElse(SYS_USER_REPOSITORY_MAP.get(SysUserConstant.DEFAULT.getValue()));
+        return Optional.ofNullable(repository).orElse(SYS_USER_REPOSITORY_MAP.get(SysUserConstant.SysUserRootType.DEFAULT.getType()));
     }
 }

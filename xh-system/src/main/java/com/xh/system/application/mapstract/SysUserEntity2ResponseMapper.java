@@ -8,12 +8,12 @@ import org.mapstruct.factory.Mappers;
 /**
  * @author : gr
  * @version 1.0.0
- * @since : 2025/8/23 00:27
+ * @since : 2025/8/23 09:23
  */
 @Mapper(componentModel = "spring")
-public interface SysUserRequest2EntityMapper {
-
-    SysUserRequest2EntityMapper INSTANCE = Mappers.getMapper(SysUserRequest2EntityMapper.class);
+public interface SysUserEntity2ResponseMapper {
     
-    SysUser toEntity(GetUserInfoResponse request);
+    SysUserEntity2ResponseMapper INSTANCE = Mappers.getMapper(SysUserEntity2ResponseMapper.class);
+
+    GetUserInfoResponse toGetUserInfoResponse(SysUser sysUser);
 }

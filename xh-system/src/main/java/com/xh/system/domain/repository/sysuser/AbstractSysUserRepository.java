@@ -1,13 +1,13 @@
 package com.xh.system.domain.repository.sysuser;
 
-import com.xh.common.core.entity.SysUserRecord;
 import com.xh.system.domain.aggregate.SysUserAggregate;
-import com.xh.system.domain.constant.SysUserConstant;
+import com.xh.system.domain.constant.sysuser.SysUserConstant;
 import com.xh.system.domain.entity.SysUser;
-import com.xh.system.domain.mapstract.sysuser.SysUserEntity2RecordMapper;
-import com.xh.system.domain.mapstract.sysuser.SysUserRecord2EntityMapper;
+import com.xh.system.domain.mapstract.sysuser.SysUserEntity2POMapper;
+import com.xh.system.domain.mapstract.sysuser.SysUserPOEntityMapper;
 import com.xh.system.domain.repository.sysuser.factory.SysUserRepositoryFactory;
-import com.xh.system.infrastructure.mysql.service.SysUserRecordService;
+import com.xh.system.infrastructure.mysql.po.SysUserPO;
+import com.xh.system.infrastructure.mysql.service.SysUserPOService;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.Getter;
@@ -25,20 +25,20 @@ import java.util.Optional;
 public abstract class AbstractSysUserRepository {
 
     @Resource
-    private SysUserRecordService sysUserRecordService;
+    private SysUserPOService sysUserPOService;
 
     @Resource
-    private SysUserRecord2EntityMapper sysUserRecord2EntityMapper;
+    private SysUserPOEntityMapper sysUserPOEntityMapper;
 
     @Resource
-    private SysUserEntity2RecordMapper sysUserEntity2RecordMapper;
+    private SysUserEntity2POMapper sysUserEntity2POMapper;
 
 
-    protected abstract SysUserConstant getType();
+    protected abstract SysUserConstant.SysUserRootType getType();
 
     @PostConstruct
     protected void init() {
-        SysUserRepositoryFactory.SYS_USER_REPOSITORY_MAP.put(getType().getValue(), this);
+        SysUserRepositoryFactory.SYS_USER_REPOSITORY_MAP.put(getType().getType(), this);
     }
 
     public SysUserAggregate findByRootId(Long rootId) {
@@ -46,11 +46,11 @@ public abstract class AbstractSysUserRepository {
             return null;
         }
         SysUserAggregate root = new SysUserAggregate();
-        SysUserRecord sysUserRecord = sysUserRecordService.getById(rootId);
-        if (sysUserRecord == null) {
+        SysUserPO sysUserPO = sysUserPOService.getById(rootId);
+        if (sysUserPO == null) {
             return null;
         }
-        root.setSysUser(sysUserRecord2EntityMapper.toEntity(sysUserRecord));
+        root.setSysUser(sysUserPOEntityMapper.toEntity(sysUserPO));
         root.setRootId(rootId);
         return root;
     }
@@ -59,14 +59,14 @@ public abstract class AbstractSysUserRepository {
         if (loginAccount == null) {
             return null;
         }
-        SysUserRecord sysUserRecord = sysUserRecordService.findByLoginAccount(loginAccount, enable);
+        SysUserPO sysUserPO = sysUserPOService.findByLoginAccount(loginAccount, enable);
 
-        if (sysUserRecord == null) {
+        if (sysUserPO == null) {
             return null;
         }
         SysUserAggregate root = new SysUserAggregate();
-        root.setSysUser(sysUserRecord2EntityMapper.toEntity(sysUserRecord));
-        root.setRootId(sysUserRecord.getId());
+        root.setSysUser(sysUserPOEntityMapper.toEntity(sysUserPO));
+        root.setRootId(sysUserPO.getId());
         return root;
     }
 
@@ -93,8 +93,8 @@ public abstract class AbstractSysUserRepository {
 
     protected Long saveSysUser(SysUser sysUser) {
         return Optional.of(sysUser).map(t -> {
-            SysUserRecord record = sysUserEntity2RecordMapper.toRecord(t);
-            sysUserRecordService.save(record);
+            SysUserPO record = sysUserEntity2POMapper.toRecord(t);
+            sysUserPOService.save(record);
             record.setId(record.getId());
             return record.getId();
         }).orElse(null);
@@ -102,14 +102,14 @@ public abstract class AbstractSysUserRepository {
 
     protected void updateSysUser(SysUser sysUser) {
         Optional.of(sysUser).map(t -> {
-            SysUserRecord record = sysUserEntity2RecordMapper.toRecord(t);
-            sysUserRecordService.updateById(record);
+            SysUserPO record = sysUserEntity2POMapper.toRecord(t);
+            sysUserPOService.updateById(record);
             record.setId(record.getId());
             return record.getId();
         });
     }
 
     private boolean deleteSysUser(Long rootId) {
-        return Optional.ofNullable(rootId).map(t -> sysUserRecordService.removeById(t)).orElse(false);
+        return Optional.ofNullable(rootId).map(t -> sysUserPOService.removeById(t)).orElse(false);
     }
 }

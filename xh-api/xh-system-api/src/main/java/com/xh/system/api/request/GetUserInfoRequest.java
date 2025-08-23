@@ -1,5 +1,6 @@
 package com.xh.system.api.request;
 
+import com.xh.system.api.constant.sysuser.SysUserConstant;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -17,4 +18,6 @@ public class GetUserInfoRequest {
     private String userName;
     
     private boolean enabled = true;
+    
+    private SysUserConstant.GetUpdateUserInfoType type;
 }

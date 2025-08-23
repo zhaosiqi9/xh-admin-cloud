@@ -4,28 +4,23 @@ import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.secure.BCrypt;
 import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.dev33.satoken.stp.parameter.SaLoginParameter;
 import cn.hutool.captcha.AbstractCaptcha;
-import cn.hutool.http.useragent.UserAgent;
-import cn.hutool.http.useragent.UserAgentUtil;
 import com.xh.auth.api.request.LoginRequest;
 import com.xh.auth.api.response.ImageCaptchaDTO;
 import com.xh.auth.api.response.LoginUserInfoVO;
 import com.xh.common.core.utils.CommonUtil;
 import com.xh.common.core.web.MyException;
+import com.xh.system.api.constant.sysuser.SysUserConstant;
 import com.xh.system.api.contract.RemoteSysUserContract;
 import com.xh.system.api.request.GetUserInfoRequest;
+import com.xh.system.api.request.UpdateUserInfoRequest;
 import com.xh.system.api.response.GetUserInfoResponse;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @author : gr
@@ -103,67 +98,17 @@ public class TokenService {
                     }
                     throw new MyException("密码错误！您还可以尝试%s次。".formatted(maxTryNum - failuresNum));
                 } finally {
-                    remoteUserContract.updateUserInfo(sysUser);
+                    remoteUserContract.updateUserInfo(new UpdateUserInfoRequest().initFromResponse(sysUser.getUser(), SysUserConstant.GetUpdateUserInfoType.DEFAULT));
                 }
             } else {
                 //失败次数置零
                 sysUser.setFailuresNum(0);
                 sysUser.setLockMsg(null);
-                remoteUserContract.updateUserInfo(sysUser);
+                remoteUserContract.updateUserInfo(new UpdateUserInfoRequest().initFromResponse(sysUser.getUser(), SysUserConstant.GetUpdateUserInfoType.DEFAULT));
             }
 
-            //获取用户岗位角色
-            List<SysOrgRoleDTO> roles = getUserRoles(sysUser.getId());
-            if (roles.isEmpty()) {
-                throw new MyException("该用户未分配角色，无法登录!");
-            }
-
-            SaLoginParameter loginParameter = new SaLoginParameter();
-            loginParameter.setDeviceType("WEB");
-            //如果账号不允许重复登录，则将已登录的强制下线
-            loginParameter.setIsConcurrent(sysUser.getAllowRepeat());
-            // 登录
-            StpUtil.login(sysUser.getId(), loginParameter);
-
-            session = StpUtil.getSession();
-
-            // 刷新用户信息和权限缓存
-            SysUserDTO sysUserDTO = new SysUserDTO();
-            BeanUtils.copyProperties(sysUser, sysUserDTO);
-            SysLoginUserInfoDTO loginUserInfoDTO = new SysLoginUserInfoDTO();
-            loginUserInfoDTO.setUser(sysUserDTO);
-            loginUserInfoDTO.setRoles(roles);
-            session.set(LoginUtil.SYS_USER_KEY, loginUserInfoDTO);
-
-            UserAgent ua = UserAgentUtil.parse(userAgent);
-            SysLog sysLog = MyContext.getSysLog();
-            OnlineUserDTO onlineUserDTO = new OnlineUserDTO();
-            onlineUserDTO.setToken(StpUtil.getTokenValue());
-            onlineUserDTO.setUserId(sysUser.getId());
-            onlineUserDTO.setUserCode(sysUser.getCode());
-            onlineUserDTO.setUserName(sysUser.getName());
-            if(ua != null) {
-                onlineUserDTO.setLoginBrowser(ua.getBrowser().getName());
-                onlineUserDTO.setBrowserVersion(ua.getVersion());
-                onlineUserDTO.setLoginBrowser(ua.getBrowser().getName());
-                onlineUserDTO.setLoginOs(ua.getOs().getName());
-                onlineUserDTO.setIsMobile(ua.isMobile());
-            }
-            onlineUserDTO.setLoginIp(sysLog.getIp());
-            onlineUserDTO.setLoginAddress(sysLog.getIpAddress());
-            onlineUserDTO.setLocale(locale);
-            onlineUserDTO.setLocaleLabel(localeLabel);
-
-            SysOrgRoleDTO orgRole = roles.getFirst(); //默认当前使用角色为第一个角色
-            onlineUserDTO.setOrgId(orgRole.getSysOrgId());
-            onlineUserDTO.setRoleId(orgRole.getSysRoleId());
-            onlineUserDTO.setOrgName(orgRole.getOrgName());
-            onlineUserDTO.setRoleName(orgRole.getRoleName());
-            onlineUserDTO.setLoginTime(LocalDateTime.now());
-            StpUtil.getTokenSession().set(LoginUtil.SYS_USER_KEY, onlineUserDTO);
-            return getCurrentLoginUserVO(true);
-        } else {
-            return getCurrentLoginUserVO(false);
+            return null;
         }
+        return null;
     }
 }

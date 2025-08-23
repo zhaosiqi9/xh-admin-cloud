@@ -1,7 +1,7 @@
 package com.xh.system.domain.mapstract.sysuser;
 
-import com.xh.common.core.entity.SysUserRecord;
 import com.xh.system.domain.entity.SysUser;
+import com.xh.system.infrastructure.mysql.po.SysUserPO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -11,9 +11,9 @@ import org.mapstruct.factory.Mappers;
  * @since : 2025/8/22 21:26
  */
 @Mapper(componentModel = "spring")
-public interface SysUserRecord2EntityMapper {
+public interface SysUserPOEntityMapper {
 
-    SysUserRecord2EntityMapper INSTANCE = Mappers.getMapper(SysUserRecord2EntityMapper.class);
+    SysUserPOEntityMapper INSTANCE = Mappers.getMapper(SysUserPOEntityMapper.class);
 
-    SysUser toEntity(SysUserRecord sysUserRecord);
+    SysUser toEntity(SysUserPO sysUserPO);
 }

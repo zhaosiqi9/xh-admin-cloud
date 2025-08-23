@@ -1,28 +1,22 @@
-package com.xh.system.api.response;
+package com.xh.system.api.request;
 
+import com.xh.system.api.constant.sysuser.SysUserConstant;
+import com.xh.system.api.response.GetUserInfoResponseUser;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author : gr
  * @version 1.0.0
- * @since : 2025/8/23 00:04
+ * @since : 2025/8/23 09:26
  */
 @Data
-@Builder
-public class GetUserInfoResponse {
-
-    private GetUserInfoResponseUser user;
-    
-    private List<GetUserInfoResponseRole> roleList = new ArrayList<>();
-    
+public class UpdateUserInfoRequest {
     @Schema(title = "主键ID")
     protected Long id;
+    SysUserConstant.GetUpdateUserInfoType type;
     @Schema(title = "用户代码")
     private String code;
     @Schema(title = "用户名")
@@ -51,16 +45,37 @@ public class GetUserInfoResponse {
     private Boolean enabled;
     @Schema(title = "创建时间")
     private LocalDateTime createTime;
-
     @Schema(title = "修改时间")
     private LocalDateTime updateTime;
-
     @Schema(title = "创建人")
     private Integer createBy;
-
     @Schema(title = "修改人")
     private Integer updateBy;
-
     @Schema(title = "是否已删除")
     private Boolean deleted;
+
+    public UpdateUserInfoRequest initFromResponse(GetUserInfoResponseUser queryResponse, SysUserConstant.GetUpdateUserInfoType type) {
+        UpdateUserInfoRequest t = new UpdateUserInfoRequest();
+        t.id = queryResponse.getId();
+        t.code = queryResponse.getCode();
+        t.name = queryResponse.getName();
+        t.password = queryResponse.getPassword();
+        t.avatar = queryResponse.getAvatar();
+        t.telephone = queryResponse.getTelephone();
+        t.status = queryResponse.getStatus();
+        t.failuresNum = queryResponse.getFailuresNum();
+        t.lockMsg = queryResponse.getLockMsg();
+        t.allowRepeat = queryResponse.getAllowRepeat();
+        t.autoRenewal = queryResponse.getAutoRenewal();
+        t.isDemo = queryResponse.getIsDemo();
+        t.roleSorter = queryResponse.getRoleSorter();
+        t.enabled = queryResponse.getEnabled();
+        t.createTime = queryResponse.getCreateTime();
+        t.updateTime = queryResponse.getUpdateTime();
+        t.createBy = queryResponse.getCreateBy();
+        t.updateBy = queryResponse.getUpdateBy();
+        t.deleted = queryResponse.getDeleted();
+        t.type = type;
+        return t;
+    }
 }

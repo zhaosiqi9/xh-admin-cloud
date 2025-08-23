@@ -1,26 +1,18 @@
-package com.xh.system.api.response;
+package com.xh.system.application.command.sysuser;
 
+import com.xh.system.domain.constant.sysuser.SysUserConstant;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author : gr
  * @version 1.0.0
- * @since : 2025/8/23 00:04
+ * @since : 2025/8/23 09:40
  */
 @Data
-@Builder
-public class GetUserInfoResponse {
-
-    private GetUserInfoResponseUser user;
-    
-    private List<GetUserInfoResponseRole> roleList = new ArrayList<>();
-    
+public class UpdateUserInfoCommand {
     @Schema(title = "主键ID")
     protected Long id;
     @Schema(title = "用户代码")
@@ -63,4 +55,6 @@ public class GetUserInfoResponse {
 
     @Schema(title = "是否已删除")
     private Boolean deleted;
+    
+    private SysUserConstant.SysUserRootType type;
 }

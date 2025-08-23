@@ -1,7 +1,7 @@
 package com.xh.system.infrastructure.mysql.mapper;
 
 import com.github.yulichang.base.MPJBaseMapper;
-import com.xh.system.infrastructure.mysql.po.SysUserPO;
+import com.xh.system.infrastructure.mysql.po.SysRolePO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -10,6 +10,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since : 2025/8/22 16:47
  */
 @Mapper
-public interface SysUserMapper extends MPJBaseMapper<SysUserPO> {
+public interface SysRoleMapper extends MPJBaseMapper<SysRolePO> {
 
 }

@@ -1,14 +1,13 @@
 package com.xh.system.application.service;
 
 import com.alibaba.fastjson.JSON;
-import com.xh.common.core.entity.SysUserRecord;
-import com.xh.system.api.request.GetUserInfoRequest;
 import com.xh.system.api.response.GetUserInfoResponse;
-import com.xh.system.application.mapstract.SysUserRequest2EntityMapper;
+import com.xh.system.application.command.sysuser.GetUserInfoCommand;
+import com.xh.system.application.command.sysuser.UpdateUserInfoCommand;
+import com.xh.system.application.mapstract.SysUserEntity2ResponseMapper;
 import com.xh.system.domain.aggregate.SysUserAggregate;
-import com.xh.system.domain.constant.SysUserConstant;
-import com.xh.system.domain.entity.SysUser;
 import com.xh.system.domain.service.SysUserDomainService;
+import com.xh.system.infrastructure.mysql.po.SysUserPO;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,43 +25,23 @@ public class SysUserService {
     @Resource
     private SysUserDomainService sysUserDomainService;
 
-    public SysUserRecord personalCenterSave(SysUserRecord sysUserRecord) {
+    public SysUserPO personalCenterSave(SysUserPO sysUserPO) {
         return null;
     }
 
-    public SysUserRecord getById(Serializable loginId) {
+    public SysUserPO getById(Serializable loginId) {
         return null;
     }
 
-    public GetUserInfoResponse getUserInfo(GetUserInfoRequest request) {
-        SysUserAggregate root = sysUserDomainService.getRootByLoginAccount(request.getUserName(), request.isEnabled() , SysUserConstant.DEFAULT);
+    public GetUserInfoResponse getUserInfo(GetUserInfoCommand command) {
+        SysUserAggregate root = sysUserDomainService.getRootByLoginAccount(command.getUserName(), command.isEnabled(), command.getType());
         log.info("root:{}", JSON.toJSONString(root));
-        return GetUserInfoResponse.builder()
-                .id(root.getRootId())
-                .code(root.getSysUser().getCode())
-                .name(root.getSysUser().getName())
-                .password(root.getSysUser().getPassword())
-                .avatar(root.getSysUser().getAvatar())
-                .telephone(root.getSysUser().getTelephone())
-                .status(root.getSysUser().getStatus())
-                .failuresNum(root.getSysUser().getFailuresNum())
-                .lockMsg(root.getSysUser().getLockMsg())
-                .allowRepeat(root.getSysUser().getAllowRepeat())
-                .autoRenewal(root.getSysUser().getAutoRenewal())
-                .isDemo(root.getSysUser().getIsDemo())
-                .roleSorter(root.getSysUser().getRoleSorter())
-                .roleSorter(root.getSysUser().getRoleSorter())
-                .enabled(root.getSysUser().getEnabled())
-                .createTime(root.getSysUser().getCreateTime())
-                .updateTime(root.getSysUser().getUpdateTime())
-                .createBy(root.getSysUser().getCreateBy())
-                .updateBy(root.getSysUser().getUpdateBy())
-                .deleted(root.getSysUser().getDeleted())
-                .build();
+        return SysUserEntity2ResponseMapper.INSTANCE.toGetUserInfoResponse(root.getSysUser());
     }
 
-    public boolean updateUserInfo(GetUserInfoResponse request) {
-        SysUser entity = SysUserRequest2EntityMapper.INSTANCE.toEntity(request);
-        return sysUserDomainService.updateUserInfo(entity);
+    public boolean updateUserInfo(UpdateUserInfoCommand command) {
+//        SysUser entity = SysUserRequest2CommandMapper.INSTANCE.toEntity(request);
+//        return sysUserDomainService.updateUserInfo(entity);
+        return true;
     }
 }

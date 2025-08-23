@@ -1,6 +1,7 @@
 package com.xh.system.api.contract;
 
 import com.xh.system.api.request.GetUserInfoRequest;
+import com.xh.system.api.request.UpdateUserInfoRequest;
 import com.xh.system.api.response.GetUserInfoResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,5 +19,5 @@ public interface RemoteSysUserContract {
     GetUserInfoResponse getUserInfo(@RequestBody GetUserInfoRequest request);
     
     @PostMapping("update-user-info")
-    boolean updateUserInfo(@RequestBody GetUserInfoResponse request);
+    boolean updateUserInfo(@RequestBody UpdateUserInfoRequest request);
 }
