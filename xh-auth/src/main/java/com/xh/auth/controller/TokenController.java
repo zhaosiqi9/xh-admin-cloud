@@ -6,6 +6,7 @@ import com.xh.auth.api.request.LoginRequest;
 import com.xh.auth.service.TokenService;
 import com.xh.auth.service.dto.ImageCaptchaDTO;
 import com.xh.auth.service.dto.LoginUserInfoVO;
+import com.xh.common.core.annotation.Log;
 import com.xh.common.core.web.RestResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,7 +27,7 @@ public class TokenController {
     @Resource
     private TokenService tokenService;
 
-
+    @Log
     @SaIgnore
     @Operation(description = "获取图形验证码")
     @GetMapping("/captcha")
@@ -34,6 +35,7 @@ public class TokenController {
         return RestResponse.success(tokenService.getImageCaptcha(captchaKey));
     }
 
+    @Log
     @SaIgnore
     @Operation(description = "登录")
     @PostMapping("/login")

@@ -3,6 +3,7 @@ package com.xh.common.core.configure;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -25,9 +26,8 @@ public class JacksonConfig {
     public Jackson2ObjectMapperBuilderCustomizer customizer() {
         System.out.println("JacksonConfig");
         return builder -> {
-            JavaTimeModule javaTimeModule = new JavaTimeModule();
-
             // 注册Java 8时间模块
+            JavaTimeModule javaTimeModule = new JavaTimeModule();
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(formatter));
@@ -38,6 +38,8 @@ public class JacksonConfig {
             javaTimeModule.addSerializer(BigInteger.class, CustomerJacksonSerializer.instance);
             javaTimeModule.addSerializer(BigDecimal.class, ToStringSerializer.instance);
 
+            // 添加LocalDateTime反序列化器
+            javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(formatter));
 
             // 全局配置序列化特性
             builder.featuresToDisable(

@@ -1,6 +1,6 @@
 package com.xh.common.core.utils;
 
-import com.xh.common.core.web.PageQuery;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author : gr
@@ -8,23 +8,15 @@ import com.xh.common.core.web.PageQuery;
  * @since : 2025/8/22 08:36
  */
 public class CommonUtil {
-    public static boolean isNotEmpty(String whereCon) {
-        return false;
-    }
 
-    public static boolean isEmpty(String childrenWhereCon) {
-        return false;
-    }
-
-    public static String toLowerUnderscore(String prop) {
-        return null;
-    }
-
-    public static String getString(Object value1) {
-        return null;
-    }
-
-    public static boolean isNotEmpty(PageQuery.OrderDirection orderDirection) {
-        return false;
+    public static String camelToSnake(String camelCase) {
+         if (camelCase == null || camelCase.isEmpty()) {
+            return camelCase;
+        }
+        // 先将驼峰转成带分隔符的形式，再替换分隔符为下划线并转小写
+        return StringUtils.join(
+            StringUtils.splitByCharacterTypeCamelCase(camelCase), 
+            "_"
+        ).toLowerCase();
     }
 }

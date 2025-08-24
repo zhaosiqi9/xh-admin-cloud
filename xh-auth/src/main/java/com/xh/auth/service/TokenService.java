@@ -14,7 +14,6 @@ import com.xh.auth.constant.LoginUtil;
 import com.xh.auth.mapstruct.Entity2DTOMapper;
 import com.xh.auth.service.dto.*;
 import com.xh.auth.util.RequestUtil;
-import com.xh.common.core.utils.CommonUtil;
 import com.xh.common.core.web.MyException;
 import com.xh.system.api.constant.sysuser.SysUserConstant;
 import com.xh.system.api.contract.RemoteSysMenuContract;
@@ -85,8 +84,8 @@ public class TokenService {
         if (session == null && StrUtil.isNotBlank(username)) {
 
             if (request.isDemo()) {
-                if (CommonUtil.isEmpty(captchaKey)) throw new MyException("非法登录");
-                if (CommonUtil.isEmpty(captchaCode)) throw new MyException("请输入图形验证码");
+                if (StrUtil.isBlank(captchaKey)) throw new MyException("非法登录");
+                if (StrUtil.isBlank(captchaCode)) throw new MyException("请输入图形验证码");
 
                 //验证图形验证码
                 ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();

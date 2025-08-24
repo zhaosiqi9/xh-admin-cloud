@@ -1,5 +1,6 @@
 package com.xh.system.interfaces;
 
+import com.xh.common.core.annotation.Log;
 import com.xh.common.core.web.RestResponse;
 import com.xh.system.api.contract.RemoteSysUserContract;
 import com.xh.system.api.request.GetUserInfoRequest;
@@ -34,13 +35,14 @@ public class SysUserController implements RemoteSysUserContract {
     @Autowired
     private SysUserRequest2CommandMapper sysUserRequest2CommandMapper;
 
+    @Log
     @Operation(description = "登录")
     @PostMapping("/login")
     public RestResponse<LoginUserInfoVO> login(HttpServletRequest request, @RequestBody Map<String, Object> params) {
         return null;
     }
 
-
+    @Log
     @Override
     public GetUserInfoResponse getUserInfo(GetUserInfoRequest request) {
         return Optional.ofNullable(request)
@@ -49,6 +51,7 @@ public class SysUserController implements RemoteSysUserContract {
                 .orElse(null);
     }
 
+    @Log
     @Override
     public boolean clearFailuresNum(UpdateUserInfoRequest request) {
         return Optional.ofNullable(request)
@@ -57,6 +60,7 @@ public class SysUserController implements RemoteSysUserContract {
                 .orElse(false);
     }
 
+    @Log
     @Override
     public boolean loginFailUpdateInfo(UpdateUserInfoRequest request) {
         return Optional.ofNullable(request)
@@ -65,5 +69,5 @@ public class SysUserController implements RemoteSysUserContract {
                 .orElse(false);
 
     }
-    
+
 }

@@ -1,14 +1,12 @@
 package com.xh.common.core.web;
 
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.xh.common.core.utils.CommonUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 页面查询
@@ -78,19 +76,7 @@ public class PageQuery<T> {
     public void addFirstArg(Object... arg) {
         this.args.addAll(0, Arrays.asList(arg));
     }
-
-    @Schema(hidden = true)
-    public String getSql() {
-        var whereCon = getWhereCon(this.filters);
-        if (CommonUtil.isNotEmpty(whereCon)) whereCon = " where " + whereCon;
-        if (CommonUtil.isNotEmpty(orderProp) && CommonUtil.isNotEmpty(orderDirection)) {
-            whereCon += " order by `%s` %s".formatted(CommonUtil.toLowerUnderscore(orderProp), orderDirection);
-        }
-        if (CommonUtil.isNotEmpty(whereCon)) {
-            return "select * from (%s) QUERY %s".formatted(baseSql, whereCon);
-        }
-        return baseSql;
-    }
+    
 
     public String getWhereCon(List<FilterRow> filters) {
         if (filters == null) return "";
@@ -104,13 +90,13 @@ public class PageQuery<T> {
             List<FilterRow> children = filter.getChildren();
             if (children != null && !children.isEmpty()) {
                 String childrenWhereCon = getWhereCon(children);
-                if (!CommonUtil.isEmpty(childrenWhereCon)) {
+                if (!StrUtil.isEmpty(childrenWhereCon)) {
                     whereCon.append(str).append("(").append(childrenWhereCon).append(") ");
                 }
             } else {
                 String prop = filter.getAlias();
-                if (CommonUtil.isEmpty(prop)) {
-                    prop = CommonUtil.toLowerUnderscore(filter.getProp());
+                if (StrUtil.isEmpty(prop)) {
+                    prop = CommonUtil.camelToSnake(filter.getProp());
                 }
                 ComparatorEnum condition = filter.getCondition();
                 str += "`%s` ".formatted(prop);
@@ -238,7 +224,7 @@ public class PageQuery<T> {
         }
 
         private String getInValues() {
-            String[] values = CommonUtil.getString(this.value1).split(",");
+            String[] values = Optional.ofNullable(this.value1).map(Object::toString).orElse(StrUtil.EMPTY).split(",");
             StringBuilder sb = new StringBuilder();
             if ("number".equals(type)) {
                 for (String value : values) {
