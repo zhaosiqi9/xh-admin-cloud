@@ -32,7 +32,7 @@ public class LogAspect {
 
     public static final List<String> SKIP_METHOD_REGEX = List.of(".*import.*", ".*export.*", ".*download.*", ".*upload.*");
 
-    private static final ThreadLocal<Long> TIME_THREADLOCAL = new NamedThreadLocal<Long>("Cost Time");
+    private static final ThreadLocal<Long> TIME_THREADLOCAL = new NamedThreadLocal<>("Cost Time");
 
     @Pointcut("@annotation(com.xh.common.core.annotation.Log)")
     public void pointCut() {
@@ -40,7 +40,7 @@ public class LogAspect {
     }
 
     @Before(value = "pointCut()")
-    public void before(JoinPoint point) {
+    public void before() {
         TIME_THREADLOCAL.set(System.currentTimeMillis());
     }
 
