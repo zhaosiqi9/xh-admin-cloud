@@ -167,7 +167,11 @@ public class TokenService {
                 onlineUserDTO.setLoginOs(ua.getOs().getName());
                 onlineUserDTO.setIsMobile(ua.isMobile());
             }
-            onlineUserDTO.setLoginIp(currentRequest.getHeader("X-Real-IP"));
+            String loginIp = currentRequest.getHeader("X-Real-IP");
+            if (StrUtil.isBlank(loginIp)) {
+                loginIp = currentRequest.getRemoteAddr();
+            }
+            onlineUserDTO.setLoginIp(loginIp);
             onlineUserDTO.setLoginAddress(RequestUtil.getIpRegion2(onlineUserDTO.getLoginIp()));
             onlineUserDTO.setLocale(request.getLocale());
             onlineUserDTO.setLocaleLabel(request.getLocaleLabel());

@@ -1,5 +1,6 @@
 package com.xh.system.infrastructure.mysql.po;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.xh.common.core.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -43,6 +44,7 @@ public class SysMenuPO extends BaseEntity {
     private String icon;
 
     @Schema(title = "排序号")
+    @TableField(value = "`order`")
     private Integer order;
 
     @Schema(title = "是否缓存")

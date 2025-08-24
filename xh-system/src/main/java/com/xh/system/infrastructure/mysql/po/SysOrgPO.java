@@ -1,14 +1,17 @@
 package com.xh.system.infrastructure.mysql.po;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.xh.common.core.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 
 @Schema(title = "系统机构")
 @TableName("sys_org")
 @Data
-public class SysOrgPO {
+@EqualsAndHashCode(callSuper = true)
+public class SysOrgPO extends BaseEntity {
 
     @Schema(title = "机构代码")
     private String code;

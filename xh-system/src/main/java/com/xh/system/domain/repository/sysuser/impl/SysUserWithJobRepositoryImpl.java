@@ -8,6 +8,7 @@ import com.xh.system.domain.entity.SysRole;
 import com.xh.system.domain.entity.SysUser;
 import com.xh.system.domain.entity.SysUserJob;
 import com.xh.system.domain.repository.sysuser.AbstractSysUserRepository;
+import com.xh.system.infrastructure.mysql.po.SysUserPO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,12 @@ public class SysUserWithJobRepositoryImpl extends AbstractSysUserRepository {
         }
         rootId = sysUser.getId();
 
+        UserAggregateSetJob(rootId, root, sysUser);
+        return root;
+
+    }
+
+    private void UserAggregateSetJob(Long rootId, SysUserAggregate root, SysUser sysUser) {
         List<SysUserJob> userJobList = findUserJobListByRootId(rootId);
         List<SysOrg> orgList = findUserOrgListByRootId(rootId, userJobList);
         List<SysRole> roleList = findUserRoleListByRootId(rootId, userJobList);
@@ -59,8 +66,26 @@ public class SysUserWithJobRepositoryImpl extends AbstractSysUserRepository {
         root.setSysUserJobList(userJobList);
         root.setSysOrgList(orgList);
         root.setSysRoleList(roleList);
-        return root;
+    }
 
+    @Override
+    public SysUserAggregate findByLoginAccount(String loginAccount, boolean enable) {
+        
+        if (loginAccount == null) {
+            return null;
+        }
+        SysUserPO sysUserPO = getSysUserPOService().findByLoginAccount(loginAccount, enable);
+
+        if (sysUserPO == null) {
+            return null;
+        }
+        SysUserAggregate root = new SysUserAggregate();
+        SysUser sysUser = getSysUserPO2EntityMapper().user2Entity(sysUserPO);
+        root.setSysUser(sysUser);
+        root.setRootId(sysUserPO.getId());
+        
+        UserAggregateSetJob(sysUserPO.getId(), root, sysUser);
+        return root;
     }
 
 
