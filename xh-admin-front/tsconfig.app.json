@@ -1,0 +1,32 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": ["src/**/*", "interface/**/*", "types/**/*.d.ts"],
+  "exclude": ["src/**/__tests__/*", "node_modules/**/*.d.ts"],
+  "compilerOptions": {
+    "outDir": "dist",
+    "declaration": false,
+    "noImplicitAny": false,
+    "allowJs": true,
+    "strict": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+    "composite": false,
+    "moduleResolution": "Node",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@i/*": ["interface/*"],
+      "@d/*": ["docs/*"]
+    },
+    "types": ["vite/client"],
+    "target": "esnext",
+    "useDefineForClassFields": true,
+    "module": "esnext",
+    "removeComments": false,
+    "sourceMap": false,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "noEmit": false
+  }
+}

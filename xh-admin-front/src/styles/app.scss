@@ -1,0 +1,274 @@
+:root {
+  --layout-bg-color: var(--el-bg-color-page);
+  --layout-left-bg-color: var(--el-bg-color);
+  --layout-header-bg-color: var(--el-bg-color);
+
+  --font:
+    'Microsoft YaHei', '微软雅黑', 'Noto Sans SC', 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
+    Arial, sans-serif;
+}
+
+html,
+body {
+  font-family: var(--font), serif;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background-size: cover; //或者background-size:100%;
+}
+
+pre {
+  font-family: var(--font), serif;
+  overflow-x: auto;
+}
+
+#app {
+  height: 100%;
+}
+
+.root {
+  height: var(--main-height);
+  border-radius: 5px;
+}
+
+.el-menu {
+  border-right: none;
+}
+
+.el-table {
+  //--el-table-border-color: var(--el-border-color);
+  --el-table-header-bg-color: var(--el-color-primary-light-9);
+  --el-table-header-text-color: var(--el-text-color-regular);
+
+  thead.is-group th.el-table__cell {
+    background: var(--el-table-header-bg-color);
+  }
+}
+
+.el-table--small {
+  --el-font-size-base: 11px;
+  font-size: 11px;
+
+  .el-table__cell {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+
+  thead {
+    font-size: 12px;
+  }
+
+  .el-link {
+    font-size: 11px;
+  }
+}
+
+.el-table--default {
+  --el-font-size-base: 12px;
+  font-size: 12px;
+
+  .el-table__cell {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  thead {
+    font-size: 13px;
+  }
+
+  .el-link {
+    font-size: 12px;
+  }
+}
+
+.el-table--large {
+  --el-font-size-base: 14px;
+  font-size: 14px;
+
+  .el-table__cell {
+    padding: 5px;
+  }
+
+  thead {
+    font-size: 15px;
+  }
+
+  .el-link {
+    font-size: 14px;
+  }
+}
+
+.el-form-item--small {
+  --font-size: 12px;
+  --el-form-label-font-size: var(--font-size);
+}
+
+.el-form-item--default {
+  margin: 0 0 15px 0;
+}
+
+.el-dialog {
+  &:not(.is-fullscreen) {
+    min-width: min(350px, 95vw);
+    max-width: 95vw;
+  }
+
+  &.is-fullscreen {
+    display: flex;
+    flex-direction: column;
+
+    .el-dialog__body {
+      height: 0;
+      flex-grow: 1;
+    }
+  }
+
+  .el-dialog__body {
+    padding: 0;
+  }
+}
+
+.el-drawer {
+  min-width: min(300px, 95vw);
+  max-width: 95vw;
+
+  .el-drawer__header {
+    padding-bottom: 20px;
+    margin-bottom: 0;
+
+    border-bottom: var(--el-border);
+  }
+}
+
+.el-checkbox-group,
+.el-radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.el-checkbox,
+.el-radio {
+  margin-right: 0;
+}
+
+.el-checkbox__label,
+.el-radio__label {
+  padding-left: 5px;
+}
+
+.el-link {
+  align-items: center;
+
+  .el-icon {
+    margin-right: 5px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .el-scrollbar__bar {
+    pointer-events: none;
+
+    &.is-vertical {
+      width: 3px;
+    }
+
+    &.is-horizontal {
+      height: 3px;
+    }
+  }
+}
+
+//表单为明细查看时的样式
+.detail-form {
+  .el-input__wrapper,
+  .el-radio {
+    box-shadow: none;
+    outline: 1px dashed var(--el-text-color-disabled);
+    outline-offset: -1px;
+  }
+
+  .el-input.is-disabled .el-input__wrapper {
+    box-shadow: none;
+  }
+
+  .el-form-item__label::before {
+    display: none;
+  }
+
+  .el-upload {
+    display: none;
+  }
+
+  //隐藏placeholder
+  /* WebKit浏览器 */
+  input::-webkit-input-placeholder {
+    opacity: 0;
+    color: transparent !important;
+  }
+
+  /* Firefox 4 至 18 */
+  input:-moz-placeholder {
+    opacity: 0;
+    color: transparent !important;
+  }
+
+  /* Firefox 19+ */
+  input::-moz-placeholder {
+    opacity: 0;
+    color: transparent !important;
+  }
+}
+
+//表单的底部按钮栏样式
+.m-footer {
+  text-align: right;
+  margin-top: 10px;
+}
+
+.slide-right-enter-active,
+.slide-right-leave-active,
+.slide-left-enter-active,
+.slide-left-leave-active {
+  will-change: transform;
+  transition: all 0.2s ease;
+}
+
+// slide-right
+.slide-right-enter-from {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.slide-right-leave-to {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+// slide-left
+.slide-left-enter-from {
+  @extend .slide-right-leave-to;
+}
+
+.slide-left-leave-to {
+  @extend .slide-right-enter-from;
+}
+
+/* nprogress color */
+#nprogress {
+  .bar {
+    background: var(--el-color-primary);
+  }
+
+  .peg {
+    box-shadow:
+      0 0 10px var(--el-color-primary),
+      0 0 5px var(--el-color-primary);
+  }
+
+  .spinner-icon {
+    border-top-color: var(--el-color-primary);
+    border-left-color: var(--el-color-primary);
+  }
+}
