@@ -3,6 +3,7 @@ package com.xh.auth.service;
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.secure.BCrypt;
 import cn.dev33.satoken.session.SaSession;
+import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.stp.parameter.SaLoginParameter;
 import cn.hutool.captcha.AbstractCaptcha;
@@ -230,4 +231,27 @@ public class TokenService {
         return list;
     }
 
+    public LoginUserInfoVO refreshToken(HttpServletRequest request) {
+
+        String tokenValue = StpUtil.getTokenValue();
+        SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+        log.info(tokenValue);
+        log.info(tokenInfo.toString());
+        log.info(StpUtil.getLoginId().toString());
+        return null;
+    }
+
+    public boolean logout() {
+        StpUtil.logout();
+        return true;
+    }
+
+    public boolean kickOut() {
+        Object loginId = StpUtil.getLoginId();
+        if (loginId == null) {
+            throw new RuntimeException("当前用户未登录");
+        }
+        StpUtil.kickout(loginId);
+        return true;
+    }
 }

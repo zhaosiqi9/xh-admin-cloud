@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "用户管理")
 @RestController
 @RequestMapping("/api/system/user")
-public class TokenController {
+public class LoginController {
 
     @Resource
     private TokenService tokenService;
@@ -44,5 +44,26 @@ public class TokenController {
         return RestResponse.success(tokenService.login(loginRequest));
     }
 
+    @Log
+    @SaIgnore
+    @Operation(description = "刷新token")
+    @PostMapping("/refreshToken")
+    public RestResponse<LoginUserInfoVO> refreshToken(HttpServletRequest request) {
+        return RestResponse.success(tokenService.refreshToken(request));
+    }
+
+    @Log
+    @Operation(description = "注销")
+    @PostMapping("/logout")
+    public RestResponse<?> logout() {
+        return RestResponse.success(tokenService.logout());
+    }
+
+    @Log
+    @Operation(description = "踢人下线")
+    @PostMapping("/kickOut")
+    public RestResponse<?> kickOut() {
+        return RestResponse.success(tokenService.kickOut());
+    }
 
 }

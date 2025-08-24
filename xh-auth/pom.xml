@@ -111,11 +111,11 @@
             <version>${revision}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.xh</groupId>
-            <artifactId>xh-common-mybatis</artifactId>
-            <version>${revision}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.xh</groupId>-->
+<!--            <artifactId>xh-common-mybatis</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--        </dependency>-->
         <!--      ip属地离线查询      -->
         <dependency>
             <groupId>org.lionsoul</groupId>

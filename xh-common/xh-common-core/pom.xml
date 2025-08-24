@@ -76,6 +76,12 @@
             <artifactId>fastjson2</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.xh</groupId>
+            <artifactId>xh-common-api</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
     </dependencies>
 
 
