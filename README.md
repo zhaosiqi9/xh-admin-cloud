@@ -24,6 +24,8 @@ rocketmq (todo)
 1. springboot -> springcloud Alibaba
 2. DDD模式开发
 3. 代码集成nacos 作为配置中心
+4. jdbc -> mybatis plus join
+5. sa-token -> sa-token-jwt
 
 ## ⚡ 原项目介绍
 
@@ -37,3 +39,16 @@ XHan Admin（晓寒开源管理系统）是一个开源免费（前后端分离�
 gitee 码云代码仓库<br>
 前端代码库: [xh-admin-frontend](https://gitee.com/sun-xiaohan/xh-admin-frontend)<br>
 后端代码库: [xh-admin-backend](https://gitee.com/sun-xiaohan/xh-admin-backend)
+
+
+> 开始文档：[https://www.xhansky.cn/guide/install/)
+
+### 前端启动说明
+1. 安装 pnpm
+`npm install pnpm -g`
+2. 命令行进入项目目录
+`cd xh-admin-frontend`
+3. 安装依赖
+`pnpm i`
+4. 前端开发环境启动
+`pnpm dev`
