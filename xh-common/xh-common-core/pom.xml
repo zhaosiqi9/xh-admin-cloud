@@ -78,7 +78,7 @@
 
         <dependency>
             <groupId>com.xh</groupId>
-            <artifactId>xh-common-api</artifactId>
+            <artifactId>xh-common-core-api</artifactId>
             <version>${revision}</version>
         </dependency>
 

@@ -8,7 +8,7 @@
         <artifactId>xh-common</artifactId>
         <version>${revision}</version>
     </parent>
-    <artifactId>xh-common-api</artifactId>
+    <artifactId>xh-common-core-api</artifactId>
     <packaging>jar</packaging>
 
     <name>xh-common-core-api</name>

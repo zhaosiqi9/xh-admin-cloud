@@ -2,7 +2,7 @@ package com.xh.jwt.service;
 
 import cn.dev33.satoken.stp.StpInterface;
 import cn.hutool.extra.spring.SpringUtil;
-import com.xh.common.api.contract.RemotePermissionContract;
+import com.xh.common.core.api.contract.RemotePermissionContract;
 
 import java.util.List;
 

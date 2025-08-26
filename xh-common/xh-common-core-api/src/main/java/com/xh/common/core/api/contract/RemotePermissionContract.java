@@ -1,4 +1,4 @@
-package com.xh.common.api.contract;
+package com.xh.common.core.api.contract;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;

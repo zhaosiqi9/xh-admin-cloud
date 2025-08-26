@@ -15,7 +15,7 @@
         <module>xh-common-jwt</module>
         <module>xh-common-security</module>
         <module>xh-common-redis</module>
-        <module>xh-common-api</module>
+        <module>xh-common-core-api</module>
     </modules>
 
     <artifactId>xh-common</artifactId>

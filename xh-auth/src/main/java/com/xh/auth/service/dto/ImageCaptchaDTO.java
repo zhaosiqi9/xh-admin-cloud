@@ -12,5 +12,8 @@ import lombok.Data;
 @Schema(description = "图片验证码")
 public class ImageCaptchaDTO {
 
+    private String captchaKey;
 
+    private String imageBase64;
+    
 }

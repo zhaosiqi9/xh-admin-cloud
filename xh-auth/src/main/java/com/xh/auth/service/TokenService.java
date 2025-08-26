@@ -7,6 +7,7 @@ import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.stp.parameter.SaLoginParameter;
 import cn.hutool.captcha.AbstractCaptcha;
+import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
@@ -15,6 +16,8 @@ import com.xh.auth.constant.LoginUtil;
 import com.xh.auth.mapstruct.Entity2DTOMapper;
 import com.xh.auth.service.dto.*;
 import com.xh.auth.util.RequestUtil;
+import com.xh.jwt.constant.JwtConstant;
+import com.xh.common.core.constants.SystemRedisConstant;
 import com.xh.common.core.web.MyException;
 import com.xh.system.api.constant.sysuser.SysUserConstant;
 import com.xh.system.api.contract.RemoteSysMenuContract;
@@ -38,6 +41,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author : gr
@@ -48,7 +52,6 @@ import java.util.Objects;
 @Slf4j
 public class TokenService {
 
-    private static final String ROLE_PERMISSIONS_PREFIX = "role:permissions:";
     @Resource
     private RemoteSysUserContract remoteUserContract;
 
@@ -59,8 +62,18 @@ public class TokenService {
     @Resource
     private RemoteSysMenuContract remoteMenuContract;
 
+    /**
+     * 生成图形验证码
+     */
     public ImageCaptchaDTO getImageCaptcha(String captchaKey) {
-        return null;
+        //定义图形验证码的长、宽、验证码字符数、干扰元素个数
+        AbstractCaptcha captcha = CaptchaUtil.createLineCaptcha(100, 30, 4, 10);
+        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+        ImageCaptchaDTO imageCaptcha = new ImageCaptchaDTO();
+        imageCaptcha.setCaptchaKey(captchaKey);
+        imageCaptcha.setImageBase64(captcha.getImageBase64Data());
+        valueOperations.set(SystemRedisConstant.CAPTCHA_KEY_PREFIX.getValue() + captchaKey, captcha, 2, TimeUnit.MINUTES);
+        return imageCaptcha;
     }
 
     public LoginUserInfoVO login(LoginRequest request) {
@@ -152,7 +165,7 @@ public class TokenService {
             SysLoginUserInfoDTO loginUserInfoDTO = new SysLoginUserInfoDTO();
             loginUserInfoDTO.setUser(sysUserDTO);
             loginUserInfoDTO.setRoles(entity2DTOMapper.toSysOrgRoleDTOList(roles));
-            session.set(LoginUtil.SYS_USER_KEY, loginUserInfoDTO);
+            session.set(JwtConstant.SYS_USER_KEY, loginUserInfoDTO);
 
             UserAgent ua = UserAgentUtil.parse(request.getUserAgent());
             OnlineUserDTO onlineUserDTO = new OnlineUserDTO();
@@ -182,7 +195,7 @@ public class TokenService {
             onlineUserDTO.setOrgName(orgRole.getOrgName());
             onlineUserDTO.setRoleName(orgRole.getRoleName());
             onlineUserDTO.setLoginTime(LocalDateTime.now());
-            StpUtil.getTokenSession().set(LoginUtil.SYS_USER_KEY, onlineUserDTO);
+            StpUtil.getTokenSession().set(JwtConstant.SYS_USER_KEY, onlineUserDTO);
             return getCurrentLoginUserVO(true);
         }
         return getCurrentLoginUserVO(false);
@@ -199,12 +212,12 @@ public class TokenService {
             SaSession tokenSession = StpUtil.getTokenSession();
             LoginUserInfoVO loginUserInfo = null;
             if (session != null && tokenSession != null) {
-                SysLoginUserInfoDTO loginUserInfoDTO = session.getModel(LoginUtil.SYS_USER_KEY, SysLoginUserInfoDTO.class);
+                SysLoginUserInfoDTO loginUserInfoDTO = session.getModel(JwtConstant.SYS_USER_KEY, SysLoginUserInfoDTO.class);
                 loginUserInfo = new LoginUserInfoVO();
                 loginUserInfo.setTokenName(StpUtil.getTokenName());
                 loginUserInfo.setTokenValue(StpUtil.getTokenValue());
                 loginUserInfo.setUser(loginUserInfoDTO.getUser());
-                OnlineUserDTO onlineUser = tokenSession.getModel(LoginUtil.SYS_USER_KEY, OnlineUserDTO.class);
+                OnlineUserDTO onlineUser = tokenSession.getModel(JwtConstant.SYS_USER_KEY, OnlineUserDTO.class);
                 List<SysOrgRoleDTO> roles = loginUserInfoDTO.getRoles();
                 for (SysOrgRoleDTO role : roles) {
                     role.setActive(Objects.equals(onlineUser.getRoleId(), role.getSysRoleId()) && Objects.equals(onlineUser.getOrgId(), role.getSysOrgId()));
@@ -221,7 +234,7 @@ public class TokenService {
     private List<SysMenuDTO> getRolePermissions(Long roleId, Boolean refresh) {
         ValueOperations<String, Object> operations = redisTemplate.opsForValue();
         if (refresh == Boolean.FALSE) {
-            RolePermissionsDTO rolePermissions = (RolePermissionsDTO) operations.get(ROLE_PERMISSIONS_PREFIX + roleId);
+            RolePermissionsDTO rolePermissions = (RolePermissionsDTO) operations.get(SystemRedisConstant.ROLE_PERMISSIONS_PREFIX.getValue() + roleId);
             if (rolePermissions != null) {
                 return rolePermissions.getPermissions();
             }

@@ -9,16 +9,12 @@ import com.xh.auth.service.dto.LoginUserInfoVO;
 import com.xh.common.core.annotation.Log;
 import com.xh.common.core.web.RestResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * @author : gr
- * @version 1.0.0
- * @since : 2025/8/22 09:42
- */
 @Tag(name = "用户管理")
 @RestController
 @RequestMapping("/api/system/user")
@@ -31,7 +27,7 @@ public class LoginController {
     @SaIgnore
     @Operation(description = "获取图形验证码")
     @GetMapping("/captcha")
-    public RestResponse<ImageCaptchaDTO> getImageCaptcha(String captchaKey) {
+    public RestResponse<ImageCaptchaDTO> getImageCaptcha(@Parameter(description = "验证码key") String captchaKey) {
         return RestResponse.success(tokenService.getImageCaptcha(captchaKey));
     }
 
