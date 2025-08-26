@@ -188,7 +188,7 @@ public class TokenService {
             onlineUserDTO.setLocale(request.getLocale());
             onlineUserDTO.setLocaleLabel(request.getLocaleLabel());
 
-            SysOrgRoleDTO orgRole = entity2DTOMapper.toSysOrgRoleDTO(roles.get(0)); //默认当前使用角色为第一个角色
+            SysOrgRoleDTO orgRole = entity2DTOMapper.toSysOrgRoleDTO(roles.getFirst()); //默认当前使用角色为第一个角色
             onlineUserDTO.setOrgId(orgRole.getSysOrgId());
             onlineUserDTO.setRoleId(orgRole.getSysRoleId());
             onlineUserDTO.setOrgName(orgRole.getOrgName());
