@@ -1,0 +1,35 @@
+# 安全配置
+security:
+  # 不校验白名单
+  ignore:
+    whites:
+      - /api/system/user/captcha
+      - /api/system/user/login
+      - /api/system/user/logout
+
+spring:
+  cloud:
+    # 网关配置
+    gateway:
+      # 打印请求日志(自定义)
+      requestLog: true
+      discovery:
+        locator:
+          lowerCaseServiceId: true
+          enabled: true
+      routes:
+        # 认证中心
+        - id: xh-auth
+          uri: lb://xh-auth
+          predicates:
+            - Path=/api/system/user/captcha,/api/system/user/login,/api/system/user/logout
+#            另一种表达方式
+#            - Path=/api/system/user/{path:(captcha|login|logout)}
+        # 系统模块
+        - id: ruoyi-system
+          uri: lb://xh-system
+          predicates:
+            - Path=/api/system/**
+#          filters:
+#            - StripPrefix=1
+      
