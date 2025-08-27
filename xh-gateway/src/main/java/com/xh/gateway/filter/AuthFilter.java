@@ -7,12 +7,14 @@ import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.util.SaResult;
 import com.xh.gateway.config.IgnoreWhiteProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 
 @Configuration
+@Slf4j
 public class AuthFilter {
     
     
@@ -53,6 +55,7 @@ public class AuthFilter {
                         // }
                     });
             }).setError(e -> {
+                log.error("认证失败", e.getMessage(), e);
                 if (e instanceof NotLoginException) {
                     return SaResult.error(e.getMessage()).setCode(HttpStatus.UNAUTHORIZED.value());
                 }

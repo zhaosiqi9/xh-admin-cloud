@@ -250,6 +250,7 @@ public class TokenService {
         log.info(tokenValue);
         log.info(tokenInfo.toString());
         log.info(StpUtil.getLoginId().toString());
+        StpUtil.checkLogin();
         return null;
     }
 

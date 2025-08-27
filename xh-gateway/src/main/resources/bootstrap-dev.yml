@@ -22,7 +22,7 @@ spring:
         - id: xh-auth
           uri: lb://xh-auth
           predicates:
-            - Path=/api/system/user/captcha,/api/system/user/login,/api/system/user/logout
+            - Path=/api/system/user/captcha,/api/system/user/login,/api/system/user/logout,/api/system/user/lickOut,/api/system/user/refreshToken
 #            另一种表达方式
 #            - Path=/api/system/user/{path:(captcha|login|logout)}
         # 系统模块
