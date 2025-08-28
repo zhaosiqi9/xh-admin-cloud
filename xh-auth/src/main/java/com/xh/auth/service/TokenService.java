@@ -18,6 +18,7 @@ import com.xh.auth.util.RequestUtil;
 import com.xh.common.core.constants.SystemRedisConstant;
 import com.xh.common.core.web.MyException;
 import com.xh.jwt.constant.JwtConstant;
+import com.xh.redis.service.RedisService;
 import com.xh.system.api.constant.sysuser.SysUserConstant;
 import com.xh.system.api.contract.RemoteSysMenuContract;
 import com.xh.system.api.contract.RemoteSysUserContract;
@@ -55,9 +56,14 @@ public class TokenService {
     private RemoteSysUserContract remoteUserContract;
 
     @Resource
+    private RedisService redisService;
+
+    @Resource
     private RedisTemplate redisTemplate;
+
     @Autowired
     private Entity2DTOMapper entity2DTOMapper;
+
     @Resource
     private RemoteSysMenuContract remoteMenuContract;
 
@@ -238,9 +244,15 @@ public class TokenService {
                 return rolePermissions.getPermissions();
             }
         }
+//                查询角色拥有的所有菜单权限
         List<UserPermissionResponse> permissions = remoteMenuContract.rolePermissionList(roleId);
-        List<SysMenuDTO> list = Entity2DTOMapper.INSTANCE.permissionList2SysMenuDTOList(permissions);
-        return list;
+        List<SysMenuDTO> menus = Entity2DTOMapper.INSTANCE.permissionList2SysMenuDTOList(permissions);
+        RolePermissionsDTO rolePermissions = new RolePermissionsDTO();
+        rolePermissions.setRoleId(roleId);
+        rolePermissions.setCreateTime(LocalDateTime.now());
+
+        redisService.setCacheObject(SystemRedisConstant.ROLE_PERMISSIONS_PREFIX.getValue() + roleId, rolePermissions);
+        return menus;
     }
 
     public LoginUserInfoVO refreshToken(HttpServletRequest request) {

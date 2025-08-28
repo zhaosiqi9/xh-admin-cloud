@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 public class RolePermissionsDTO implements Serializable {
     @Schema(title = "角色ID")
-    protected Integer roleId;
+    protected Long roleId;
     @Schema(title = "创建时间")
     private LocalDateTime createTime;
     @Schema(title = "修改时间")
