@@ -4,6 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xh.common.core.utils.AssertUtil;
+import com.xh.common.core.web.MyException;
 import com.xh.system.domain.aggregate.SysUserAggregate;
 import com.xh.system.domain.constant.sysuser.SysUserConstant;
 import com.xh.system.domain.entity.SysOrg;
@@ -23,6 +25,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.util.List;
 import java.util.Objects;
@@ -150,6 +153,17 @@ public abstract class AbstractSysUserRepository {
 
     protected Long saveSysUser(SysUser sysUser) {
         return Optional.of(sysUser).map(t -> {
+            if (Optional.ofNullable(findByLoginAccount(sysUser.getCode(), sysUser.getEnabled())).isPresent()) {
+                throw new MyException("用户账号%s已存在！".formatted(sysUser.getCode()));
+            }
+            AssertUtil.notBlank(sysUser.getCode(), "用户账号不能为空！");
+            AssertUtil.notBlank(sysUser.getPassword(), "用户密码不能为空！");
+            AssertUtil.notBlank(sysUser.getName(), "用户名称不能为空！");
+
+            // 密码加密
+            String pwHash = BCrypt.hashpw(sysUser.getPassword(), BCrypt.gensalt());
+            sysUser.setPassword(pwHash);
+
             SysUserPO record = sysUserEntity2POMapper.toRecord(t);
             sysUserPOService.save(record);
             record.setId(record.getId());
@@ -176,7 +190,7 @@ public abstract class AbstractSysUserRepository {
         lambdaQueryWrapper.like(StrUtil.isNotBlank(name), SysUserPO::getName, name);
         lambdaQueryWrapper.like(StrUtil.isNotBlank(code), SysUserPO::getCode, code);
         return sysUserPOService.page(page, lambdaQueryWrapper);
-                
-        
+
+
     }
 }

@@ -4,15 +4,13 @@ import com.xh.common.core.annotation.Log;
 import com.xh.common.core.web.PageResult;
 import com.xh.common.core.web.RestResponse;
 import com.xh.system.api.contract.RemoteSysUserContract;
-import com.xh.system.api.request.GetUserInfoRequest;
-import com.xh.system.api.request.SwitchUserRoleRequest;
-import com.xh.system.api.request.SystemUserQueryRequest;
-import com.xh.system.api.request.UpdateUserInfoRequest;
+import com.xh.system.api.request.*;
 import com.xh.system.api.response.GetUserInfoResponse;
 import com.xh.system.api.response.SwitchUserRoleResponse;
 import com.xh.system.api.response.SystemUserQueryResponse;
 import com.xh.system.application.mapstract.SysUserRequest2CommandMapper;
 import com.xh.system.application.service.SysUserService;
+import com.xh.system.domain.entity.SysUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -30,9 +28,10 @@ import java.util.Optional;
 public class SysUserController implements RemoteSysUserContract {
     @Resource
     private SysUserService sysUserService;
+
     @Autowired
     private SysUserRequest2CommandMapper sysUserRequest2CommandMapper;
-    
+
     @Log
     @Operation(description = "获取用户信息")
     @Override
@@ -70,11 +69,20 @@ public class SysUserController implements RemoteSysUserContract {
     public RestResponse<SwitchUserRoleResponse> switchUserRole(@RequestBody SwitchUserRoleRequest request) {
         return RestResponse.success(sysUserService.switchUserRole(request));
     }
-    
+
     @Log
     @Operation(description = "查询用户")
     @PostMapping("/query")
-    public RestResponse<PageResult<SystemUserQueryResponse>> query(@RequestBody SystemUserQueryRequest request){
+    public RestResponse<PageResult<SystemUserQueryResponse>> query(@RequestBody SystemUserQueryRequest request) {
         return RestResponse.success(sysUserService.query(request));
+    }
+
+    @Log
+    @Operation(description = "用户保存")
+    @PostMapping("/save")
+    public RestResponse<SysUser> save(@RequestBody SaveSysUserRequest request) {
+        return RestResponse.success(Optional.ofNullable(request)
+                .map(t -> sysUserRequest2CommandMapper.saveSysUserRequest2Command(t))
+                .map(t -> sysUserService.save(t)).orElse(null));
     }
 }

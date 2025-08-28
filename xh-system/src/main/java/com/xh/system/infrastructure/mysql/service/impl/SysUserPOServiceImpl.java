@@ -30,6 +30,8 @@ public class SysUserPOServiceImpl extends MPJBaseServiceImpl<SysUserPOMapper, Sy
         return Optional.ofNullable(list).map(t -> {
             if (t.size() > 1) {
                 throw new RuntimeException("登录账号重复");
+            } else if (t.isEmpty()) {
+                return null;
             }
             return list.getFirst();
         }).orElse(null);

@@ -3,6 +3,7 @@ package com.xh.system.application.service;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xh.common.core.web.PageResult;
+import com.xh.system.api.request.SaveSysUserRequest;
 import com.xh.system.api.request.SwitchUserRoleRequest;
 import com.xh.system.api.request.SystemUserQueryRequest;
 import com.xh.system.api.response.GetUserInfoResponse;
@@ -13,6 +14,7 @@ import com.xh.system.application.command.sysuser.UpdateUserInfoCommand;
 import com.xh.system.application.mapstract.SysUserEntity2ResponseMapper;
 import com.xh.system.domain.aggregate.SysUserAggregate;
 import com.xh.system.domain.constant.sysuser.SysUserConstant;
+import com.xh.system.domain.entity.SysUser;
 import com.xh.system.domain.service.SysUserDomainService;
 import com.xh.system.infrastructure.mysql.po.SysUserPO;
 import jakarta.annotation.Resource;
@@ -95,4 +97,7 @@ public class SysUserService {
         return SysUserEntity2ResponseMapper.INSTANCE.toSystemUserQueryResponseList(userPage);
     }
 
+    public SysUser save(SysUser sysUser) {
+        return sysUserDomainService.saveSysUser(sysUser);
+    }
 }

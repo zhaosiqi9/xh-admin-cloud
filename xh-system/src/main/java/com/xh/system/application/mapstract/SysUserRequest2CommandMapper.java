@@ -1,9 +1,11 @@
 package com.xh.system.application.mapstract;
 
 import com.xh.system.api.request.GetUserInfoRequest;
+import com.xh.system.api.request.SaveSysUserRequest;
 import com.xh.system.api.request.UpdateUserInfoRequest;
 import com.xh.system.application.command.sysuser.GetUserInfoCommand;
 import com.xh.system.application.command.sysuser.UpdateUserInfoCommand;
+import com.xh.system.domain.entity.SysUser;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -23,4 +25,6 @@ public interface SysUserRequest2CommandMapper {
 
     @Mapping(target = "type", source = "type")
     GetUserInfoCommand getUserInfoRequest2Command(GetUserInfoRequest request);
+
+    SysUser saveSysUserRequest2Command(SaveSysUserRequest request);
 }

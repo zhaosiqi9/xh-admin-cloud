@@ -1,5 +1,6 @@
 package com.xh.system.domain.service;
 
+import cn.hutool.core.util.IdUtil;
 import com.xh.system.domain.aggregate.SysUserAggregate;
 import com.xh.system.domain.constant.sysuser.SysUserConstant;
 import com.xh.system.domain.entity.SysUser;
@@ -58,5 +59,16 @@ public class SysUserDomainService {
         newRoot.setRootId(sysUser.getId());
         newRoot.setSysUser(sysUser);
         getRepository(type).update(newRoot);
+    }
+
+    public SysUser saveSysUser(SysUser sysUser) {
+        return Optional.ofNullable(sysUser).map(t -> {
+            SysUserAggregate root = new SysUserAggregate();
+            sysUser.setId(IdUtil.getSnowflakeNextId());
+            root.setSysUser(sysUser);
+            root.setRootId(sysUser.getId());
+            getRepository(SysUserConstant.SysUserRootType.DEFAULT).save(root);
+            return sysUser;
+        }).orElse(null);
     }
 }
