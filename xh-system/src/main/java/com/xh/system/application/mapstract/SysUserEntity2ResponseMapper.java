@@ -1,13 +1,18 @@
 package com.xh.system.application.mapstract;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xh.common.core.web.PageResult;
 import com.xh.system.api.response.*;
 import com.xh.system.domain.aggregate.SysUserAggregate;
 import com.xh.system.domain.entity.SysOrg;
 import com.xh.system.domain.entity.SysRole;
 import com.xh.system.domain.entity.SysUser;
 import com.xh.system.domain.entity.SysUserJob;
+import com.xh.system.infrastructure.mysql.po.SysUserPO;
 import lombok.val;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
@@ -39,4 +44,10 @@ public interface SysUserEntity2ResponseMapper {
 
     List<GetUserInfoResponseRole> toGetUserInfoResponseRoleList(List<SysRole> sysRoleList);
 
+    @Mappings({
+            @Mapping(source = "current", target = "currentPage"),
+            @Mapping(source = "size", target = "pageSize"),
+            @Mapping(source = "records", target = "list")
+    })
+    PageResult<SystemUserQueryResponse> toSystemUserQueryResponseList(Page<SysUserPO> userPage);
 }

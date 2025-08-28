@@ -1,7 +1,9 @@
 package com.xh.system.domain.repository.sysuser;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xh.system.domain.aggregate.SysUserAggregate;
 import com.xh.system.domain.constant.sysuser.SysUserConstant;
 import com.xh.system.domain.entity.SysOrg;
@@ -166,5 +168,15 @@ public abstract class AbstractSysUserRepository {
 
     private boolean deleteSysUser(Long rootId) {
         return Optional.ofNullable(rootId).map(t -> sysUserPOService.removeById(t)).orElse(false);
+    }
+
+    public Page<SysUserPO> query(String name, String code, long current, long size) {
+        Page<SysUserPO> page = new Page<>(current, size);
+        LambdaQueryWrapper<SysUserPO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.like(StrUtil.isNotBlank(name), SysUserPO::getName, name);
+        lambdaQueryWrapper.like(StrUtil.isNotBlank(code), SysUserPO::getCode, code);
+        return sysUserPOService.page(page, lambdaQueryWrapper);
+                
+        
     }
 }

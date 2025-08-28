@@ -1,15 +1,17 @@
 package com.xh.system.interfaces;
 
 import com.xh.common.core.annotation.Log;
+import com.xh.common.core.web.PageResult;
 import com.xh.common.core.web.RestResponse;
 import com.xh.system.api.contract.RemoteSysUserContract;
 import com.xh.system.api.request.GetUserInfoRequest;
 import com.xh.system.api.request.SwitchUserRoleRequest;
+import com.xh.system.api.request.SystemUserQueryRequest;
 import com.xh.system.api.request.UpdateUserInfoRequest;
 import com.xh.system.api.response.GetUserInfoResponse;
 import com.xh.system.api.response.SwitchUserRoleResponse;
+import com.xh.system.api.response.SystemUserQueryResponse;
 import com.xh.system.application.mapstract.SysUserRequest2CommandMapper;
-import com.xh.system.application.service.SysLoginService;
 import com.xh.system.application.service.SysUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,9 +28,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/system/user")
 public class SysUserController implements RemoteSysUserContract {
-
-    @Resource
-    private SysLoginService sysLoginService;
     @Resource
     private SysUserService sysUserService;
     @Autowired
@@ -69,6 +68,13 @@ public class SysUserController implements RemoteSysUserContract {
     @Operation(description = "角色切换")
     @PostMapping("/switchUserRole")
     public RestResponse<SwitchUserRoleResponse> switchUserRole(@RequestBody SwitchUserRoleRequest request) {
-        return RestResponse.success(sysLoginService.switchUserRole(request));
+        return RestResponse.success(sysUserService.switchUserRole(request));
+    }
+    
+    @Log
+    @Operation(description = "查询用户")
+    @PostMapping("/query")
+    public RestResponse<PageResult<SystemUserQueryResponse>> query(@RequestBody SystemUserQueryRequest request){
+        return RestResponse.success(sysUserService.query(request));
     }
 }
