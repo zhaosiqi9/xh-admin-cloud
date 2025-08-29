@@ -18,8 +18,11 @@ mybatis-plus:
       logic-delete-field: deleted
       logic-delete-value: true
       logic-not-delete-value: false
+    banner: false
 
 logging:
   level:
     root: info
     com.xh: debug
+mybatis-plus-join:
+  banner: false

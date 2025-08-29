@@ -258,9 +258,8 @@ public class TokenService {
     public LoginUserInfoVO refreshToken(HttpServletRequest request) {
 
         String tokenValue = StpUtil.getTokenValue();
-        SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
         log.info(tokenValue);
-        log.info(tokenInfo.toString());
+        log.info(String.valueOf(StpUtil.isLogin()));
         log.info(StpUtil.getLoginId().toString());
         StpUtil.checkLogin();
         return null;

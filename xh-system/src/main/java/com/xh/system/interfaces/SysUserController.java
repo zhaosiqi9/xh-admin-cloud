@@ -1,5 +1,8 @@
 package com.xh.system.interfaces;
 
+import cn.dev33.satoken.context.mock.SaTokenContextMockUtil;
+import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.util.SaResult;
 import com.xh.common.core.annotation.Log;
 import com.xh.common.core.web.PageResult;
 import com.xh.common.core.web.RestResponse;
@@ -85,4 +88,17 @@ public class SysUserController implements RemoteSysUserContract {
                 .map(t -> sysUserRequest2CommandMapper.saveSysUserRequest2Command(t))
                 .map(t -> sysUserService.save(t)).orElse(null));
     }
+
+    @PostMapping("/test")
+    public SaResult isLogin2() {
+//    System.out.println("是否登录：" + StpUtil.isLogin());
+    String tokenValue = StpUtil.getTokenValue();
+    new Thread(() -> {
+        SaTokenContextMockUtil.setMockContext(()->{
+            StpUtil.setTokenValueToStorage(tokenValue);
+            System.out.println("是否登录：" + StpUtil.isLogin());
+        });
+    }).start();
+    return SaResult.data(StpUtil.getTokenValue());
+}
 }
