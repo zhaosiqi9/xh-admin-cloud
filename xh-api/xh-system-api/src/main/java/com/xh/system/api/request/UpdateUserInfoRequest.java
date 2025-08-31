@@ -1,6 +1,6 @@
 package com.xh.system.api.request;
 
-import com.xh.system.api.constant.sysuser.SysUserConstant;
+import com.xh.common.base.constant.SysUserConstant;
 import com.xh.system.api.response.GetUserInfoResponseUser;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -19,7 +19,7 @@ public class UpdateUserInfoRequest {
     protected Long id;
 
     @Schema(title = "获取用户信息类型")
-    SysUserConstant.GetUpdateUserInfoType type;
+    SysUserConstant.SysUserRootType type;
 
     @Schema(title = "用户代码")
     private String code;
@@ -75,7 +75,7 @@ public class UpdateUserInfoRequest {
     @Schema(title = "是否已删除")
     private Boolean deleted;
 
-    public UpdateUserInfoRequest initFromResponse(GetUserInfoResponseUser queryResponse, SysUserConstant.GetUpdateUserInfoType type) {
+    public UpdateUserInfoRequest initFromResponse(GetUserInfoResponseUser queryResponse, SysUserConstant.SysUserRootType type) {
         UpdateUserInfoRequest t = new UpdateUserInfoRequest();
         t.id = queryResponse.getId();
         t.code = queryResponse.getCode();

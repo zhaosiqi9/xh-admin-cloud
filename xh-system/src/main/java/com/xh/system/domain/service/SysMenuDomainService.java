@@ -1,7 +1,7 @@
 package com.xh.system.domain.service;
 
 import com.xh.system.domain.aggregate.SysMenuAggregate;
-import com.xh.system.domain.constant.sysmenu.SysMenuConstant;
+import com.xh.common.base.constant.SysMenuConstant;
 import com.xh.system.domain.repository.sysmenu.AbstractSysMenuRepository;
 import org.springframework.stereotype.Service;
 

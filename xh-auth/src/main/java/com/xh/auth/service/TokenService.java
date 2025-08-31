@@ -19,7 +19,7 @@ import com.xh.common.base.exception.MyException;
 import com.xh.jwt.constant.JwtConstant;
 import com.xh.jwt.dto.*;
 import com.xh.redis.service.RedisService;
-import com.xh.system.api.constant.sysuser.SysUserConstant;
+import com.xh.common.base.constant.SysUserConstant;
 import com.xh.system.api.contract.RemoteSysMenuContract;
 import com.xh.system.api.contract.RemoteSysUserContract;
 import com.xh.system.api.request.GetUserInfoRequest;
@@ -90,7 +90,7 @@ public class TokenService {
         val captchaCode = request.getCaptchaCode();
         val password = request.getPassword();
         GetUserInfoResponse userInfoResponse =
-                remoteUserContract.getUserInfo(new GetUserInfoRequest().setUserName(username).setEnabled(true).setType(SysUserConstant.GetUpdateUserInfoType.ORG_ROLE));
+                remoteUserContract.getUserInfo(new GetUserInfoRequest().setUserName(username).setEnabled(true).setType(SysUserConstant.SysUserRootType.ORG_ROLE));
         GetUserInfoResponseUser sysUser = userInfoResponse.getUser();
 
         SaSession session = null;
@@ -142,11 +142,11 @@ public class TokenService {
                     }
                     throw new MyException("密码错误！您还可以尝试%s次。".formatted(maxTryNum - failuresNum));
                 } finally {
-                    remoteUserContract.loginFailUpdateInfo(new UpdateUserInfoRequest().initFromResponse(sysUser, SysUserConstant.GetUpdateUserInfoType.DEFAULT));
+                    remoteUserContract.loginFailUpdateInfo(new UpdateUserInfoRequest().initFromResponse(sysUser, SysUserConstant.SysUserRootType.DEFAULT));
                 }
             } else {
                 //失败次数置零
-                remoteUserContract.clearFailuresNum(new UpdateUserInfoRequest().initFromResponse(sysUser, SysUserConstant.GetUpdateUserInfoType.DEFAULT));
+                remoteUserContract.clearFailuresNum(new UpdateUserInfoRequest().initFromResponse(sysUser, SysUserConstant.SysUserRootType.DEFAULT));
             }
 
             //获取用户岗位角色

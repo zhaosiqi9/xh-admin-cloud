@@ -1,6 +1,6 @@
 package com.xh.system.api.response;
 
-import com.xh.system.api.base.ApiBaseEntity;
+import com.xh.common.base.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "切换用户角色返回角色")
-public class SwitchUserRoleResponseRole extends ApiBaseEntity {
+public class SwitchUserRoleResponseRole extends BaseEntity {
 
     @Schema(title = "数据类型", allowableValues = {"1", "2"}, description = "1：用户，2：用户组")
     private Integer type;

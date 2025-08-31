@@ -1,4 +1,4 @@
-package com.xh.system.domain.constant.sysmenu;
+package com.xh.common.base.constant;
 
 import lombok.Data;
 import lombok.Getter;

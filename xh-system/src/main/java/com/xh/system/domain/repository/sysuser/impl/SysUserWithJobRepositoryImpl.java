@@ -1,8 +1,8 @@
 package com.xh.system.domain.repository.sysuser.impl;
 
+import com.xh.common.base.constant.SysUserConstant;
 import com.xh.common.core.entity.BaseEntity;
 import com.xh.system.domain.aggregate.SysUserAggregate;
-import com.xh.system.domain.constant.sysuser.SysUserConstant;
 import com.xh.system.domain.entity.SysOrg;
 import com.xh.system.domain.entity.SysRole;
 import com.xh.system.domain.entity.SysUser;

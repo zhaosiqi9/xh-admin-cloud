@@ -1,6 +1,6 @@
 package com.xh.system.api.request;
 
-import com.xh.system.api.constant.sysuser.SysUserConstant;
+import com.xh.common.base.constant.SysUserConstant;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -25,5 +25,5 @@ public class GetUserInfoRequest {
     private boolean enabled = true;
 
     @Schema(description = "获取用户信息类型")
-    private SysUserConstant.GetUpdateUserInfoType type;
+    private SysUserConstant.SysUserRootType type;
 }

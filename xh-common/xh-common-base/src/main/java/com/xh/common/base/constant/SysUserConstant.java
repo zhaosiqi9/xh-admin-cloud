@@ -1,16 +1,12 @@
-package com.xh.system.domain.constant.sysuser;
+package com.xh.common.base.constant;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.Getter;
 
-/**
- * @author : gr
- * @version 1.0.0
- * @since : 2025/8/23 09:13
- */
 @Data
+@Schema(title = "用户常量")
 public class SysUserConstant {
-
 
     @Getter
     public enum SysUserRootType {
@@ -28,5 +24,6 @@ public class SysUserConstant {
             this.type = type;
             this.description = description;
         }
+
     }
 }

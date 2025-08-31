@@ -1,6 +1,6 @@
 package com.xh.system.application.command.sysuser;
 
-import com.xh.system.domain.constant.sysuser.SysUserConstant;
+import com.xh.common.base.constant.SysUserConstant;
 import lombok.Data;
 
 /**

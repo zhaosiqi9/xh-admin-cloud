@@ -23,7 +23,7 @@ import com.xh.system.application.mapstract.SysUserEntity2ResponseMapper;
 import com.xh.system.application.service.dto.LoginUserInfoVO;
 import com.xh.system.application.service.sub.ThirdPartyService;
 import com.xh.system.domain.aggregate.SysUserAggregate;
-import com.xh.system.domain.constant.sysuser.SysUserConstant;
+import com.xh.common.base.constant.SysUserConstant;
 import com.xh.system.domain.entity.SysUser;
 import com.xh.system.domain.service.SysUserDomainService;
 import com.xh.system.infrastructure.mysql.po.SysUserPO;

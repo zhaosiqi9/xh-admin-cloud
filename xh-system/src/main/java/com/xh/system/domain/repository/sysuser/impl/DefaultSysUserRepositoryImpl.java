@@ -1,6 +1,6 @@
 package com.xh.system.domain.repository.sysuser.impl;
 
-import com.xh.system.domain.constant.sysuser.SysUserConstant;
+import com.xh.common.base.constant.SysUserConstant;
 import com.xh.system.domain.repository.sysuser.AbstractSysUserRepository;
 import com.xh.system.infrastructure.mysql.service.SysUserPOService;
 import jakarta.annotation.Resource;

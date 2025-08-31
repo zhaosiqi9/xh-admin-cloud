@@ -2,7 +2,7 @@ package com.xh.system.domain.service;
 
 import cn.hutool.core.util.IdUtil;
 import com.xh.system.domain.aggregate.SysUserAggregate;
-import com.xh.system.domain.constant.sysuser.SysUserConstant;
+import com.xh.common.base.constant.SysUserConstant;
 import com.xh.system.domain.entity.SysUser;
 import com.xh.system.domain.repository.sysuser.AbstractSysUserRepository;
 import com.xh.system.domain.repository.sysuser.factory.SysUserRepositoryFactory;

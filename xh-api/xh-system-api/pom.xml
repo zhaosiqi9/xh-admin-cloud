@@ -39,6 +39,12 @@
             <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.xh</groupId>
+            <artifactId>xh-common-base</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
 </project>

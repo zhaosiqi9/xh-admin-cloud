@@ -3,7 +3,7 @@ package com.xh.system.domain.repository.sysmenu;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xh.system.domain.aggregate.SysMenuAggregate;
-import com.xh.system.domain.constant.sysmenu.SysMenuConstant;
+import com.xh.common.base.constant.SysMenuConstant;
 import com.xh.system.domain.entity.SysMenu;
 import com.xh.system.domain.mapstract.sysmenu.SysMenuPO2EntityMapper;
 import com.xh.system.domain.mapstract.sysuser.SysUserPO2EntityMapper;

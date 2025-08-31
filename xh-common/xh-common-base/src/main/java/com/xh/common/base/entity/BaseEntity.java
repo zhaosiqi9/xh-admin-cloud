@@ -1,4 +1,4 @@
-package com.xh.system.api.base;
+package com.xh.common.base.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @Schema(description = "基础实体")
-public class ApiBaseEntity implements Serializable {
+public class BaseEntity implements Serializable {
     @Schema(title = "主键ID")
     protected Long id;
 
