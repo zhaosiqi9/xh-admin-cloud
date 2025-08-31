@@ -17,11 +17,19 @@
 
 
         <!-- Sa-Token 权限认证，在线文档：https://sa-token.cc -->
-        <dependency>
-            <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-spring-boot3-starter</artifactId>
+        <!-- sa-token-jakarta-servlet -->
+		<dependency>
+			<groupId>cn.dev33</groupId>
+			<artifactId>sa-token-jakarta-servlet</artifactId>
             <version>1.44.0</version>
-        </dependency>
+		</dependency>
+		
+		<!-- sa-token-spring-boot-autoconfig -->
+		<dependency>
+			<groupId>cn.dev33</groupId>
+			<artifactId>sa-token-spring-boot-autoconfig</artifactId>
+            <version>1.44.0</version>
+		</dependency>
         <!-- Sa-Token 整合 Redis （使用 jackson 序列化方式） -->
         <dependency>
             <groupId>cn.dev33</groupId>
@@ -33,14 +41,7 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
         </dependency>
-
-
-        <dependency>
-            <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-redis-template</artifactId>
-            <version>1.44.0</version>
-        </dependency>
-
+        
         <!--        Sa-Token jwt-->
         <dependency>
             <groupId>cn.dev33</groupId>
