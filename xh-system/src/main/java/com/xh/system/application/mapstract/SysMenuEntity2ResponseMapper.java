@@ -1,5 +1,6 @@
 package com.xh.system.application.mapstract;
 
+import com.xh.jwt.dto.SysMenuDTO;
 import com.xh.system.api.response.UserPermissionResponse;
 import com.xh.system.domain.aggregate.SysMenuAggregate;
 import com.xh.system.domain.entity.SysMenu;
@@ -50,4 +51,6 @@ public interface SysMenuEntity2ResponseMapper {
             return response;
         }).toList();
     }
+
+    List<UserPermissionResponse> rolePermission2UserPermissionResponse(List<SysMenuDTO> permissions);
 }

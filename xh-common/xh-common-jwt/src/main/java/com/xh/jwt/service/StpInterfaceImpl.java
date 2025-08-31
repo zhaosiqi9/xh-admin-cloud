@@ -19,10 +19,8 @@ public class StpInterfaceImpl implements StpInterface {
      */
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
-        //todo 待实现
         RemotePermissionContract permissionService = SpringUtil.getBean(RemotePermissionContract.class);
-//        return permissionService.getMenuPermission((Long) loginId);
-        return List.of();
+        return permissionService.getPermissionList((Long) loginId, loginType);
     }
 
     /**
@@ -33,7 +31,7 @@ public class StpInterfaceImpl implements StpInterface {
      */
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
-        //todo 待实现
-        return List.of();
+        RemotePermissionContract permissionService = SpringUtil.getBean(RemotePermissionContract.class);
+        return permissionService.getRoleList((Long) loginId, loginType);
     }
 }

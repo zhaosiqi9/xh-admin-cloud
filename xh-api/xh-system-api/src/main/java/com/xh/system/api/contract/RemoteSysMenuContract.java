@@ -1,5 +1,7 @@
 package com.xh.system.api.contract;
 
+import com.xh.common.base.web.RestResponse;
+import com.xh.system.api.request.UserPermissionRequest;
 import com.xh.system.api.response.UserPermissionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -22,11 +24,11 @@ public interface RemoteSysMenuContract {
     /**
      * 角色权限列表
      *
-     * @param roleId 角色id
+     * @param request 用户权限请求
      * @return 角色权限列表
      */
     @Operation(description = "角色权限列表")
     @PostMapping("role-permission-list")
-    List<UserPermissionResponse> rolePermissionList(@Parameter(description = "角色id") @RequestBody Long roleId);
+    RestResponse<List<UserPermissionResponse>> rolePermissionList(@Parameter(description = "用户权限请求") @RequestBody UserPermissionRequest request);
 
 }

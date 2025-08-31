@@ -12,18 +12,20 @@ import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.xh.auth.api.request.LoginRequest;
 import com.xh.auth.mapstruct.Entity2DTOMapper;
-import com.xh.auth.service.dto.*;
+import com.xh.auth.service.dto.ImageCaptchaDTO;
+import com.xh.auth.service.dto.LoginUserInfoVO;
 import com.xh.auth.util.RequestUtil;
-import com.xh.common.core.constants.SystemRedisConstant;
+import com.xh.common.base.constant.SysUserConstant;
 import com.xh.common.base.exception.MyException;
+import com.xh.common.core.constants.SystemRedisConstant;
 import com.xh.jwt.constant.JwtConstant;
 import com.xh.jwt.dto.*;
 import com.xh.redis.service.RedisService;
-import com.xh.common.base.constant.SysUserConstant;
 import com.xh.system.api.contract.RemoteSysMenuContract;
 import com.xh.system.api.contract.RemoteSysUserContract;
 import com.xh.system.api.request.GetUserInfoRequest;
 import com.xh.system.api.request.UpdateUserInfoRequest;
+import com.xh.system.api.request.UserPermissionRequest;
 import com.xh.system.api.response.GetUserInfoResponse;
 import com.xh.system.api.response.GetUserInfoResponseJob;
 import com.xh.system.api.response.GetUserInfoResponseUser;
@@ -228,33 +230,17 @@ public class TokenService {
                     role.setActive(Objects.equals(onlineUser.getRoleId(), role.getSysRoleId()) && Objects.equals(onlineUser.getOrgId(), role.getSysOrgId()));
                 }
                 loginUserInfo.setRoles(roles);
-                loginUserInfo.setMenus(getRolePermissions(onlineUser.getRoleId(), refresh));
+                List<UserPermissionResponse> permissionResponseList =
+                        remoteMenuContract.rolePermissionList(UserPermissionRequest.initRequest(onlineUser.getRoleId(), refresh)).getData();
+                List<SysMenuDTO> menus = Entity2DTOMapper.INSTANCE.permissionList2SysMenuDTOList(permissionResponseList);
+                loginUserInfo.setMenus(menus);
             }
             return loginUserInfo;
         } catch (NotLoginException e) {
             return null;
         }
     }
-
-    private List<SysMenuDTO> getRolePermissions(Long roleId, Boolean refresh) {
-        ValueOperations<String, Object> operations = redisTemplate.opsForValue();
-        if (refresh == Boolean.FALSE) {
-            RolePermissionsDTO rolePermissions = (RolePermissionsDTO) operations.get(SystemRedisConstant.ROLE_PERMISSIONS_PREFIX.getValue() + roleId);
-            if (rolePermissions != null) {
-                return rolePermissions.getPermissions();
-            }
-        }
-//                查询角色拥有的所有菜单权限
-        List<UserPermissionResponse> permissions = remoteMenuContract.rolePermissionList(roleId);
-        List<SysMenuDTO> menus = Entity2DTOMapper.INSTANCE.permissionList2SysMenuDTOList(permissions);
-        RolePermissionsDTO rolePermissions = new RolePermissionsDTO();
-        rolePermissions.setRoleId(roleId);
-        rolePermissions.setCreateTime(LocalDateTime.now());
-
-        redisService.setCacheObject(SystemRedisConstant.ROLE_PERMISSIONS_PREFIX.getValue() + roleId, rolePermissions);
-        return menus;
-    }
-
+    
     public LoginUserInfoVO refreshToken(HttpServletRequest request) {
 
         String tokenValue = StpUtil.getTokenValue();
