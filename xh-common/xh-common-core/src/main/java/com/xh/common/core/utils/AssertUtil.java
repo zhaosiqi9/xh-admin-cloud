@@ -1,6 +1,6 @@
 package com.xh.common.core.utils;
 
-import com.xh.common.core.web.MyException;
+import com.xh.common.base.exception.MyException;
 
 public class AssertUtil {
     

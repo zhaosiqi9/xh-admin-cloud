@@ -1,13 +1,17 @@
 package com.xh.system.api.contract;
 
 import com.xh.system.api.request.GetUserInfoRequest;
+import com.xh.system.api.request.RolePermissionsListRequest;
 import com.xh.system.api.request.UpdateUserInfoRequest;
 import com.xh.system.api.response.GetUserInfoResponse;
+import com.xh.system.api.response.RolePermissionsListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
 
 /**
  * @author : gr
@@ -27,6 +31,11 @@ public interface RemoteSysUserContract {
     @Operation(description = "获取用户信息")
     @PostMapping("get-user-info")
     GetUserInfoResponse getUserInfo(@RequestBody GetUserInfoRequest request);
+    
+    @Operation(description = "角色权限列表")
+    @PostMapping("role-permission-list")
+    List<RolePermissionsListResponse> rolePermissionList(@RequestBody RolePermissionsListRequest request);
+    
 
     /**
      * 清空登录失败次数

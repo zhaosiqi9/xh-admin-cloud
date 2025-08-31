@@ -1,9 +1,17 @@
 package com.xh.system.application.service;
 
+import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.session.SaSession;
+import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.xh.common.core.web.PageResult;
-import com.xh.system.api.request.SaveSysUserRequest;
+import com.xh.common.base.exception.MyException;
+import com.xh.common.base.web.PageResult;
+import com.xh.jwt.constant.JwtConstant;
+import com.xh.jwt.dto.OnlineUserDTO;
+import com.xh.jwt.dto.SysLoginUserInfoDTO;
+import com.xh.jwt.dto.SysOrgRoleDTO;
+import com.xh.jwt.util.JwtUtil;
 import com.xh.system.api.request.SwitchUserRoleRequest;
 import com.xh.system.api.request.SystemUserQueryRequest;
 import com.xh.system.api.response.GetUserInfoResponse;
@@ -12,6 +20,8 @@ import com.xh.system.api.response.SystemUserQueryResponse;
 import com.xh.system.application.command.sysuser.GetUserInfoCommand;
 import com.xh.system.application.command.sysuser.UpdateUserInfoCommand;
 import com.xh.system.application.mapstract.SysUserEntity2ResponseMapper;
+import com.xh.system.application.service.dto.LoginUserInfoVO;
+import com.xh.system.application.service.sub.ThirdPartyService;
 import com.xh.system.domain.aggregate.SysUserAggregate;
 import com.xh.system.domain.constant.sysuser.SysUserConstant;
 import com.xh.system.domain.entity.SysUser;
@@ -22,6 +32,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -34,6 +46,9 @@ import java.util.Optional;
 public class SysUserService {
     @Resource
     private SysUserDomainService sysUserDomainService;
+    
+    @Resource
+    private ThirdPartyService thirdPartyService;
 
     public SysUserPO personalCenterSave(SysUserPO sysUserPO) {
         return null;
@@ -70,22 +85,53 @@ public class SysUserService {
     public SwitchUserRoleResponse switchUserRole(SwitchUserRoleRequest request) {
         Long orgId = request.getSysOrgId();
         Long roleId = request.getSysRoleId();
-//        SysLoginUserInfoDTO loginUserInfoDTO = LoginUtil.getSysUserInfo();
-//        List<SysOrgRoleDTO> roles = loginUserInfoDTO.getRoles();
-//        for (SysOrgRoleDTO orgRole : roles) {
-//            //从当前登录用户session中寻找匹配的角色，并设置当前角色，机构，及名称
-//            if (Objects.equals(orgRole.getSysOrgId().toString(), orgId) && Objects.equals(orgRole.getSysRoleId().toString(), roleId)) {
-//                SaSession tokenSession = StpUtil.getTokenSession();
-//                OnlineUserDTO onlineUserDTO = tokenSession.getModel(LoginUtil.SYS_USER_KEY, OnlineUserDTO.class);
-//                onlineUserDTO.setOrgId(orgRole.getSysOrgId());
-//                onlineUserDTO.setOrgName(orgRole.getOrgName());
-//                onlineUserDTO.setRoleId(orgRole.getSysRoleId());
-//                onlineUserDTO.setRoleName(orgRole.getRoleName());
-//                tokenSession.set(LoginUtil.SYS_USER_KEY, onlineUserDTO);
+        SysLoginUserInfoDTO loginUserInfoDTO = JwtUtil.getSysUserInfo();
+        List<SysOrgRoleDTO> roles = Optional.ofNullable(loginUserInfoDTO).orElse(new SysLoginUserInfoDTO()).getRoles();
+        for (SysOrgRoleDTO orgRole : roles) {
+            //从当前登录用户session中寻找匹配的角色，并设置当前角色，机构，及名称
+            if (Objects.equals(orgRole.getSysOrgId(), orgId) && Objects.equals(orgRole.getSysRoleId(), roleId)) {
+                SaSession tokenSession = StpUtil.getTokenSession();
+                OnlineUserDTO onlineUserDTO = tokenSession.getModel(JwtConstant.SYS_USER_KEY, OnlineUserDTO.class);
+                onlineUserDTO.setOrgId(orgRole.getSysOrgId());
+                onlineUserDTO.setOrgName(orgRole.getOrgName());
+                onlineUserDTO.setRoleId(orgRole.getSysRoleId());
+                onlineUserDTO.setRoleName(orgRole.getRoleName());
+                tokenSession.set(JwtConstant.SYS_USER_KEY, onlineUserDTO);
 //                return getCurrentLoginUserVO(true);
+                return null;
+            }
+        }
+        throw new MyException("角色切换异常，请重新登录后操作！");
+    }
+
+    /**
+     * 获取当前token的用户角色信息
+     *
+     * @param refresh 是否刷新缓存
+     */
+    private LoginUserInfoVO getCurrentLoginUserVO(boolean refresh) {
+//         try {
+//            SaSession session = StpUtil.getSession();
+//            SaSession tokenSession = StpUtil.getTokenSession();
+//            LoginUserInfoVO loginUserInfo = null;
+//            if (session != null && tokenSession != null) {
+//                SysLoginUserInfoDTO loginUserInfoDTO = session.getModel(JwtConstant.SYS_USER_KEY, SysLoginUserInfoDTO.class);
+//                loginUserInfo = new LoginUserInfoVO();
+//                loginUserInfo.setTokenName(StpUtil.getTokenName());
+//                loginUserInfo.setTokenValue(StpUtil.getTokenValue());
+//                loginUserInfo.setUser(loginUserInfoDTO.getUser());
+//                OnlineUserDTO onlineUser = tokenSession.getModel(JwtConstant.SYS_USER_KEY, OnlineUserDTO.class);
+//                List<SysOrgRoleDTO> roles = loginUserInfoDTO.getRoles();
+//                for (SysOrgRoleDTO role : roles) {
+//                    role.setActive(Objects.equals(onlineUser.getRoleId(), role.getSysRoleId()) && Objects.equals(onlineUser.getOrgId(), role.getSysOrgId()));
+//                }
+//                loginUserInfo.setRoles(roles);
+//                loginUserInfo.setMenus(getRolePermissions(onlineUser.getRoleId(), refresh));
 //            }
+//            return loginUserInfo;
+//        } catch (NotLoginException e) {
+//            return null;
 //        }
-//        throw new MyException("角色切换异常，请重新登录后操作！");
         return null;
     }
 

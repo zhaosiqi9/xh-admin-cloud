@@ -9,15 +9,14 @@
 
     <artifactId>xh-common-security</artifactId>
     <packaging>jar</packaging>
-
-    <name>xh-common-security</name>
-    <url>http://maven.apache.org</url>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    
 
     <dependencies>
 
+        <dependency>
+            <groupId>com.xh</groupId>
+            <artifactId>xh-common-jwt</artifactId>
+            <version>${revision}</version>
+        </dependency>
     </dependencies>
 </project>

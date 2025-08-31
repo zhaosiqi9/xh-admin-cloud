@@ -1,7 +1,7 @@
 package com.xh.system.application.mapstract;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.xh.common.core.web.PageResult;
+import com.xh.common.base.web.PageResult;
 import com.xh.system.api.response.*;
 import com.xh.system.domain.aggregate.SysUserAggregate;
 import com.xh.system.domain.entity.SysOrg;

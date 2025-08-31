@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xh.common.core.utils.AssertUtil;
-import com.xh.common.core.web.MyException;
+import com.xh.common.base.exception.MyException;
 import com.xh.system.domain.aggregate.SysUserAggregate;
 import com.xh.system.domain.constant.sysuser.SysUserConstant;
 import com.xh.system.domain.entity.SysOrg;

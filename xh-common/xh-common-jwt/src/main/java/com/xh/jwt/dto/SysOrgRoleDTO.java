@@ -1,8 +1,11 @@
-package com.xh.auth.service.dto;
+package com.xh.jwt.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 岗位信息DTO
@@ -10,9 +13,11 @@ import lombok.EqualsAndHashCode;
  * @author sunxh 2023/3/1
  */
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class SysOrgRoleDTO extends BaseDTO<Long> {
+public class SysOrgRoleDTO implements Serializable {
+    @Schema(title = "主键ID")
+    protected Long id;
+
     @Schema(title = "数据类型", allowableValues = {"1", "2"}, description = "1：用户，2：用户组")
     private Integer type;
 
@@ -36,4 +41,16 @@ public class SysOrgRoleDTO extends BaseDTO<Long> {
 
     @Schema(title = "是否当前使用的角色")
     private Boolean active;
+
+    @Schema(title = "创建时间")
+    private LocalDateTime createTime;
+
+    @Schema(title = "修改时间")
+    private LocalDateTime updateTime;
+
+    @Schema(title = "创建人")
+    private Integer createBy;
+
+    @Schema(title = "修改人")
+    private Integer updateBy;
 }

@@ -17,6 +17,7 @@
         <module>xh-common-redis</module>
         <module>xh-common-core-api</module>
         <module>xh-common-bom</module>
+        <module>xh-common-base</module>
     </modules>
 
     <artifactId>xh-common</artifactId>

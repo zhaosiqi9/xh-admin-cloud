@@ -1,4 +1,4 @@
-package com.xh.common.core.web;
+package com.xh.common.base.web;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

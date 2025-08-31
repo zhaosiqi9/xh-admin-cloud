@@ -1,4 +1,4 @@
-package com.xh.common.core.web;
+package com.xh.common.base.exception;
 
 /**
  * 2021-09-26 sunxh

@@ -1,17 +1,23 @@
-package com.xh.auth.service.dto;
+package com.xh.jwt.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 存放系统登录的用户信息DTO
  *
  * @author sunxh 2023/3/1
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class SysUserDTO extends BaseDTO<Long> {
+@Schema(title = "系统用户DTO")
+public class SysUserDTO implements Serializable {
+
+    @Schema(title = "主键ID")
+    protected Long id;
 
     @Schema(title = "用户代码")
     private String code;
@@ -36,4 +42,17 @@ public class SysUserDTO extends BaseDTO<Long> {
 
     @Schema(title = "是否演示账号")
     private Boolean isDemo;
+
+    @Schema(title = "创建时间")
+    private LocalDateTime createTime;
+
+    @Schema(title = "修改时间")
+    private LocalDateTime updateTime;
+
+    @Schema(title = "创建人")
+    private Integer createBy;
+
+    @Schema(title = "修改人")
+    private Integer updateBy;
+
 }

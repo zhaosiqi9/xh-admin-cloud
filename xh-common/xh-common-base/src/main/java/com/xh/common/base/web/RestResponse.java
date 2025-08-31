@@ -1,8 +1,8 @@
-package com.xh.common.core.web;
+package com.xh.common.base.web;
 
+import com.xh.common.base.constant.HttpStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
 
@@ -12,14 +12,16 @@ public class RestResponse<T> implements Serializable {
 
     @Schema(title = "http状态码", description = "正确响应码为200")
     private Integer httpCode;
+
     @Schema(title = "响应消息状态", allowableValues = {"success", "error", "warning", "info"})
     private String status;
+
     @Schema(title = "响应的消息内容")
     private String message;
 
     private T data;
-
-    /**
+    
+     /**
      * 响应成功信息
      */
     public static <T> RestResponse<T> success() {

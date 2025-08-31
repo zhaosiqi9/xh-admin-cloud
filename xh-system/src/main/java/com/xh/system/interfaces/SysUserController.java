@@ -1,14 +1,14 @@
 package com.xh.system.interfaces;
 
-import cn.dev33.satoken.context.mock.SaTokenContextMockUtil;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.util.SaResult;
 import com.xh.common.core.annotation.Log;
-import com.xh.common.core.web.PageResult;
-import com.xh.common.core.web.RestResponse;
+import com.xh.common.base.web.PageResult;
+import com.xh.common.base.web.RestResponse;
 import com.xh.system.api.contract.RemoteSysUserContract;
 import com.xh.system.api.request.*;
 import com.xh.system.api.response.GetUserInfoResponse;
+import com.xh.system.api.response.RolePermissionsListResponse;
 import com.xh.system.api.response.SwitchUserRoleResponse;
 import com.xh.system.api.response.SystemUserQueryResponse;
 import com.xh.system.application.mapstract.SysUserRequest2CommandMapper;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
 
 @Tag(name = "用户管理")
@@ -43,6 +44,11 @@ public class SysUserController implements RemoteSysUserContract {
                 .map(t -> sysUserRequest2CommandMapper.getUserInfoRequest2Command(t))
                 .map(t -> sysUserService.getUserInfo(t))
                 .orElse(null);
+    }
+
+    @Override
+    public List<RolePermissionsListResponse> rolePermissionList(RolePermissionsListRequest request) {
+        return List.of();
     }
 
     @Log
@@ -88,17 +94,15 @@ public class SysUserController implements RemoteSysUserContract {
                 .map(t -> sysUserRequest2CommandMapper.saveSysUserRequest2Command(t))
                 .map(t -> sysUserService.save(t)).orElse(null));
     }
+    
+    
 
+    @Log
+    @Operation(description = "测试")
     @PostMapping("/test")
-    public SaResult isLogin2() {
-//    System.out.println("是否登录：" + StpUtil.isLogin());
-    String tokenValue = StpUtil.getTokenValue();
-    new Thread(() -> {
-        SaTokenContextMockUtil.setMockContext(()->{
-            StpUtil.setTokenValueToStorage(tokenValue);
-            System.out.println("是否登录：" + StpUtil.isLogin());
-        });
-    }).start();
-    return SaResult.data(StpUtil.getTokenValue());
-}
+    public SaResult test() {
+        System.out.println("是否登录：" + StpUtil.isLogin());
+        System.out.println("tokenValue：" + StpUtil.getTokenValue());
+        return SaResult.data(StpUtil.getTokenValue());
+    }
 }

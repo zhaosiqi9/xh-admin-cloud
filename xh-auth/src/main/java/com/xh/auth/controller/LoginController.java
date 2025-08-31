@@ -7,7 +7,7 @@ import com.xh.auth.service.TokenService;
 import com.xh.auth.service.dto.ImageCaptchaDTO;
 import com.xh.auth.service.dto.LoginUserInfoVO;
 import com.xh.common.core.annotation.Log;
-import com.xh.common.core.web.RestResponse;
+import com.xh.common.base.web.RestResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

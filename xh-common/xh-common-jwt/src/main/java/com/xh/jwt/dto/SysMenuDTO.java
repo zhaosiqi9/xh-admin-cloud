@@ -1,18 +1,23 @@
-package com.xh.auth.service.dto;
+package com.xh.jwt.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 角色权限菜单DTO
  *
  * @author sunxh 2023/3/1
  */
-@EqualsAndHashCode(callSuper = true)
 @Schema(description = "承载当前登录用户拥有的菜单权限")
 @Data
-public class SysMenuDTO extends BaseDTO<Long> {
+public class SysMenuDTO implements Serializable {
+
+    @Schema(title = "主键ID")
+    protected Long id;
 
     @Schema(title = "角色id")
     private Long roleId;
@@ -55,4 +60,16 @@ public class SysMenuDTO extends BaseDTO<Long> {
 
     @Schema(title = "是否启用")
     private Boolean enabled;
+
+    @Schema(title = "创建时间")
+    private LocalDateTime createTime;
+
+    @Schema(title = "修改时间")
+    private LocalDateTime updateTime;
+
+    @Schema(title = "创建人")
+    private Integer createBy;
+
+    @Schema(title = "修改人")
+    private Integer updateBy;
 }
