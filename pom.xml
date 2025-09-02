@@ -343,8 +343,13 @@
                 <logstash.address>127.0.0.1:4560</logstash.address>
                 <mysql.server.host>localhost</mysql.server.host>
                 <mysql.server.port>3306</mysql.server.port>
+                <mysql.server.database>xh_admin_cloud</mysql.server.database>
                 <mysql.username>root</mysql.username>
                 <mysql.password>guirong</mysql.password>
+                <redis.server.host>127.0.0.1</redis.server.host>
+                <redis.server.port>6379</redis.server.port>
+                <redis.server.database>1</redis.server.database>
+                <redis.server.password></redis.server.password>
             </properties>
         </profile>
     </profiles>

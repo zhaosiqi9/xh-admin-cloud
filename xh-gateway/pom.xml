@@ -52,6 +52,16 @@
             <groupId>com.xh</groupId>
             <artifactId>xh-common-jwt</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>cn.dev33</groupId>
+                    <artifactId>sa-token-spring-boot-autoconfig</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>cn.dev33</groupId>
+                    <artifactId>sa-token-jakarta-servlet</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- Sa-Token 权限认证（Reactor响应式集成）, 在线文档：http://sa-token.dev33.cn/ -->
         <dependency>

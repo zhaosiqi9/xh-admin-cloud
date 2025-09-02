@@ -15,12 +15,11 @@ import com.xh.system.domain.entity.SysUserJob;
 import com.xh.system.domain.mapstract.sysuser.SysUserEntity2POMapper;
 import com.xh.system.domain.mapstract.sysuser.SysUserPO2EntityMapper;
 import com.xh.system.domain.repository.sysuser.factory.SysUserRepositoryFactory;
+import com.xh.system.infrastructure.mysql.po.SysRolePO;
+import com.xh.system.infrastructure.mysql.po.SysUserGroupMemberPO;
 import com.xh.system.infrastructure.mysql.po.SysUserJobPO;
 import com.xh.system.infrastructure.mysql.po.SysUserPO;
-import com.xh.system.infrastructure.mysql.service.SysOrgPOService;
-import com.xh.system.infrastructure.mysql.service.SysRolePOService;
-import com.xh.system.infrastructure.mysql.service.SysUserJobPOService;
-import com.xh.system.infrastructure.mysql.service.SysUserPOService;
+import com.xh.system.infrastructure.mysql.service.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.Getter;
@@ -58,6 +57,8 @@ public abstract class AbstractSysUserRepository {
 
     @Resource
     private SysUserEntity2POMapper sysUserEntity2POMapper;
+    @Resource
+    private SysUserGroupMemberPOService sysUserGroupMemberPOService;
 
     protected abstract SysUserConstant.SysUserRootType getType();
 
@@ -147,8 +148,18 @@ public abstract class AbstractSysUserRepository {
     }
 
     public boolean delete(Long rootId) {
-        boolean deleteSysUser = deleteSysUser(rootId);
-        return deleteSysUser;
+        deleteSysUser(rootId);
+        sysUserJobPOService.remove(new LambdaQueryWrapper<SysUserJobPO>().eq(SysUserJobPO::getUserId, rootId));
+        sysUserGroupMemberPOService.remove(new LambdaQueryWrapper<SysUserGroupMemberPO>().eq(SysUserGroupMemberPO::getSysUserId, rootId));
+        return true;
+    }
+    
+    protected void deleteUserRole(Long rootId) {
+        
+    }
+    
+    protected void deleteSysDept(Long rootId) {
+        
     }
 
     protected Long saveSysUser(SysUser sysUser) {

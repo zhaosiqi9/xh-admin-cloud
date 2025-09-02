@@ -18,10 +18,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -104,5 +101,19 @@ public class SysUserController implements RemoteSysUserContract {
         System.out.println("是否登录：" + StpUtil.isLogin());
         System.out.println("tokenValue：" + StpUtil.getTokenValue());
         return SaResult.data(StpUtil.getTokenValue());
+    }
+    
+    @Log
+    @Operation(description = "获取用户")
+    @GetMapping("/get/{id}")
+    public RestResponse<SysUser> getById(@PathVariable("id") Long id) {
+        return RestResponse.success(Optional.ofNullable(id)
+                .map(t -> sysUserService.getById(t)).orElse(null));
+    }
+    
+    @Operation(description = "用户批量删除")
+    @DeleteMapping("/del")
+    public RestResponse<Boolean> delUserByIds(@RequestParam List<Long> ids) {
+        return RestResponse.success(Optional.ofNullable(ids).map(t -> sysUserService.delUserByIds(t)).orElse(false));
     }
 }

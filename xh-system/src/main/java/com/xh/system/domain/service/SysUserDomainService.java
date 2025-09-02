@@ -1,5 +1,6 @@
 package com.xh.system.domain.service;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
 import com.xh.system.domain.aggregate.SysUserAggregate;
 import com.xh.common.base.constant.SysUserConstant;
@@ -8,6 +9,7 @@ import com.xh.system.domain.repository.sysuser.AbstractSysUserRepository;
 import com.xh.system.domain.repository.sysuser.factory.SysUserRepositoryFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -70,5 +72,15 @@ public class SysUserDomainService {
             getRepository(SysUserConstant.SysUserRootType.DEFAULT).save(root);
             return sysUser;
         }).orElse(null);
+    }
+
+    public boolean delUserByIds(List<Long> userIds) {
+        if (CollUtil.isEmpty(userIds)) {
+            return false;
+        }
+        userIds.parallelStream().forEach(t -> {
+            getRepository(SysUserConstant.SysUserRootType.ORG_ROLE).delete(t);
+        });
+        return true;
     }
 }

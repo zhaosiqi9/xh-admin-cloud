@@ -31,9 +31,9 @@ spring:
   
   data:
     redis:
-      host: localhost
-      port: 6379
-      database: 0
+      host: @redis.server.host@
+      port: @redis.server.port@
+      database: @redis.server.database@
       timeout: 60000
       lettuce:
         cluster:

@@ -3,6 +3,7 @@ package com.xh.system.application.service;
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xh.common.base.exception.MyException;
@@ -30,6 +31,7 @@ import com.xh.system.infrastructure.mysql.po.SysUserPO;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.List;
@@ -54,8 +56,9 @@ public class SysUserService {
         return null;
     }
 
-    public SysUserPO getById(Serializable loginId) {
-        return null;
+    public SysUser getById(Long userId) {
+        SysUserAggregate root = Optional.ofNullable(sysUserDomainService.getRoot(userId, SysUserConstant.SysUserRootType.DEFAULT)).orElse(new SysUserAggregate());
+        return root.getSysUser();
     }
 
     public GetUserInfoResponse getUserInfo(GetUserInfoCommand command) {
@@ -137,7 +140,7 @@ public class SysUserService {
 
 
     public PageResult<SystemUserQueryResponse> query(SystemUserQueryRequest request) {
-        Page<SysUserPO> userPage = sysUserDomainService.getRepository(SysUserConstant.SysUserRootType.DEFAULT).query(request.getParam().getName(),
+        Page<SysUserPO> userPage = SysUserDomainService.getRepository(SysUserConstant.SysUserRootType.DEFAULT).query(request.getParam().getName(),
                 request.getParam().getCode(),
                 request.getCurrentPage(), request.getPageSize());
         return SysUserEntity2ResponseMapper.INSTANCE.toSystemUserQueryResponseList(userPage);
@@ -145,5 +148,13 @@ public class SysUserService {
 
     public SysUser save(SysUser sysUser) {
         return sysUserDomainService.saveSysUser(sysUser);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public boolean delUserByIds(List<Long> ids) {
+        if (CollUtil.isEmpty(ids)) {
+            return false;
+        }
+        return sysUserDomainService.delUserByIds(ids);
     }
 }
