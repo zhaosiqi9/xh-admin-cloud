@@ -116,4 +116,13 @@ public class SysUserController implements RemoteSysUserContract {
     public RestResponse<Boolean> delUserByIds(@RequestParam List<Long> ids) {
         return RestResponse.success(Optional.ofNullable(ids).map(t -> sysUserService.delUserByIds(t)).orElse(false));
     }
+    
+    @Log
+    @Operation(description = "用户导出")
+    @PostMapping("/export")
+    public void export(@RequestBody SystemUserQueryRequest request) {
+        Optional.ofNullable(request).ifPresent(t->{
+            sysUserService.export(t);
+        });
+    }
 }

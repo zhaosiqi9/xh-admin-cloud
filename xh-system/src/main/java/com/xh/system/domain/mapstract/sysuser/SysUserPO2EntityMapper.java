@@ -1,5 +1,6 @@
 package com.xh.system.domain.mapstract.sysuser;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xh.system.domain.entity.SysOrg;
 import com.xh.system.domain.entity.SysRole;
 import com.xh.system.domain.entity.SysUser;
@@ -32,4 +33,6 @@ public interface SysUserPO2EntityMapper {
     List<SysRole> userRole2EntityList(List<SysRolePO> poList);
 
     SysRole userRole2Entity(SysRolePO po);
+    
+    Page<SysOrg> userOrg2EntityList(Page<SysOrgPO> poList);
 }

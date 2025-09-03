@@ -157,4 +157,9 @@ public class SysUserService {
         }
         return sysUserDomainService.delUserByIds(ids);
     }
+
+    public void export(SystemUserQueryRequest request) {
+        PageResult<SystemUserQueryResponse> userPage = query(request);
+        //todo 导出
+    }
 }

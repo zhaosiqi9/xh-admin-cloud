@@ -15,10 +15,7 @@ import com.xh.system.domain.entity.SysUserJob;
 import com.xh.system.domain.mapstract.sysuser.SysUserEntity2POMapper;
 import com.xh.system.domain.mapstract.sysuser.SysUserPO2EntityMapper;
 import com.xh.system.domain.repository.sysuser.factory.SysUserRepositoryFactory;
-import com.xh.system.infrastructure.mysql.po.SysRolePO;
-import com.xh.system.infrastructure.mysql.po.SysUserGroupMemberPO;
-import com.xh.system.infrastructure.mysql.po.SysUserJobPO;
-import com.xh.system.infrastructure.mysql.po.SysUserPO;
+import com.xh.system.infrastructure.mysql.po.*;
 import com.xh.system.infrastructure.mysql.service.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
@@ -204,4 +201,8 @@ public abstract class AbstractSysUserRepository {
 
 
     }
+    
+    public Page<SysOrg> sysOrgPageQuery(int current, int pageSize, LambdaQueryWrapper<SysOrgPO> lambdaQueryWrapper) {
+        return new Page<>();
+    } 
 }

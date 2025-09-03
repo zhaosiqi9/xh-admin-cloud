@@ -12,7 +12,7 @@ public class SysUserConstant {
     public enum SysUserRootType {
         DEFAULT("default", "默认-只有用户信息"),
         ROLE("role", "用户+角色信息"),
-        ORG("job", "用户+部门信息"),
+        ORG("org", "用户+部门信息"),
         ORG_ROLE("org_role", "用户+部门+角色信息"),
         ;
 
