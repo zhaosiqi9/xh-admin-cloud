@@ -63,7 +63,7 @@ public abstract class AbstractSysMenuRepository {
 
         SysMenuAggregate root = new SysMenuAggregate();
         root.setRootId(rootId);
-        root.setSysRole(SysUserPO2EntityMapper.INSTANCE.userRole2Entity(rolePO));
+        root.setSysRole(SysUserPO2EntityMapper.INSTANCE.role2Entity(rolePO));
         root.setSysRoleMenuList(SysMenuPO2EntityMapper.INSTANCE.sysRoleMenuPO2Entity(roleMenuPOList));
         root.setSysMenuList(menuByIdList(menuIdList));
         return root;

@@ -4,6 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.yulichang.query.MPJLambdaQueryWrapper;
+import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.xh.common.base.constant.SysUserConstant;
 import com.xh.common.core.utils.AssertUtil;
 import com.xh.common.base.exception.MyException;
@@ -99,7 +101,7 @@ public abstract class AbstractSysUserRepository {
         if (CollUtil.isEmpty(roleIdList)) {
             return CollUtil.newArrayList();
         }
-        return sysUserPO2EntityMapper.userRole2EntityList(sysRolePOService.listByIds(roleIdList));
+        return sysUserPO2EntityMapper.role2EntityList(sysRolePOService.listByIds(roleIdList));
     }
 
     protected List<SysOrg> findUserOrgListByRootId(Long rootId, List<SysUserJob> userJobList) {
@@ -110,7 +112,7 @@ public abstract class AbstractSysUserRepository {
         if (CollUtil.isEmpty(orgIdList)) {
             return CollUtil.newArrayList();
         }
-        return sysUserPO2EntityMapper.userOrg2EntityList(sysOrgPOService.listByIds(orgIdList));
+        return sysUserPO2EntityMapper.org2EntityList(sysOrgPOService.listByIds(orgIdList));
     }
 
     public SysUserAggregate findByLoginAccount(String loginAccount, boolean enable) {
@@ -202,7 +204,8 @@ public abstract class AbstractSysUserRepository {
 
     }
     
-    public Page<SysOrg> sysOrgPageQuery(int current, int pageSize, LambdaQueryWrapper<SysOrgPO> lambdaQueryWrapper) {
-        return new Page<>();
+    public Page<SysOrg> sysOrgPageQuery(int current, int pageSize, MPJLambdaWrapper<SysOrgPO> lambdaQueryWrapper) {
+        Page<SysOrg> page = sysOrgPOService.selectJoinListPage(new Page<>(current, pageSize), SysOrg.class, lambdaQueryWrapper);
+        return page;
     } 
 }

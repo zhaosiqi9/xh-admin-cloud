@@ -28,11 +28,11 @@ public interface SysUserPO2EntityMapper {
 
     List<SysUserJob> userJob2EntityList(List<SysUserJobPO> poList);
 
-    List<SysOrg> userOrg2EntityList(List<SysOrgPO> poList);
+    List<SysOrg> org2EntityList(List<SysOrgPO> poList);
 
-    List<SysRole> userRole2EntityList(List<SysRolePO> poList);
+    List<SysRole> role2EntityList(List<SysRolePO> poList);
 
-    SysRole userRole2Entity(SysRolePO po);
+    SysRole role2Entity(SysRolePO po);
     
-    Page<SysOrg> userOrg2EntityList(Page<SysOrgPO> poList);
+    Page<SysOrg> org2EntityList(Page<SysOrgPO> poList);
 }

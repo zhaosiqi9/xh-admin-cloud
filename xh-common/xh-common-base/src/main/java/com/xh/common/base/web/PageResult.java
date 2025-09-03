@@ -26,7 +26,7 @@ public class PageResult<T> implements Serializable {
     private Integer total = 0;
 
     @Schema(title = "是否分页")
-    private Boolean isPage;
+    private Boolean isPage = true;
 
     @Schema(title = "分页号")
     private Integer currentPage;
