@@ -1,7 +1,5 @@
 package com.xh.system.application.command.sysorg;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
 import com.github.yulichang.toolkit.StrUtils;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.xh.common.base.web.PageQuery;
@@ -11,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.List;
+import static com.xh.mybatis.util.MybatisUtil.wrapperConditionList;
 
 @Data
 @Schema(title = "组织查询参数")
@@ -20,7 +18,7 @@ public class OrgQueryCommand {
 
 
     public static MPJLambdaWrapper<SysOrgPO> initQueryWrapper(PageQuery<OrgQueryRequest> query) {
-        MPJLambdaWrapper<SysOrgPO> lambdaQueryWrapper = new MPJLambdaWrapper<SysOrgPO>()
+        MPJLambdaWrapper<SysOrgPO> lambdaWrapper = new MPJLambdaWrapper<SysOrgPO>()
                 .selectAll(SysOrgPO.class)
                 .select("t1.name parent_name")
                 .leftJoin("sys_org t1 on t1.id = t.parent_id")
@@ -28,52 +26,9 @@ public class OrgQueryCommand {
                 .like(StrUtils.isNotBlank(query.getParam().getName()), SysOrgPO::getName, query.getParam().getName())
                 .like(StrUtils.isNotBlank(query.getParam().getParentId()), SysOrgPO::getParentId, query.getParam().getParentId())
                 .eq(query.getParam().getEnabled() != null, SysOrgPO::getEnabled, query.getParam().getEnabled());
-        wrapperConditionList(lambdaQueryWrapper, query.getFilters());
-        return lambdaQueryWrapper;
+        wrapperConditionList(lambdaWrapper, query.getFilters());
+        return lambdaWrapper;
     }
 
-    private static <T> void wrapperConditionList(MPJLambdaWrapper<T> lambdaQueryWrapper, List<PageQuery.FilterRow> filterList) {
-        if (CollUtil.isNotEmpty(filterList)) {
-            filterList.forEach(filter -> {
-                lambdaQueryWrapper.and(w1 -> {
-                    wrapperCondition(w1, filter);
-                });
-            });
-        }
-    }
 
-    private static <T> void wrapperCondition(MPJLambdaWrapper<T> w1, PageQuery.FilterRow filter) {
-        if (filter.getLogic().equals("or")) {
-            w1.or();
-        }
-        String prop = "t."+StrUtil.toUnderlineCase(filter.getProp());
-        switch (filter.getCondition()) {
-            case eq:
-                w1.eqSql(prop, (String) filter.getValue1());
-                break;
-            case ne:
-                w1.ne(prop, (String) filter.getValue1());
-                break;
-            case gt:
-                w1.gt(prop, (String) filter.getValue1());
-                break;
-            case ge:
-                w1.ge(prop, (String) filter.getValue1());
-                break;
-            case lt:
-                w1.lt(prop, (String) filter.getValue1());
-                break;
-            case le:
-                w1.le(prop, (String) filter.getValue1());
-                break;
-            case ct:
-                w1.in(prop, filter.getValue1());
-                break;
-        }
-        if (filter.getChildren() != null) {
-            filter.getChildren().forEach(filter1 -> {
-                wrapperCondition(w1, filter1);
-            });
-        }
-    }
 }

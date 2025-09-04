@@ -21,8 +21,8 @@ public class SysOrgService {
     private SysUserDomainService sysUserDomainService;
 
     public PageResult<OrgQueryResponse> query(PageQuery<OrgQueryRequest> query) {
-        MPJLambdaWrapper<SysOrgPO> lambdaQueryWrapper = OrgQueryCommand.initQueryWrapper(query);
-        Page<SysOrg> orgPage = SysUserDomainService.getRepository(SysUserConstant.SysUserRootType.ORG).sysOrgPageQuery(query.getCurrentPage(), query.getPageSize(), lambdaQueryWrapper);
+        MPJLambdaWrapper<SysOrgPO> lambdaWrapper = OrgQueryCommand.initQueryWrapper(query);
+        Page<SysOrg> orgPage = SysUserDomainService.getRepository(SysUserConstant.SysUserRootType.ORG).sysOrgPageQuery(query.getCurrentPage(), query.getPageSize(), lambdaWrapper);
         return SysOrgEntity2ResponseMapper.INSTANCE.pageEntity2PageResult(orgPage);
     }
 }

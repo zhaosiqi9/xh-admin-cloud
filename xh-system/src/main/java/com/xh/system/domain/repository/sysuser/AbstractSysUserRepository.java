@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.yulichang.query.MPJLambdaQueryWrapper;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.xh.common.base.constant.SysUserConstant;
 import com.xh.common.core.utils.AssertUtil;
@@ -204,8 +203,12 @@ public abstract class AbstractSysUserRepository {
 
     }
     
-    public Page<SysOrg> sysOrgPageQuery(int current, int pageSize, MPJLambdaWrapper<SysOrgPO> lambdaQueryWrapper) {
-        Page<SysOrg> page = sysOrgPOService.selectJoinListPage(new Page<>(current, pageSize), SysOrg.class, lambdaQueryWrapper);
+    public Page<SysOrg> sysOrgPageQuery(int current, int pageSize, MPJLambdaWrapper<SysOrgPO> lambdaWrapper) {
+        Page<SysOrg> page = sysOrgPOService.selectJoinListPage(new Page<>(current, pageSize), SysOrg.class, lambdaWrapper);
         return page;
-    } 
+    }
+
+    public Page<SysRole> sysRolePageQuery(int currentPage, int pageSize, MPJLambdaWrapper<SysRolePO> lambdaWrapper) {
+       return sysRolePOService.selectJoinListPage(new Page<>(currentPage, pageSize), SysRole.class, lambdaWrapper);
+    }
 }
