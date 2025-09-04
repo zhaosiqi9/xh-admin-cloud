@@ -1,6 +1,5 @@
 package com.xh.mybatis.interceptor;
 
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
@@ -23,16 +22,6 @@ import java.util.Properties;
  * 拦截StatementHandler类中参数类型为Statement的 prepare 方法
  * 即拦截 Statement prepare(Connection var1, Integer var2) 方法
  *
- * @author lkx
- */
-
-/**
- * @author shigenfu
- * @date 2024/6/16 10:01
- */
-/**
- * @author CoderKK
- * @date 2020-09-01 00:13
  */
 @Slf4j
 @Intercepts({
@@ -63,7 +52,7 @@ public class PrintSqlInterceptor implements Interceptor {
         List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
         //替换空格、换行、tab缩进等
         String sql = boundSql.getSql().replaceAll("[\\s]+", " ");
-        if (parameterMappings.size() > 0 && parameterObject != null) {
+        if (!parameterMappings.isEmpty() && parameterObject != null) {
             TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
             if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
                 sql = sql.replaceFirst("\\?", getParameterValue(parameterObject));
@@ -102,12 +91,11 @@ public class PrintSqlInterceptor implements Interceptor {
     }
 
     private static void logs(long time, String sql, String sqlId) {
-        StringBuilder sb = new StringBuilder()
-                .append(" Time：").append(time)
-                .append(" ms - ID：").append(sqlId)
-                .append(StringPool.NEWLINE).append("Execute SQL：")
-                .append(sql).append(StringPool.NEWLINE);
-        log.info(sb.toString());
+        String str = """
+                Time： %s ms - ID：%s
+                Execute SQL： %s
+                """.formatted(time, sqlId, sql);
+        log.info(str);
     }
 
     @Override

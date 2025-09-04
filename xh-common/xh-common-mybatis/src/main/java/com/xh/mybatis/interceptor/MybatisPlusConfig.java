@@ -8,8 +8,6 @@ import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerIntercept
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Properties;
-
 @Configuration
 public class MybatisPlusConfig {
 
@@ -27,9 +25,7 @@ public class MybatisPlusConfig {
     @Bean
     public ConfigurationCustomizer configurationCustomizer() {
         System.out.println("注册ConfigurationCustomizer");
-         return configuration -> {
-            configuration.addInterceptor(new PrintSqlInterceptor());
-        };
+         return configuration -> configuration.addInterceptor(new PrintSqlInterceptor());
     }
 
 }
