@@ -1,6 +1,7 @@
 package com.xh.system.application.command.sysorg;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.github.yulichang.toolkit.StrUtils;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.xh.common.base.web.PageQuery;
@@ -23,9 +24,9 @@ public class OrgQueryCommand {
                 .selectAll(SysOrgPO.class)
                 .select("t1.name parent_name")
                 .leftJoin("sys_org t1 on t1.id = t.parent_id")
-                .eq(StrUtils.isNotBlank(query.getParam().getCode()), SysOrgPO::getCode, query.getParam().getCode())
-                .eq(StrUtils.isNotBlank(query.getParam().getName()), SysOrgPO::getName, query.getParam().getName())
-                .eq(StrUtils.isNotBlank(query.getParam().getParentId()), SysOrgPO::getParentId, query.getParam().getParentId())
+                .like(StrUtils.isNotBlank(query.getParam().getCode()), SysOrgPO::getCode, query.getParam().getCode())
+                .like(StrUtils.isNotBlank(query.getParam().getName()), SysOrgPO::getName, query.getParam().getName())
+                .like(StrUtils.isNotBlank(query.getParam().getParentId()), SysOrgPO::getParentId, query.getParam().getParentId())
                 .eq(query.getParam().getEnabled() != null, SysOrgPO::getEnabled, query.getParam().getEnabled());
         wrapperConditionList(lambdaQueryWrapper, query.getFilters());
         return lambdaQueryWrapper;
@@ -45,24 +46,28 @@ public class OrgQueryCommand {
         if (filter.getLogic().equals("or")) {
             w1.or();
         }
+        String prop = "t."+StrUtil.toUnderlineCase(filter.getProp());
         switch (filter.getCondition()) {
             case eq:
-                w1.eqSql(filter.getProp(), (String) filter.getValue1());
+                w1.eqSql(prop, (String) filter.getValue1());
                 break;
             case ne:
-                w1.ne(filter.getProp(), (String) filter.getValue1());
+                w1.ne(prop, (String) filter.getValue1());
                 break;
             case gt:
-                w1.gt(filter.getProp(), (String) filter.getValue1());
+                w1.gt(prop, (String) filter.getValue1());
                 break;
             case ge:
-                w1.ge(filter.getProp(), (String) filter.getValue1());
+                w1.ge(prop, (String) filter.getValue1());
                 break;
             case lt:
-                w1.lt(filter.getProp(), (String) filter.getValue1());
+                w1.lt(prop, (String) filter.getValue1());
                 break;
             case le:
-                w1.le(filter.getProp(), (String) filter.getValue1());
+                w1.le(prop, (String) filter.getValue1());
+                break;
+            case ct:
+                w1.in(prop, filter.getValue1());
                 break;
         }
         if (filter.getChildren() != null) {

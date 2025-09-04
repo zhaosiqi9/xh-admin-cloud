@@ -1,2 +1,3 @@
 com.xh.mybatis.interceptor.MybatisPlusConfig
 com.xh.mybatis.handler.MybatisPlusHandler
+com.xh.mybatis.interceptor.PrintSqlInterceptor
