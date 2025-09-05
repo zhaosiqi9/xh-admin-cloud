@@ -1,6 +1,7 @@
 package com.xh.mybatis.interceptor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -21,31 +22,14 @@ import java.util.Properties;
 /**
  * 拦截StatementHandler类中参数类型为Statement的 prepare 方法
  * 即拦截 Statement prepare(Connection var1, Integer var2) 方法
- *
  */
 @Slf4j
 @Intercepts({
         @Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class}),
-        @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class,
-                RowBounds.class, ResultHandler.class})})
+        @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}),
+        @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class}),
+})
 public class PrintSqlInterceptor implements Interceptor {
-
-    @Override
-    public Object intercept(Invocation invocation) throws Throwable {
-        MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
-        Object parameter = null;
-        if (invocation.getArgs().length > 1) {
-            parameter = invocation.getArgs()[1];
-        }
-        String sqlId = mappedStatement.getId();
-        BoundSql boundSql = mappedStatement.getBoundSql(parameter);
-        Configuration configuration = mappedStatement.getConfiguration();
-        long start = System.currentTimeMillis();
-        Object returnValue = invocation.proceed();
-        long time = System.currentTimeMillis() - start;
-        showSql(configuration, boundSql, time, sqlId);
-        return returnValue;
-    }
 
     private static void showSql(Configuration configuration, BoundSql boundSql, long time, String sqlId) {
         Object parameterObject = boundSql.getParameterObject();
@@ -96,6 +80,23 @@ public class PrintSqlInterceptor implements Interceptor {
                 Execute SQL： %s
                 """.formatted(time, sqlId, sql);
         log.info(str);
+    }
+
+    @Override
+    public Object intercept(Invocation invocation) throws Throwable {
+        MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
+        Object parameter = null;
+        if (invocation.getArgs().length > 1) {
+            parameter = invocation.getArgs()[1];
+        }
+        String sqlId = mappedStatement.getId();
+        BoundSql boundSql = mappedStatement.getBoundSql(parameter);
+        Configuration configuration = mappedStatement.getConfiguration();
+        long start = System.currentTimeMillis();
+        Object returnValue = invocation.proceed();
+        long time = System.currentTimeMillis() - start;
+        showSql(configuration, boundSql, time, sqlId);
+        return returnValue;
     }
 
     @Override
