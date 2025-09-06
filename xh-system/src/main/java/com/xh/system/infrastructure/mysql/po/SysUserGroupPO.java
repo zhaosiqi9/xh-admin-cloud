@@ -18,6 +18,7 @@ public class SysUserGroupPO extends BaseEntity {
 
     @Schema(title = "用户组名")
     private String name;
+    
     @Schema(title = "是否启用")
     private Boolean enabled;
 

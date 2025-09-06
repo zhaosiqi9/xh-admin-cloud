@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Data
 @Schema(title = "用户常量")
-public class SysUserGroupMemberConstant {
+public class SysUserGroupConstant {
     
     @Getter
     public enum UserGroupMemberRootType {

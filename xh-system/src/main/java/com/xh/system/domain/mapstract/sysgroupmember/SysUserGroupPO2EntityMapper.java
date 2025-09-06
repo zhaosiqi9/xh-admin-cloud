@@ -1,6 +1,7 @@
 package com.xh.system.domain.mapstract.sysgroupmember;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xh.system.domain.entity.SysUserGroup;
 import com.xh.system.domain.entity.SysUserGroupMember;
 import com.xh.system.infrastructure.mysql.po.SysUserGroupMemberPO;
@@ -18,5 +19,6 @@ public interface SysUserGroupPO2EntityMapper {
     List<SysUserGroupMember> sysUserGroupMemberPoList2Entity(List<SysUserGroupMemberPO> po);
     
     SysUserGroup sysUserGroupPo2Entity(SysUserGroupPO po);
-    
+
+    Page<SysUserGroup> sysUserGroupPoPage2Entity(Page<SysUserGroupPO> page);
 }

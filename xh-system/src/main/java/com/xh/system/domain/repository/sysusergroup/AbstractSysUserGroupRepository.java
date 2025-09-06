@@ -1,7 +1,8 @@
 package com.xh.system.domain.repository.sysusergroup;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.xh.common.base.constant.SysUserGroupMemberConstant;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xh.common.base.constant.SysUserGroupConstant;
 import com.xh.system.domain.aggregate.SysUserGroupAggregate;
 import com.xh.system.domain.entity.SysUserGroup;
 import com.xh.system.domain.entity.SysUserGroupMember;
@@ -31,7 +32,7 @@ public abstract class AbstractSysUserGroupRepository {
     @Resource
     private SysUserGroupPO2EntityMapper sysUserGroupPO2EntityMapper;
 
-    protected abstract SysUserGroupMemberConstant.UserGroupMemberRootType getType();
+    protected abstract SysUserGroupConstant.UserGroupMemberRootType getType();
 
     @PostConstruct
     protected void init() {
@@ -60,5 +61,14 @@ public abstract class AbstractSysUserGroupRepository {
 
         List<SysUserGroupMemberPO> sysUserGroupMemberPOList = sysUserGroupMemberPOService.list(lambdaQueryWrapper);
         return sysUserGroupPO2EntityMapper.sysUserGroupMemberPoList2Entity(sysUserGroupMemberPOList);
+    }
+
+    public Page<SysUserGroup> queryUserGroupPage(int currentPage, int pageSize, String code, String name) {
+        LambdaQueryWrapper<SysUserGroupPO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper
+//                .like(SysUserGroupPO::getCode, code)
+                .like(SysUserGroupPO::getName, name);
+        Page<SysUserGroupPO> page = sysUserGroupPOService.page(new Page<>(currentPage, pageSize), lambdaQueryWrapper);
+        return sysUserGroupPO2EntityMapper.sysUserGroupPoPage2Entity(page);
     }
 }

@@ -5,6 +5,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xh.common.base.constant.SysUserGroupConstant;
 import com.xh.common.base.exception.MyException;
 import com.xh.common.base.web.PageQuery;
 import com.xh.common.base.web.PageResult;
@@ -38,7 +39,6 @@ import com.xh.system.infrastructure.mysql.po.SysUserPO;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -217,7 +217,10 @@ public class SysUserService {
     public PageResult<SysUserGroup> queryUserGroupList(PageQuery<UserQueryUserGroupListRequest> pageQuery) {
         String code = Optional.ofNullable(pageQuery.getParam().getCode()).orElseThrow(() -> new MyException("参数异常，检查后重试！"));
         String name = Optional.ofNullable(pageQuery.getParam().getName()).orElseThrow(() -> new MyException("参数异常，检查后重试！"));
-        
-        return null;
+
+        Page<SysUserGroup> page =
+                Optional.ofNullable(SysUserGroupDomainService.getRepository(SysUserGroupConstant.UserGroupMemberRootType.DEFAULT).queryUserGroupPage(pageQuery.getCurrentPage(),
+                        pageQuery.getPageSize(), code, name)).orElse(new Page<>());
+        return SysUserEntity2ResponseMapper.INSTANCE.toSysUserGroupPageResult(page);
     }
 }

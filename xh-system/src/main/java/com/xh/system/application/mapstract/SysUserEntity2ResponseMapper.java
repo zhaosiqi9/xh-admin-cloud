@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xh.common.base.web.PageResult;
 import com.xh.system.api.response.*;
 import com.xh.system.domain.aggregate.SysUserAggregate;
-import com.xh.system.domain.entity.SysOrg;
-import com.xh.system.domain.entity.SysRole;
-import com.xh.system.domain.entity.SysUser;
-import com.xh.system.domain.entity.SysUserJob;
+import com.xh.system.domain.entity.*;
 import com.xh.system.infrastructure.mysql.po.SysUserPO;
 import lombok.val;
 import org.mapstruct.Mapper;
@@ -50,4 +47,13 @@ public interface SysUserEntity2ResponseMapper {
             @Mapping(source = "records", target = "list")
     })
     PageResult<SystemUserQueryResponse> toSystemUserQueryResponseList(Page<SysUserPO> userPage);
+
+    @Mappings(
+            {
+                    @Mapping(source = "records", target = "list"),
+                    @Mapping(source = "total", target = "total"),
+                    @Mapping(source = "current", target = "currentPage"),
+                    @Mapping(source = "size", target = "pageSize"),
+            })
+    PageResult<SysUserGroup> toSysUserGroupPageResult(Page<SysUserGroup> page);
 }

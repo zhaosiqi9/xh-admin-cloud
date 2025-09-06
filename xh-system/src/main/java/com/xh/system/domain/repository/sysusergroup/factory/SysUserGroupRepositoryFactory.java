@@ -1,6 +1,6 @@
 package com.xh.system.domain.repository.sysusergroup.factory;
 
-import com.xh.common.base.constant.SysUserGroupMemberConstant;
+import com.xh.common.base.constant.SysUserGroupConstant;
 import com.xh.system.domain.repository.sysusergroup.AbstractSysUserGroupRepository;
 
 import java.util.HashMap;
@@ -18,7 +18,7 @@ public class SysUserGroupRepositoryFactory {
 
     public static AbstractSysUserGroupRepository getRepository(String type) {
         AbstractSysUserGroupRepository repository = SYS_USER_GROUP_REPOSITORY_MAP.get(type);
-        return Optional.ofNullable(repository).orElse(SYS_USER_GROUP_REPOSITORY_MAP.get(SysUserGroupMemberConstant.UserGroupMemberRootType.DEFAULT.getType()));
+        return Optional.ofNullable(repository).orElse(SYS_USER_GROUP_REPOSITORY_MAP.get(SysUserGroupConstant.UserGroupMemberRootType.DEFAULT.getType()));
     }
     
 }
