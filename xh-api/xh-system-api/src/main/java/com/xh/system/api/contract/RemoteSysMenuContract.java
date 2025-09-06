@@ -1,7 +1,7 @@
 package com.xh.system.api.contract;
 
 import com.xh.common.base.web.RestResponse;
-import com.xh.system.api.request.UserPermissionRequest;
+import com.xh.system.api.request.user.UserPermissionRequest;
 import com.xh.system.api.response.UserPermissionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

@@ -1,5 +1,6 @@
 package com.xh.system.domain.service;
 
+import cn.dev33.satoken.secure.BCrypt;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
 import com.xh.system.domain.aggregate.SysUserAggregate;
@@ -82,5 +83,14 @@ public class SysUserDomainService {
             getRepository(SysUserConstant.SysUserRootType.ORG_ROLE).delete(t);
         });
         return true;
+    }
+
+    public void resetPassword(SysUserAggregate root, Long id, String password) {
+        root = Optional.ofNullable(Optional.ofNullable(root).orElse(getRoot(id, SysUserConstant.SysUserRootType.DEFAULT))).orElseThrow(() -> new RuntimeException("用户不存在"));
+        SysUser user = Optional.ofNullable(root.getSysUser()).orElseThrow(() -> new RuntimeException("用户不存在"));
+        // 密码加密
+        String pwHash = BCrypt.hashpw(password, BCrypt.gensalt());
+        user.setPassword(pwHash);
+        getRepository(SysUserConstant.SysUserRootType.DEFAULT).update(root);
     }
 }

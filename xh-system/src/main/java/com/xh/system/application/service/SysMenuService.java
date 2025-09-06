@@ -3,7 +3,7 @@ package com.xh.system.application.service;
 import com.xh.common.core.constants.SystemRedisConstant;
 import com.xh.jwt.dto.RolePermissionsDTO;
 import com.xh.redis.service.RedisService;
-import com.xh.system.api.request.UserPermissionRequest;
+import com.xh.system.api.request.user.UserPermissionRequest;
 import com.xh.system.api.response.UserPermissionResponse;
 import com.xh.system.application.mapstract.SysMenuEntity2ResponseMapper;
 import com.xh.system.domain.aggregate.SysMenuAggregate;

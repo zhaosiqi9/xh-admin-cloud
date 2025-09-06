@@ -2,7 +2,7 @@ package com.xh.system.application.service.sub;
 
 import com.xh.common.base.web.RestResponse;
 import com.xh.system.api.contract.RemoteSysMenuContract;
-import com.xh.system.api.request.UserPermissionRequest;
+import com.xh.system.api.request.user.UserPermissionRequest;
 import com.xh.system.api.response.UserPermissionResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Resource;

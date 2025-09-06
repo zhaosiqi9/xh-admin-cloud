@@ -1,20 +1,24 @@
 package com.xh.system.application.service;
 
-import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xh.common.base.exception.MyException;
+import com.xh.common.base.web.PageQuery;
 import com.xh.common.base.web.PageResult;
+import com.xh.common.core.utils.AssertUtil;
 import com.xh.jwt.constant.JwtConstant;
 import com.xh.jwt.dto.OnlineUserDTO;
 import com.xh.jwt.dto.SysLoginUserInfoDTO;
 import com.xh.jwt.dto.SysOrgRoleDTO;
+import com.xh.jwt.dto.SysUserDTO;
 import com.xh.jwt.util.JwtUtil;
 import com.xh.system.api.request.SwitchUserRoleRequest;
 import com.xh.system.api.request.SystemUserQueryRequest;
+import com.xh.system.api.request.user.UserQueryUserGroupListRequest;
+import com.xh.system.api.request.user.UserSwitchMenuPropRequest;
 import com.xh.system.api.response.GetUserInfoResponse;
 import com.xh.system.api.response.SwitchUserRoleResponse;
 import com.xh.system.api.response.SystemUserQueryResponse;
@@ -26,17 +30,19 @@ import com.xh.system.application.service.sub.ThirdPartyService;
 import com.xh.system.domain.aggregate.SysUserAggregate;
 import com.xh.common.base.constant.SysUserConstant;
 import com.xh.system.domain.entity.SysUser;
+import com.xh.system.domain.entity.SysUserGroup;
+import com.xh.system.domain.service.SysMenuDomainService;
 import com.xh.system.domain.service.SysUserDomainService;
+import com.xh.system.domain.service.SysUserGroupDomainService;
 import com.xh.system.infrastructure.mysql.po.SysUserPO;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author : gr
@@ -48,12 +54,36 @@ import java.util.Optional;
 public class SysUserService {
     @Resource
     private SysUserDomainService sysUserDomainService;
-    
+
     @Resource
     private ThirdPartyService thirdPartyService;
+    
+    @Resource
+    private SysMenuDomainService sysMenuDomainService;
+    
+    @Resource
+    private SysUserGroupDomainService sysUserGroupDomainService;
 
-    public SysUserPO personalCenterSave(SysUserPO sysUserPO) {
-        return null;
+    public SysUser personalCenterSave(SysUser sysUser) {
+
+        AssertUtil.equals(sysUser.getId(), (Long) StpUtil.getLoginId(), "非法请求！");
+        SysUserAggregate root =
+                Optional.ofNullable(sysUserDomainService.getRoot(sysUser.getId(), SysUserConstant.SysUserRootType.DEFAULT)).orElseThrow(() -> new MyException("用户不存在"));
+        SysUser sysUser1 = Optional.ofNullable(root.getSysUser()).orElseThrow(() -> new MyException("用户不存在"));
+        sysUser1.setName(sysUser.getName());
+        sysUser1.setPassword(sysUser.getPassword());
+        sysUser1.setAvatar(sysUser.getAvatar());
+        sysUser1.setTelephone(sysUser.getTelephone());
+        save(sysUser1);
+
+        //刷新一下
+        SaSession session = StpUtil.getSession();
+        SysLoginUserInfoDTO userInfoDTO = session.getModel(JwtConstant.SYS_USER_KEY, SysLoginUserInfoDTO.class);
+        SysUserDTO sysUserDTO = new SysUserDTO();
+        BeanUtils.copyProperties(sysUser1, sysUserDTO);
+        userInfoDTO.setUser(sysUserDTO);
+        session.set(JwtConstant.SYS_USER_KEY, userInfoDTO);
+        return sysUser1;
     }
 
     public SysUser getById(Long userId) {
@@ -161,5 +191,33 @@ public class SysUserService {
     public void export(SystemUserQueryRequest request) {
         PageResult<SystemUserQueryResponse> userPage = query(request);
         //todo 导出
+    }
+
+    public void switchMenuProp(UserSwitchMenuPropRequest param) {
+        SysUserAggregate root =
+                Optional.ofNullable(sysUserDomainService.getRoot(param.getId(), SysUserConstant.SysUserRootType.DEFAULT)).orElseThrow(() -> new MyException("用户不存在"));
+        SysUser menu = Optional.ofNullable(root.getSysUser()).orElseThrow(() -> new MyException("用户不存在"));
+        if ("enabled".equals(param.getProp())) menu.setEnabled(param.isValue());
+        else throw new MyException("参数异常，检查后重试！");
+        sysUserDomainService.saveSysUser(menu);
+    }
+
+    public ArrayList<Map<String, Object>> imports(List<SysUser> sysUsers) {
+        return null;
+    }
+
+
+    public void resetPassword(SysUser sysUsers) {
+        SysUserAggregate root =
+                Optional.ofNullable(sysUserDomainService.getRoot(sysUsers.getId(), SysUserConstant.SysUserRootType.DEFAULT)).orElseThrow(() -> new MyException("用户不存在"));
+         SysUser user = Optional.ofNullable(root.getSysUser()).orElseThrow(() -> new MyException("用户不存在"));
+        sysUserDomainService.resetPassword(root, sysUsers.getId(), sysUsers.getPassword());
+    }
+
+    public PageResult<SysUserGroup> queryUserGroupList(PageQuery<UserQueryUserGroupListRequest> pageQuery) {
+        String code = Optional.ofNullable(pageQuery.getParam().getCode()).orElseThrow(() -> new MyException("参数异常，检查后重试！"));
+        String name = Optional.ofNullable(pageQuery.getParam().getName()).orElseThrow(() -> new MyException("参数异常，检查后重试！"));
+        
+        return null;
     }
 }

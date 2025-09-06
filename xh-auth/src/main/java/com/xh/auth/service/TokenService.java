@@ -25,7 +25,7 @@ import com.xh.system.api.contract.RemoteSysMenuContract;
 import com.xh.system.api.contract.RemoteSysUserContract;
 import com.xh.system.api.request.GetUserInfoRequest;
 import com.xh.system.api.request.UpdateUserInfoRequest;
-import com.xh.system.api.request.UserPermissionRequest;
+import com.xh.system.api.request.user.UserPermissionRequest;
 import com.xh.system.api.response.GetUserInfoResponse;
 import com.xh.system.api.response.GetUserInfoResponseJob;
 import com.xh.system.api.response.GetUserInfoResponseUser;
