@@ -71,4 +71,13 @@ public abstract class AbstractSysUserGroupRepository {
         Page<SysUserGroupPO> page = sysUserGroupPOService.page(new Page<>(currentPage, pageSize), lambdaQueryWrapper);
         return sysUserGroupPO2EntityMapper.sysUserGroupPoPage2Entity(page);
     }
+
+    public List<SysUserGroup> queryUserGroupSaveQuery(SysUserGroup sysUserGroup) {
+        LambdaQueryWrapper<SysUserGroupPO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper
+                .ne(sysUserGroup.getId() != null, SysUserGroupPO::getId, sysUserGroup.getId())
+                .like(SysUserGroupPO::getName, sysUserGroup.getName());
+        List<SysUserGroupPO> list = sysUserGroupPOService.list(lambdaQueryWrapper);
+        return sysUserGroupPO2EntityMapper.sysUserGroupPoList2Entity(list);
+    }
 }

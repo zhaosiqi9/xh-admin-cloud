@@ -166,7 +166,7 @@ public class SysUserController implements RemoteSysUserContract {
     @Operation(description = "系统用户组查询")
     @PostMapping("/queryUserGroupList")
     public RestResponse<PageResult<SysUserGroup>> queryUserGroupList(@RequestBody PageQuery<UserQueryUserGroupListRequest> pageQuery) {
-        return RestResponse.success(Optional.ofNullable(pageQuery).map(t -> sysUserService.queryUserGroupList(t)).orElse(null));
+        return RestResponse.success(Optional.ofNullable(pageQuery).map(sysUserService::queryUserGroupList).orElse(null));
     }
 
     @Operation(description = "用户组保存")

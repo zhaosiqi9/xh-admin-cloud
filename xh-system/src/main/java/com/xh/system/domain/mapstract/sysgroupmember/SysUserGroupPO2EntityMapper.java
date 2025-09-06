@@ -21,4 +21,6 @@ public interface SysUserGroupPO2EntityMapper {
     SysUserGroup sysUserGroupPo2Entity(SysUserGroupPO po);
 
     Page<SysUserGroup> sysUserGroupPoPage2Entity(Page<SysUserGroupPO> page);
+
+    List<SysUserGroup> sysUserGroupPoList2Entity(List<SysUserGroupPO> list);
 }

@@ -5,6 +5,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xh.common.base.constant.SysUserConstant;
 import com.xh.common.base.constant.SysUserGroupConstant;
 import com.xh.common.base.exception.MyException;
 import com.xh.common.base.web.PageQuery;
@@ -29,7 +30,6 @@ import com.xh.system.application.mapstract.SysUserEntity2ResponseMapper;
 import com.xh.system.application.service.dto.LoginUserInfoVO;
 import com.xh.system.application.service.sub.ThirdPartyService;
 import com.xh.system.domain.aggregate.SysUserAggregate;
-import com.xh.common.base.constant.SysUserConstant;
 import com.xh.system.domain.entity.SysUser;
 import com.xh.system.domain.entity.SysUserGroup;
 import com.xh.system.domain.service.SysMenuDomainService;
@@ -57,10 +57,10 @@ public class SysUserService {
 
     @Resource
     private ThirdPartyService thirdPartyService;
-    
+
     @Resource
     private SysMenuDomainService sysMenuDomainService;
-    
+
     @Resource
     private SysUserGroupDomainService sysUserGroupDomainService;
 
@@ -210,7 +210,7 @@ public class SysUserService {
     public void resetPassword(SysUser sysUsers) {
         SysUserAggregate root =
                 Optional.ofNullable(sysUserDomainService.getRoot(sysUsers.getId(), SysUserConstant.SysUserRootType.DEFAULT)).orElseThrow(() -> new MyException("用户不存在"));
-         SysUser user = Optional.ofNullable(root.getSysUser()).orElseThrow(() -> new MyException("用户不存在"));
+        SysUser user = Optional.ofNullable(root.getSysUser()).orElseThrow(() -> new MyException("用户不存在"));
         sysUserDomainService.resetPassword(root, sysUsers.getId(), sysUsers.getPassword());
     }
 
@@ -222,5 +222,20 @@ public class SysUserService {
                 Optional.ofNullable(SysUserGroupDomainService.getRepository(SysUserGroupConstant.UserGroupMemberRootType.DEFAULT).queryUserGroupPage(pageQuery.getCurrentPage(),
                         pageQuery.getPageSize(), code, name)).orElse(new Page<>());
         return SysUserEntity2ResponseMapper.INSTANCE.toSysUserGroupPageResult(page);
+    }
+
+    public SysUserGroup saveUserGroup(SysUserGroup sysUserGroup) {
+        List<SysUserGroup> groupList =
+                Optional.ofNullable(SysUserGroupDomainService.getRepository(SysUserGroupConstant.UserGroupMemberRootType.DEFAULT).queryUserGroupSaveQuery(sysUserGroup)).orElse(List.of());
+        if (CollUtil.isNotEmpty(groupList)) {
+            throw new MyException("用户组%s已存在，不能新增重复的用户组！".formatted(sysUserGroup.getName()));
+        }
+
+        if (sysUserGroup.getId() == null) {
+            sysUserGroupDomainService.saveUserGroup(sysUserGroup);
+        } else {
+            sysUserGroupDomainService.updateUserGroup(sysUserGroup);
+        }
+        return null;
     }
 }
