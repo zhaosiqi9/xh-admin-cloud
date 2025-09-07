@@ -98,4 +98,9 @@ public class SysUserDomainService {
     public void saveUserJobs(Long userId, Integer type, List<SysUserJob> userJobList, SysUserConstant.SysUserRootType sysUserRootType) {
         getRepository(sysUserRootType).saveUserJobs(userId, type, userJobList);
     }
+
+    public void roleSort(SysUserAggregate root, SysUser sysUser) {
+        root.setSysUser(sysUser);
+        getRepository(SysUserConstant.SysUserRootType.DEFAULT).update(root);
+    }
 }

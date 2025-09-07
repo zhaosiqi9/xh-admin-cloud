@@ -8,6 +8,7 @@ import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.xh.common.base.constant.SysUserConstant;
 import com.xh.common.core.utils.AssertUtil;
 import com.xh.common.base.exception.MyException;
+import com.xh.jwt.dto.SysOrgRoleDTO;
 import com.xh.system.domain.aggregate.SysUserAggregate;
 import com.xh.system.domain.entity.*;
 import com.xh.system.domain.mapstract.sysuser.SysUserEntity2POMapper;
@@ -220,5 +221,9 @@ public abstract class AbstractSysUserRepository {
         lambdaWrapper.eq(SysUserGroupMemberPO::getSysUserId, userId);
         lambdaWrapper.leftJoin(SysUserGroupPO.class, SysUserGroupPO::getId, SysUserGroupMemberPO::getSysUserGroupId);
         return sysUserGroupMemberPOService.selectJoinList(SysUserGroup.class, lambdaWrapper);
+    }
+
+    public List<SysOrgRoleDTO> getUserRoles(Long userId) {
+        return sysUserPOService.getUserRoles(userId);
     }
 }

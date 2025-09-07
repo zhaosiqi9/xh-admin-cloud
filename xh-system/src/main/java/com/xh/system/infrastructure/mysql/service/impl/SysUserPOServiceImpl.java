@@ -2,6 +2,7 @@ package com.xh.system.infrastructure.mysql.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.yulichang.base.MPJBaseServiceImpl;
+import com.xh.jwt.dto.SysOrgRoleDTO;
 import com.xh.system.infrastructure.mysql.mapper.SysUserPOMapper;
 import com.xh.system.infrastructure.mysql.po.SysUserPO;
 import com.xh.system.infrastructure.mysql.service.SysUserPOService;
@@ -35,5 +36,10 @@ public class SysUserPOServiceImpl extends MPJBaseServiceImpl<SysUserPOMapper, Sy
             }
             return list.getFirst();
         }).orElse(null);
+    }
+
+    @Override
+    public List<SysOrgRoleDTO> getUserRoles(Long userId) {
+        return baseMapper.getUserRoles(userId);
     }
 }

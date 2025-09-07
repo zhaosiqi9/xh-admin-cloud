@@ -3,6 +3,7 @@ package com.xh.system.application.service;
 import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xh.common.base.constant.SysUserConstant;
@@ -11,7 +12,6 @@ import com.xh.common.base.exception.MyException;
 import com.xh.common.base.web.PageQuery;
 import com.xh.common.base.web.PageResult;
 import com.xh.common.core.utils.AssertUtil;
-import com.xh.common.core.utils.CommonUtil;
 import com.xh.jwt.constant.JwtConstant;
 import com.xh.jwt.dto.OnlineUserDTO;
 import com.xh.jwt.dto.SysLoginUserInfoDTO;
@@ -20,6 +20,7 @@ import com.xh.jwt.dto.SysUserDTO;
 import com.xh.jwt.util.JwtUtil;
 import com.xh.system.api.request.SwitchUserRoleRequest;
 import com.xh.system.api.request.SystemUserQueryRequest;
+import com.xh.system.api.request.user.UserQeryOnlineUserRequest;
 import com.xh.system.api.request.user.UserQueryUserGroupListRequest;
 import com.xh.system.api.request.user.UserSaveUserJobsRequest;
 import com.xh.system.api.request.user.UserSwitchMenuPropRequest;
@@ -34,17 +35,15 @@ import com.xh.system.application.service.sub.ThirdPartyService;
 import com.xh.system.domain.aggregate.SysUserAggregate;
 import com.xh.system.domain.entity.SysUser;
 import com.xh.system.domain.entity.SysUserGroup;
-import com.xh.system.domain.entity.SysUserGroupMember;
 import com.xh.system.domain.entity.SysUserJob;
 import com.xh.system.domain.service.SysMenuDomainService;
 import com.xh.system.domain.service.SysUserDomainService;
 import com.xh.system.domain.service.SysUserGroupDomainService;
-import com.xh.system.infrastructure.mysql.mapper.SysUserPOMapper;
 import com.xh.system.infrastructure.mysql.po.SysUserPO;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -273,8 +272,8 @@ public class SysUserService {
         return true;
     }
 
-    public PageResult<OnlineUserDTO> queryOnlineUser(PageQuery<Map<String, Object>> pageQuery) {
-         final Map<String, Object> param = pageQuery.getParam();
+    public PageResult<OnlineUserDTO> queryOnlineUser(PageQuery<UserQeryOnlineUserRequest> pageQuery) {
+         final UserQeryOnlineUserRequest param = pageQuery.getParam();
         // 查询所有已登录的 Token
         List<String> tokens = StpUtil.searchTokenValue("", 0, -1, false);
         List<OnlineUserDTO> onlineUserList = tokens.stream()
@@ -283,19 +282,19 @@ public class SysUserService {
                 //过滤掉未登录的token
                 .filter(i -> StpUtil.getLoginIdByToken(i) != null)
                 .map(StpUtil::getTokenSessionByToken)
-                .map(i -> i.getModel(LoginUtil.SYS_USER_KEY, OnlineUserDTO.class))
+                .map(i -> i.getModel(JwtConstant.SYS_USER_KEY, OnlineUserDTO.class))
                 .filter(Objects::nonNull)
                 //模糊查询
                 .filter(i -> {
                     boolean r = true;
-                    if (CommonUtil.isNotEmpty(param.get("userCode"))) {
-                        r = i.getUserCode().contains(param.get("userCode").toString());
+                    if (StrUtil.isNotEmpty(param.getUserCode())) {
+                        r = i.getUserCode().contains(param.getUserCode());
                     }
-                    if (r && CommonUtil.isNotEmpty(param.get("userName"))) {
-                        r = i.getUserName().contains(param.get("userName").toString());
+                    if (r && StrUtil.isNotEmpty(param.getUserName())) {
+                        r = i.getUserName().contains(param.getUserName());
                     }
-                    if (r && CommonUtil.isNotEmpty(param.get("ip"))) {
-                        r = i.getLoginIp().contains(param.get("ip").toString());
+                    if (r && StrUtil.isNotEmpty(param.getIp())) {
+                        r = i.getLoginIp().contains(param.getIp());
                     }
                     return r;
                 })
@@ -306,7 +305,7 @@ public class SysUserService {
                         pageQuery.setOrderDirection(PageQuery.OrderDirection.desc);
                     }
                     try {
-                        Field field = CommonUtil.getField(OnlineUserDTO.class, pageQuery.getOrderProp());
+                        Field field = FieldUtils.getField(OnlineUserDTO.class, pageQuery.getOrderProp());
                         if (field == null) return 0;
                         field.setAccessible(true);
                         Object aVal = field.get(a);
@@ -341,11 +340,21 @@ public class SysUserService {
     }
 
     public void kickOut(String token) {
-        
+        StpUtil.kickoutByTokenValue(token);
     }
 
     public void roleSort(String roleSorter) {
-        
+        Long userId = (Long) StpUtil.getLoginId();
+        SysUserAggregate root = Optional.ofNullable(sysUserDomainService.getRoot(userId, SysUserConstant.SysUserRootType.DEFAULT)).orElseThrow(() -> new MyException("用户不存在"));
+        SysUser sysUser = root.getSysUser();
+        sysUser.setRoleSorter(roleSorter);
+        sysUserDomainService.roleSort(root, sysUser);
+
+        // 刷新缓存
+        SaSession session = StpUtil.getSession();
+        SysLoginUserInfoDTO loginUserInfoDTO = session.getModel(JwtConstant.SYS_USER_KEY, SysLoginUserInfoDTO.class);
+        loginUserInfoDTO.setRoles(SysUserDomainService.getRepository(SysUserConstant.SysUserRootType.DEFAULT).getUserRoles(userId));
+        session.set(JwtConstant.SYS_USER_KEY, loginUserInfoDTO);
     }
 
     public List<SysUserGroup> getUserGroups(Long userId) {
