@@ -9,10 +9,7 @@ import com.xh.common.base.constant.SysUserConstant;
 import com.xh.common.core.utils.AssertUtil;
 import com.xh.common.base.exception.MyException;
 import com.xh.system.domain.aggregate.SysUserAggregate;
-import com.xh.system.domain.entity.SysOrg;
-import com.xh.system.domain.entity.SysRole;
-import com.xh.system.domain.entity.SysUser;
-import com.xh.system.domain.entity.SysUserJob;
+import com.xh.system.domain.entity.*;
 import com.xh.system.domain.mapstract.sysuser.SysUserEntity2POMapper;
 import com.xh.system.domain.mapstract.sysuser.SysUserPO2EntityMapper;
 import com.xh.system.domain.repository.sysuser.factory.SysUserRepositoryFactory;
@@ -173,7 +170,7 @@ public abstract class AbstractSysUserRepository {
             String pwHash = BCrypt.hashpw(sysUser.getPassword(), BCrypt.gensalt());
             sysUser.setPassword(pwHash);
 
-            SysUserPO record = sysUserEntity2POMapper.toRecord(t);
+            SysUserPO record = sysUserEntity2POMapper.toSysUserPO(t);
             sysUserPOService.save(record);
             record.setId(record.getId());
             return record.getId();
@@ -182,7 +179,7 @@ public abstract class AbstractSysUserRepository {
 
     protected void updateSysUser(SysUser sysUser) {
         Optional.of(sysUser).map(t -> {
-            SysUserPO record = sysUserEntity2POMapper.toRecord(t);
+            SysUserPO record = sysUserEntity2POMapper.toSysUserPO(t);
             sysUserPOService.updateById(record);
             record.setId(record.getId());
             return record.getId();
@@ -210,5 +207,18 @@ public abstract class AbstractSysUserRepository {
 
     public Page<SysRole> sysRolePageQuery(int currentPage, int pageSize, MPJLambdaWrapper<SysRolePO> lambdaWrapper) {
        return sysRolePOService.selectJoinListPage(new Page<>(currentPage, pageSize), SysRole.class, lambdaWrapper);
+    }
+
+    public void saveUserJobs(Long userId, Integer type, List<SysUserJob> userJobList) {
+        
+    }
+
+    public List<SysUserGroup> getUserGroups(Long userId) {
+        MPJLambdaWrapper<SysUserGroupMemberPO> lambdaWrapper = new MPJLambdaWrapper<>();
+        lambdaWrapper.selectAll(SysUserGroupMemberPO.class);
+        lambdaWrapper.selectAll(SysUserGroupPO.class);
+        lambdaWrapper.eq(SysUserGroupMemberPO::getSysUserId, userId);
+        lambdaWrapper.leftJoin(SysUserGroupPO.class, SysUserGroupPO::getId, SysUserGroupMemberPO::getSysUserGroupId);
+        return sysUserGroupMemberPOService.selectJoinList(SysUserGroup.class, lambdaWrapper);
     }
 }

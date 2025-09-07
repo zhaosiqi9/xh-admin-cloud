@@ -1,13 +1,18 @@
 package com.xh.system.domain.repository.sysuser.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.IdUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xh.common.base.constant.SysUserConstant;
 import com.xh.common.core.entity.BaseEntity;
+import com.xh.system.api.request.user.UserSaveUserJobsRequestJob;
 import com.xh.system.domain.aggregate.SysUserAggregate;
 import com.xh.system.domain.entity.SysOrg;
 import com.xh.system.domain.entity.SysRole;
 import com.xh.system.domain.entity.SysUser;
 import com.xh.system.domain.entity.SysUserJob;
 import com.xh.system.domain.repository.sysuser.AbstractSysUserRepository;
+import com.xh.system.infrastructure.mysql.po.SysUserJobPO;
 import com.xh.system.infrastructure.mysql.po.SysUserPO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -86,6 +91,21 @@ public class SysUserWithJobRepositoryImpl extends AbstractSysUserRepository {
         
         UserAggregateSetJob(sysUserPO.getId(), root, sysUser);
         return root;
+    }
+
+    @Override
+    public void saveUserJobs(Long userId, Integer type, List<SysUserJob> userJobList) {
+        getSysUserJobPOService().remove(new LambdaQueryWrapper<SysUserJobPO>().eq(SysUserJobPO::getUserId, userId).eq(SysUserJobPO::getType, type));
+        
+        List<SysUserJobPO> sysUserJobPOList = CollUtil.newArrayList();
+        for (SysUserJob job : userJobList) {
+            SysUserJobPO po = getSysUserEntity2POMapper().toSysUserJobPO(job);
+            po.setId(IdUtil.getSnowflakeNextId());
+            po.setUserId(userId);
+            po.setType(type);
+            sysUserJobPOList.add(po);
+        }
+        getSysUserJobPOService().saveBatch(sysUserJobPOList);
     }
 
 

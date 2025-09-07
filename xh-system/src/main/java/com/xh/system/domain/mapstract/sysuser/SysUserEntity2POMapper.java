@@ -1,6 +1,8 @@
 package com.xh.system.domain.mapstract.sysuser;
 
 import com.xh.system.domain.entity.SysUser;
+import com.xh.system.domain.entity.SysUserJob;
+import com.xh.system.infrastructure.mysql.po.SysUserJobPO;
 import com.xh.system.infrastructure.mysql.po.SysUserPO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -15,5 +17,8 @@ public interface SysUserEntity2POMapper {
 
     SysUserEntity2POMapper INSTANCE = Mappers.getMapper(SysUserEntity2POMapper.class);
 
-    SysUserPO toRecord(SysUser sysUser);
+    SysUserPO toSysUserPO(SysUser sysUser);
+    
+    
+    SysUserJobPO toSysUserJobPO(SysUserJob sysUserJob);
 }

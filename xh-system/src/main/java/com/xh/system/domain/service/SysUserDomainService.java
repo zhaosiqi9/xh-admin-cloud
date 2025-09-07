@@ -3,9 +3,10 @@ package com.xh.system.domain.service;
 import cn.dev33.satoken.secure.BCrypt;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
-import com.xh.system.domain.aggregate.SysUserAggregate;
 import com.xh.common.base.constant.SysUserConstant;
+import com.xh.system.domain.aggregate.SysUserAggregate;
 import com.xh.system.domain.entity.SysUser;
+import com.xh.system.domain.entity.SysUserJob;
 import com.xh.system.domain.repository.sysuser.AbstractSysUserRepository;
 import com.xh.system.domain.repository.sysuser.factory.SysUserRepositoryFactory;
 import org.springframework.stereotype.Service;
@@ -92,5 +93,9 @@ public class SysUserDomainService {
         String pwHash = BCrypt.hashpw(password, BCrypt.gensalt());
         user.setPassword(pwHash);
         getRepository(SysUserConstant.SysUserRootType.DEFAULT).update(root);
+    }
+
+    public void saveUserJobs(Long userId, Integer type, List<SysUserJob> userJobList, SysUserConstant.SysUserRootType sysUserRootType) {
+        getRepository(sysUserRootType).saveUserJobs(userId, type, userJobList);
     }
 }

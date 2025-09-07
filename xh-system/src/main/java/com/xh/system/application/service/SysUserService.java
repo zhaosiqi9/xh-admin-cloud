@@ -11,6 +11,7 @@ import com.xh.common.base.exception.MyException;
 import com.xh.common.base.web.PageQuery;
 import com.xh.common.base.web.PageResult;
 import com.xh.common.core.utils.AssertUtil;
+import com.xh.common.core.utils.CommonUtil;
 import com.xh.jwt.constant.JwtConstant;
 import com.xh.jwt.dto.OnlineUserDTO;
 import com.xh.jwt.dto.SysLoginUserInfoDTO;
@@ -33,17 +34,21 @@ import com.xh.system.application.service.sub.ThirdPartyService;
 import com.xh.system.domain.aggregate.SysUserAggregate;
 import com.xh.system.domain.entity.SysUser;
 import com.xh.system.domain.entity.SysUserGroup;
+import com.xh.system.domain.entity.SysUserGroupMember;
 import com.xh.system.domain.entity.SysUserJob;
 import com.xh.system.domain.service.SysMenuDomainService;
 import com.xh.system.domain.service.SysUserDomainService;
 import com.xh.system.domain.service.SysUserGroupDomainService;
+import com.xh.system.infrastructure.mysql.mapper.SysUserPOMapper;
 import com.xh.system.infrastructure.mysql.po.SysUserPO;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -260,11 +265,79 @@ public class SysUserService {
     }
 
     public boolean saveUserJobs(UserSaveUserJobsRequest sysUserJobDTO) {
+        Long userId = Optional.ofNullable(sysUserJobDTO.getUserId()).orElseThrow(() -> new MyException("参数异常，检查后重试！"));
+        Integer type = Optional.ofNullable(sysUserJobDTO.getType()).orElseThrow(() -> new MyException("参数异常，检查后重试！"));
+        AssertUtil.isNotEmpty(sysUserJobDTO.getJobData(), "参数异常，检查后重试！");
+        List<SysUserJob> userJobList = SysUserEntity2ResponseMapper.INSTANCE.toSysUserJobList(sysUserJobDTO.getJobData());
+        sysUserDomainService.saveUserJobs(userId, type, userJobList, SysUserConstant.SysUserRootType.JOB);
         return true;
     }
 
     public PageResult<OnlineUserDTO> queryOnlineUser(PageQuery<Map<String, Object>> pageQuery) {
-        return null;
+         final Map<String, Object> param = pageQuery.getParam();
+        // 查询所有已登录的 Token
+        List<String> tokens = StpUtil.searchTokenValue("", 0, -1, false);
+        List<OnlineUserDTO> onlineUserList = tokens.stream()
+                //截取实际的token值，去掉前缀
+                .map(i -> i.split(":")[3])
+                //过滤掉未登录的token
+                .filter(i -> StpUtil.getLoginIdByToken(i) != null)
+                .map(StpUtil::getTokenSessionByToken)
+                .map(i -> i.getModel(LoginUtil.SYS_USER_KEY, OnlineUserDTO.class))
+                .filter(Objects::nonNull)
+                //模糊查询
+                .filter(i -> {
+                    boolean r = true;
+                    if (CommonUtil.isNotEmpty(param.get("userCode"))) {
+                        r = i.getUserCode().contains(param.get("userCode").toString());
+                    }
+                    if (r && CommonUtil.isNotEmpty(param.get("userName"))) {
+                        r = i.getUserName().contains(param.get("userName").toString());
+                    }
+                    if (r && CommonUtil.isNotEmpty(param.get("ip"))) {
+                        r = i.getLoginIp().contains(param.get("ip").toString());
+                    }
+                    return r;
+                })
+                //排序
+                .sorted((a, b) -> {
+                    if (pageQuery.getOrderProp() == null || pageQuery.getOrderDirection() == null) {
+                        pageQuery.setOrderProp("loginTime");
+                        pageQuery.setOrderDirection(PageQuery.OrderDirection.desc);
+                    }
+                    try {
+                        Field field = CommonUtil.getField(OnlineUserDTO.class, pageQuery.getOrderProp());
+                        if (field == null) return 0;
+                        field.setAccessible(true);
+                        Object aVal = field.get(a);
+                        Object bVal = field.get(b);
+                        if (aVal != null && bVal != null) {
+                            var px = aVal.toString().compareTo(bVal.toString());
+                            if (pageQuery.getOrderDirection() == PageQuery.OrderDirection.desc) {
+                                return -px;
+                            }
+                            return px;
+                        }
+                    } catch (ReflectiveOperationException e) {
+                        log.error("比较错误", e);
+                        throw new MyException(e.getMessage());
+                    }
+                    return 0;
+                })
+                .toList();
+        PageResult<OnlineUserDTO> pageResult = new PageResult<>();
+        pageResult.setIsPage(pageQuery.getIsPage());
+        pageResult.setCurrentPage(pageQuery.getCurrentPage());
+        pageResult.setPageSize(pageQuery.getPageSize());
+        pageResult.setTotal(onlineUserList.size());
+        if (pageQuery.getIsPage()) {
+            onlineUserList = onlineUserList.stream()
+                    .skip((long) (pageQuery.getCurrentPage() - 1) * pageQuery.getPageSize())
+                    .limit(pageQuery.getPageSize())
+                    .toList();
+        }
+        pageResult.setList(onlineUserList);
+        return pageResult;
     }
 
     public void kickOut(String token) {
@@ -275,7 +348,7 @@ public class SysUserService {
         
     }
 
-    public List<SysUserGroup> getUserGroups(Long id) {
-        return null;
+    public List<SysUserGroup> getUserGroups(Long userId) {
+        return SysUserDomainService.getRepository(SysUserConstant.SysUserRootType.DEFAULT).getUserGroups(userId);
     }
 }

@@ -2,6 +2,7 @@ package com.xh.system.application.mapstract;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xh.common.base.web.PageResult;
+import com.xh.system.api.request.user.UserSaveUserJobsRequestJob;
 import com.xh.system.api.response.*;
 import com.xh.system.domain.aggregate.SysUserAggregate;
 import com.xh.system.domain.entity.*;
@@ -56,4 +57,7 @@ public interface SysUserEntity2ResponseMapper {
                     @Mapping(source = "size", target = "pageSize"),
             })
     PageResult<SysUserGroup> toSysUserGroupPageResult(Page<SysUserGroup> page);
+    
+    
+    List<SysUserJob> toSysUserJobList(List<UserSaveUserJobsRequestJob> jobData);
 }
