@@ -1,5 +1,6 @@
 package com.xh.system.application.service;
 
+import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
@@ -44,6 +45,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,6 +71,8 @@ public class SysUserService {
 
     @Resource
     private SysUserGroupDomainService sysUserGroupDomainService;
+    @Autowired
+    private PermissionService permissionService;
 
     public SysUser personalCenterSave(SysUser sysUser) {
 
@@ -149,30 +153,29 @@ public class SysUserService {
      * @param refresh 是否刷新缓存
      */
     private LoginUserInfoVO getCurrentLoginUserVO(boolean refresh) {
-//         try {
-//            SaSession session = StpUtil.getSession();
-//            SaSession tokenSession = StpUtil.getTokenSession();
-//            LoginUserInfoVO loginUserInfo = null;
-//            if (session != null && tokenSession != null) {
-//                SysLoginUserInfoDTO loginUserInfoDTO = session.getModel(JwtConstant.SYS_USER_KEY, SysLoginUserInfoDTO.class);
-//                loginUserInfo = new LoginUserInfoVO();
-//                loginUserInfo.setTokenName(StpUtil.getTokenName());
-//                loginUserInfo.setTokenValue(StpUtil.getTokenValue());
-//                loginUserInfo.setUser(loginUserInfoDTO.getUser());
-//                OnlineUserDTO onlineUser = tokenSession.getModel(JwtConstant.SYS_USER_KEY, OnlineUserDTO.class);
-//                List<SysOrgRoleDTO> roles = loginUserInfoDTO.getRoles();
-//                for (SysOrgRoleDTO role : roles) {
-//                    role.setActive(Objects.equals(onlineUser.getRoleId(), role.getSysRoleId()) && Objects.equals(onlineUser.getOrgId(), role.getSysOrgId()));
-//                }
-//                loginUserInfo.setRoles(roles);
-//                loginUserInfo.setMenus(getRolePermissions(onlineUser.getRoleId(), refresh));
-//            }
-//            return loginUserInfo;
-//        } catch (NotLoginException e) {
-//            return null;
-//        }
-        return null;
-    }
+try {
+            SaSession session = StpUtil.getSession();
+            SaSession tokenSession = StpUtil.getTokenSession();
+            LoginUserInfoVO loginUserInfo = null;
+            if (session != null && tokenSession != null) {
+                SysLoginUserInfoDTO loginUserInfoDTO = session.getModel(JwtConstant.SYS_USER_KEY, SysLoginUserInfoDTO.class);
+                loginUserInfo = new LoginUserInfoVO();
+                loginUserInfo.setTokenName(StpUtil.getTokenName());
+                loginUserInfo.setTokenValue(StpUtil.getTokenValue());
+                loginUserInfo.setUser(loginUserInfoDTO.getUser());
+                OnlineUserDTO onlineUser = tokenSession.getModel(JwtConstant.SYS_USER_KEY, OnlineUserDTO.class);
+                List<SysOrgRoleDTO> roles = loginUserInfoDTO.getRoles();
+                for (SysOrgRoleDTO role : roles) {
+                    role.setActive(Objects.equals(onlineUser.getRoleId(), role.getSysRoleId()) && Objects.equals(onlineUser.getOrgId(), role.getSysOrgId()));
+                }
+                loginUserInfo.setRoles(roles);
+                //todo 获取菜单权限
+//                loginUserInfo.setMenus(permissionService.getMenuPermission(onlineUser.getRoleId(), refresh));
+            }
+            return loginUserInfo;
+        } catch (NotLoginException e) {
+            return null;
+        }    }
 
 
     public PageResult<SystemUserQueryResponse> query(SystemUserQueryRequest request) {
