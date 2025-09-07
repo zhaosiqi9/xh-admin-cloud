@@ -6,9 +6,11 @@ import com.xh.common.base.web.PageQuery;
 import com.xh.common.base.web.PageResult;
 import com.xh.common.base.web.RestResponse;
 import com.xh.common.core.annotation.Log;
+import com.xh.jwt.dto.OnlineUserDTO;
 import com.xh.system.api.contract.RemoteSysUserContract;
 import com.xh.system.api.request.*;
 import com.xh.system.api.request.user.UserQueryUserGroupListRequest;
+import com.xh.system.api.request.user.UserSaveUserJobsRequest;
 import com.xh.system.api.request.user.UserSwitchMenuPropRequest;
 import com.xh.system.api.response.GetUserInfoResponse;
 import com.xh.system.api.response.RolePermissionsListResponse;
@@ -18,6 +20,7 @@ import com.xh.system.application.mapstract.SysUserRequest2CommandMapper;
 import com.xh.system.application.service.SysUserService;
 import com.xh.system.domain.entity.SysUser;
 import com.xh.system.domain.entity.SysUserGroup;
+import com.xh.system.domain.entity.SysUserJob;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -177,15 +180,14 @@ public class SysUserController implements RemoteSysUserContract {
 
     @Operation(description = "id获取用户组详情")
     @GetMapping("/getUserGroup/{id}")
-    public RestResponse<SysUserGroup> getUserGroupById(@PathVariable Integer id) {
+    public RestResponse<SysUserGroup> getUserGroupById(@PathVariable Long id) {
         return RestResponse.success(sysUserService.getUserGroupById(id));
     }
 
     @Operation(description = "ids批量删除用户组")
     @DeleteMapping("/delUserGroup")
-    public RestResponse<?> delUserGroup(@RequestParam List<Integer> ids) {
-        sysUserService.delUserGroup(ids);
-        return RestResponse.success();
+    public RestResponse<Boolean> delUserGroup(@RequestParam List<Long> ids) {
+        return RestResponse.success(sysUserService.delUserGroup(ids));
     }
 
     @Operation(description = "获取用户或者用户组的岗位信息")
@@ -196,35 +198,34 @@ public class SysUserController implements RemoteSysUserContract {
 
     @Operation(description = "用户岗位保存")
     @PostMapping("/saveUserJobs")
-    public RestResponse<?> saveUserJobs(@RequestBody SysUserJobDTO sysUserJobDTO) {
-        sysUserService.saveUserJobs(sysUserJobDTO);
-        return RestResponse.success();
+    public RestResponse<Boolean> saveUserJobs(@RequestBody UserSaveUserJobsRequest sysUserJobDTO) {
+        return RestResponse.success(sysUserService.saveUserJobs(sysUserJobDTO));
     }
 
     @Operation(description = "id获取用户所在的所有用户组信息")
     @GetMapping("/getUserGroups/{id}")
-    public RestResponse<List<SysUserGroup>> getUserGroups(@PathVariable Integer id) {
+    public RestResponse<List<SysUserGroup>> getUserGroups(@PathVariable Long id) {
         return RestResponse.success(sysUserService.getUserGroups(id));
     }
 
     @Operation(description = "在线用户查询")
     @PostMapping("/queryOnlineUser")
     public RestResponse<PageResult<OnlineUserDTO>> queryOnlineUser(@RequestBody PageQuery<Map<String, Object>> pageQuery) {
-        PageResult<OnlineUserDTO> data = sysLoginService.queryOnlineUser(pageQuery);
+        PageResult<OnlineUserDTO> data = sysUserService.queryOnlineUser(pageQuery);
         return RestResponse.success(data);
     }
 
     @Operation(description = "踢用户下线")
     @PostMapping("/kickOut")
     public RestResponse<?> kickOut(@RequestBody String token) {
-        sysLoginService.kickOut(token);
+        sysUserService.kickOut(token);
         return RestResponse.success();
     }
 
     @Operation(description = "用户角色排序")
     @PostMapping("/roleSort")
     public RestResponse<?> roleSort(@RequestBody String roleSorter) {
-        sysLoginService.roleSort(roleSorter);
+        sysUserService.roleSort(roleSorter);
         return RestResponse.success();
     }
 

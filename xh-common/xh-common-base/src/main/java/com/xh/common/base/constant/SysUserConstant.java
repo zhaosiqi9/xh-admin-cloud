@@ -13,7 +13,7 @@ public class SysUserConstant {
         DEFAULT("default", "默认-只有用户信息"),
         ROLE("role", "用户+角色信息"),
         ORG("org", "用户+部门信息"),
-        ORG_ROLE("org_role", "用户+部门+角色信息"),
+        JOB("org_role", "用户+部门+角色信息"),
         ;
 
         private final String type;

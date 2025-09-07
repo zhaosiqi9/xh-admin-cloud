@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class SysUserWithJobRepositoryImpl extends AbstractSysUserRepository {
     @Override
     protected SysUserConstant.SysUserRootType getType() {
-        return SysUserConstant.SysUserRootType.ORG_ROLE;
+        return SysUserConstant.SysUserRootType.JOB;
     }
 
     @Override

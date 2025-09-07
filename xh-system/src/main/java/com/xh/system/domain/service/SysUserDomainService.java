@@ -80,7 +80,7 @@ public class SysUserDomainService {
             return false;
         }
         userIds.parallelStream().forEach(t -> {
-            getRepository(SysUserConstant.SysUserRootType.ORG_ROLE).delete(t);
+            getRepository(SysUserConstant.SysUserRootType.JOB).delete(t);
         });
         return true;
     }

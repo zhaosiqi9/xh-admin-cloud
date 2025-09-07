@@ -80,4 +80,15 @@ public abstract class AbstractSysUserGroupRepository {
         List<SysUserGroupPO> list = sysUserGroupPOService.list(lambdaQueryWrapper);
         return sysUserGroupPO2EntityMapper.sysUserGroupPoList2Entity(list);
     }
+
+    public SysUserGroup queryUserGroupById(Long id) {
+        LambdaQueryWrapper<SysUserGroupPO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(SysUserGroupPO::getId, id);
+        SysUserGroupPO sysUserGroupPO = sysUserGroupPOService.getOne(lambdaQueryWrapper);
+        return sysUserGroupPO2EntityMapper.sysUserGroupPo2Entity(sysUserGroupPO);
+    }
+
+    public void delUserGroup(List<Long> ids) {
+        
+    }
 }

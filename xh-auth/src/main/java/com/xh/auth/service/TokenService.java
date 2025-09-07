@@ -92,7 +92,7 @@ public class TokenService {
         val captchaCode = request.getCaptchaCode();
         val password = request.getPassword();
         GetUserInfoResponse userInfoResponse =
-                remoteUserContract.getUserInfo(new GetUserInfoRequest().setUserName(username).setEnabled(true).setType(SysUserConstant.SysUserRootType.ORG_ROLE));
+                remoteUserContract.getUserInfo(new GetUserInfoRequest().setUserName(username).setEnabled(true).setType(SysUserConstant.SysUserRootType.JOB));
         GetUserInfoResponseUser sysUser = userInfoResponse.getUser();
 
         SaSession session = null;

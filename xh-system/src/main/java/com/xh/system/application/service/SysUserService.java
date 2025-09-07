@@ -20,6 +20,7 @@ import com.xh.jwt.util.JwtUtil;
 import com.xh.system.api.request.SwitchUserRoleRequest;
 import com.xh.system.api.request.SystemUserQueryRequest;
 import com.xh.system.api.request.user.UserQueryUserGroupListRequest;
+import com.xh.system.api.request.user.UserSaveUserJobsRequest;
 import com.xh.system.api.request.user.UserSwitchMenuPropRequest;
 import com.xh.system.api.response.GetUserInfoResponse;
 import com.xh.system.api.response.SwitchUserRoleResponse;
@@ -32,6 +33,7 @@ import com.xh.system.application.service.sub.ThirdPartyService;
 import com.xh.system.domain.aggregate.SysUserAggregate;
 import com.xh.system.domain.entity.SysUser;
 import com.xh.system.domain.entity.SysUserGroup;
+import com.xh.system.domain.entity.SysUserJob;
 import com.xh.system.domain.service.SysMenuDomainService;
 import com.xh.system.domain.service.SysUserDomainService;
 import com.xh.system.domain.service.SysUserGroupDomainService;
@@ -66,7 +68,7 @@ public class SysUserService {
 
     public SysUser personalCenterSave(SysUser sysUser) {
 
-        AssertUtil.equals(sysUser.getId(), (Long) StpUtil.getLoginId(), "非法请求！");
+        AssertUtil.equals(sysUser.getId(), StpUtil.getLoginId(), "非法请求！");
         SysUserAggregate root =
                 Optional.ofNullable(sysUserDomainService.getRoot(sysUser.getId(), SysUserConstant.SysUserRootType.DEFAULT)).orElseThrow(() -> new MyException("用户不存在"));
         SysUser sysUser1 = Optional.ofNullable(root.getSysUser()).orElseThrow(() -> new MyException("用户不存在"));
@@ -211,7 +213,7 @@ public class SysUserService {
         SysUserAggregate root =
                 Optional.ofNullable(sysUserDomainService.getRoot(sysUsers.getId(), SysUserConstant.SysUserRootType.DEFAULT)).orElseThrow(() -> new MyException("用户不存在"));
         SysUser user = Optional.ofNullable(root.getSysUser()).orElseThrow(() -> new MyException("用户不存在"));
-        sysUserDomainService.resetPassword(root, sysUsers.getId(), sysUsers.getPassword());
+        sysUserDomainService.resetPassword(root, user.getId(), sysUsers.getPassword());
     }
 
     public PageResult<SysUserGroup> queryUserGroupList(PageQuery<UserQueryUserGroupListRequest> pageQuery) {
@@ -236,6 +238,44 @@ public class SysUserService {
         } else {
             sysUserGroupDomainService.updateUserGroup(sysUserGroup);
         }
+        return sysUserGroup;
+    }
+
+    public SysUserGroup getUserGroupById(Long id) {
+        return Optional.ofNullable(SysUserGroupDomainService.getRepository(SysUserGroupConstant.UserGroupMemberRootType.DEFAULT).queryUserGroupById(id)).orElseThrow(() -> new MyException("用户组不存在"));
+    }
+
+    public boolean delUserGroup(List<Long> ids) {
+        sysUserGroupDomainService.delUserGroup(ids, SysUserGroupConstant.UserGroupMemberRootType.MEMBER);
+        return true;
+    }
+
+    public List<SysUserJob> getUserJobs(SysUserJob param) {
+        SysUserAggregate root = Optional.ofNullable(sysUserDomainService.getRoot(param.getUserId(), SysUserConstant.SysUserRootType.JOB)).orElseThrow(() -> new MyException("用户不存在"));
+        List<SysUserJob> sysUserJobs = Optional.ofNullable(root.getSysUserJobList()).orElse(List.of());
+        if (param.getType() != null) {
+            sysUserJobs = sysUserJobs.stream().filter(job -> Objects.equals(job.getType(), param.getType())).toList();
+        }
+        return sysUserJobs;
+    }
+
+    public boolean saveUserJobs(UserSaveUserJobsRequest sysUserJobDTO) {
+        return true;
+    }
+
+    public PageResult<OnlineUserDTO> queryOnlineUser(PageQuery<Map<String, Object>> pageQuery) {
+        return null;
+    }
+
+    public void kickOut(String token) {
+        
+    }
+
+    public void roleSort(String roleSorter) {
+        
+    }
+
+    public List<SysUserGroup> getUserGroups(Long id) {
         return null;
     }
 }

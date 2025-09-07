@@ -6,6 +6,8 @@ import com.xh.system.domain.repository.sysusergroup.AbstractSysUserGroupReposito
 import com.xh.system.domain.repository.sysusergroup.factory.SysUserGroupRepositoryFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SysUserGroupDomainService {
 
@@ -19,5 +21,9 @@ public class SysUserGroupDomainService {
 
     public void updateUserGroup(SysUserGroup sysUserGroup) {
         
+    }
+
+    public void delUserGroup(List<Long> ids, SysUserGroupConstant.UserGroupMemberRootType rootType) {
+        getRepository(rootType).delUserGroup(ids);
     }
 }
