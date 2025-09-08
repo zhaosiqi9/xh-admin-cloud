@@ -6,6 +6,7 @@ import com.xh.common.base.web.PageQuery;
 import com.xh.common.base.web.PageResult;
 import com.xh.common.base.web.RestResponse;
 import com.xh.system.api.request.RoleQueryRequest;
+import com.xh.system.api.request.role.SysRoleSaveRequest;
 import com.xh.system.api.response.RoleQueryResponse;
 import com.xh.system.application.command.sysrole.SysRoleDataPermission;
 import com.xh.system.application.command.sysrole.SysRolePermissionDTO;
@@ -35,7 +36,7 @@ public class SysRoleController {
     
     @Operation(description = "角色保存")
     @PostMapping("/save")
-    public RestResponse<SysRole> save(@RequestBody SysRole sysRole) {
+    public RestResponse<SysRole> save(@RequestBody SysRoleSaveRequest sysRole) {
         return RestResponse.success(sysRoleService.save(sysRole));
     }
 

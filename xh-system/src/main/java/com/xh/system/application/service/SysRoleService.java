@@ -6,6 +6,7 @@ import com.xh.common.base.constant.SysUserConstant;
 import com.xh.common.base.web.PageQuery;
 import com.xh.common.base.web.PageResult;
 import com.xh.system.api.request.RoleQueryRequest;
+import com.xh.system.api.request.role.SysRoleSaveRequest;
 import com.xh.system.api.response.RoleQueryResponse;
 import com.xh.system.application.command.sysrole.RoleQueryCommand;
 import com.xh.system.application.command.sysrole.SysRoleDataPermission;
@@ -49,7 +50,7 @@ public class SysRoleService {
         return null;
     }
 
-    public SysRole save(SysRole sysRole) {
+    public SysRole save(SysRoleSaveRequest sysRole) {
         
         if(sysRole.getId())
         
