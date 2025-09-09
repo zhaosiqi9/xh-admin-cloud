@@ -52,39 +52,38 @@ public class SysRoleService {
 
     public SysRole save(SysRoleSaveRequest sysRole) {
         
-        if(sysRole.getId())
         
-        if (sysRole.getId() == null) {
-            baseJdbcDao.insert(sysRole);
-        } else {
-            //删除之前的权限
-            String sql = "delete from sys_role_menu where sys_role_id = ?";
-            primaryJdbcTemplate.update(sql, sysRole.getId());
-            baseJdbcDao.update(sysRole);
-        }
-        List<SysRoleMenu> roleMenus = sysRole.getRoleMenus();
-        for (SysRoleMenu roleMenu : roleMenus) {
-            roleMenu.setSysRoleId(sysRole.getId());
-            baseJdbcDao.insert(roleMenu);
-        }
-        //需要删除子级角色多出的权限（mysql8.0递归查询并删除）
-        String sql2 = """
-                WITH recursive tb as (
-                	SELECT * from sys_role where parent_id = ?
-                	UNION ALL
-                	SELECT b.* from tb inner join sys_role b on b.parent_id = tb.id
-                )
-                DELETE FROM sys_role_menu
-                WHERE sys_role_id IN ( SELECT id FROM tb )
-                    AND sys_menu_id NOT IN (
-                     select * from (select sys_menu_id from sys_role_menu where sys_role_id = ?) temp
-                    )
-                """;
-        primaryJdbcTemplate.update(sql2, sysRole.getId(), sysRole.getId());
-
-        //刷新角色权限
-        commonService.getRolePermissions(sysRole.getId(), true);
-        return sysRole;
+//        if (sysRole.getId() == null) {
+//            baseJdbcDao.insert(sysRole);
+//        } else {
+//            //删除之前的权限
+//            String sql = "delete from sys_role_menu where sys_role_id = ?";
+//            primaryJdbcTemplate.update(sql, sysRole.getId());
+//            baseJdbcDao.update(sysRole);
+//        }
+//        List<SysRoleMenu> roleMenus = sysRole.getRoleMenus();
+//        for (SysRoleMenu roleMenu : roleMenus) {
+//            roleMenu.setSysRoleId(sysRole.getId());
+//            baseJdbcDao.insert(roleMenu);
+//        }
+//        //需要删除子级角色多出的权限（mysql8.0递归查询并删除）
+//        String sql2 = """
+//                WITH recursive tb as (
+//                	SELECT * from sys_role where parent_id = ?
+//                	UNION ALL
+//                	SELECT b.* from tb inner join sys_role b on b.parent_id = tb.id
+//                )
+//                DELETE FROM sys_role_menu
+//                WHERE sys_role_id IN ( SELECT id FROM tb )
+//                    AND sys_menu_id NOT IN (
+//                     select * from (select sys_menu_id from sys_role_menu where sys_role_id = ?) temp
+//                    )
+//                """;
+//        primaryJdbcTemplate.update(sql2, sysRole.getId(), sysRole.getId());
+//
+//        //刷新角色权限
+//        commonService.getRolePermissions(sysRole.getId(), true);
+        return new SysRole();
     }
 
     public List<SysMenu> queryRoleMenu(Map<String, Object> param) {
