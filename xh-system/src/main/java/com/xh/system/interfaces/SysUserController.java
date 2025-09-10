@@ -211,8 +211,8 @@ public class SysUserController implements RemoteSysUserContract {
     @Operation(description = "在线用户查询")
     @PostMapping("/queryOnlineUser")
     public RestResponse<PageResult<OnlineUserDTO>> queryOnlineUser(@RequestBody PageQuery<Map<String, Object>> pageQuery) {
-        PageResult<OnlineUserDTO> data = sysUserService.queryOnlineUser(pageQuery);
-        return RestResponse.success(data);
+//        PageResult<OnlineUserDTO> data = sysUserService.queryOnlineUser(pageQuery);
+        return RestResponse.success();
     }
 
     @Operation(description = "踢用户下线")

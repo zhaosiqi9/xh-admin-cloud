@@ -10,7 +10,7 @@ import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
-import com.xh.auth.api.request.LoginRequest;
+import com.xh.auth.controller.request.LoginRequest;
 import com.xh.auth.mapstruct.Entity2DTOMapper;
 import com.xh.auth.service.dto.ImageCaptchaDTO;
 import com.xh.auth.service.dto.LoginUserInfoVO;

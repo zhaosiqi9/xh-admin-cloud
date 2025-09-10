@@ -2,12 +2,12 @@ package com.xh.auth.controller;
 
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.hutool.http.Header;
-import com.xh.auth.api.request.LoginRequest;
+import com.xh.auth.controller.request.LoginRequest;
 import com.xh.auth.service.TokenService;
 import com.xh.auth.service.dto.ImageCaptchaDTO;
 import com.xh.auth.service.dto.LoginUserInfoVO;
-import com.xh.common.core.annotation.Log;
 import com.xh.common.base.web.RestResponse;
+import com.xh.common.core.annotation.Log;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
