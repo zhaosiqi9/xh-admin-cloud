@@ -15,7 +15,6 @@
     <description>xh-api</description>
 
     <modules>
-        <module>xh-auth-api</module>
         <module>xh-system-api</module>
     </modules>
 
