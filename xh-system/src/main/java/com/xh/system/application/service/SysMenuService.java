@@ -1,7 +1,7 @@
 package com.xh.system.application.service;
 
 import com.xh.common.core.constants.SystemRedisConstant;
-import com.xh.jwt.dto.RolePermissionsDTO;
+import com.xh.common.jwt.dto.RolePermissionsDTO;
 import com.xh.redis.service.RedisService;
 import com.xh.system.api.request.user.UserPermissionRequest;
 import com.xh.system.api.response.UserPermissionResponse;

@@ -2,7 +2,7 @@ package com.xh.system.infrastructure.mysql.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.yulichang.base.MPJBaseServiceImpl;
-import com.xh.jwt.dto.SysOrgRoleDTO;
+import com.xh.common.jwt.dto.SysOrgRoleDTO;
 import com.xh.system.infrastructure.mysql.mapper.SysUserPOMapper;
 import com.xh.system.infrastructure.mysql.po.SysUserPO;
 import com.xh.system.infrastructure.mysql.service.SysUserPOService;

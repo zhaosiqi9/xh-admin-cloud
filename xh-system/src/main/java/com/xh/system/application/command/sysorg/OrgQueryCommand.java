@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import static com.xh.mybatis.util.MybatisUtil.wrapperConditionList;
+import static com.xh.common.mybatis.util.MybatisUtil.wrapperConditionList;
 
 @Data
 @Schema(title = "组织查询参数")

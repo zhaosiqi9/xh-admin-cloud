@@ -1,7 +1,7 @@
 package com.xh.system.infrastructure.mysql.service;
 
 import com.github.yulichang.base.MPJBaseService;
-import com.xh.jwt.dto.SysOrgRoleDTO;
+import com.xh.common.jwt.dto.SysOrgRoleDTO;
 import com.xh.system.infrastructure.mysql.po.SysUserPO;
 
 import java.util.List;

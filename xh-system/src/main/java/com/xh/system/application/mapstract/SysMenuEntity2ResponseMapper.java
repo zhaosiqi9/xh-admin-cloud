@@ -1,6 +1,6 @@
 package com.xh.system.application.mapstract;
 
-import com.xh.jwt.dto.SysMenuDTO;
+import com.xh.common.jwt.dto.SysMenuDTO;
 import com.xh.system.api.response.UserPermissionResponse;
 import com.xh.system.domain.aggregate.SysMenuAggregate;
 import com.xh.system.domain.entity.SysMenu;

@@ -1,2 +1,2 @@
-com.xh.jwt.configuration.SaTokenConfiguration
+com.xh.common.jwt.configuration.SaTokenConfiguration
 cn.dev33.satoken.spring.SaTokenContextRegister

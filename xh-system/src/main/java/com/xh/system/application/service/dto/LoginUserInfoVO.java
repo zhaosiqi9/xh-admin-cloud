@@ -1,8 +1,8 @@
 package com.xh.system.application.service.dto;
 
-import com.xh.jwt.dto.SysMenuDTO;
-import com.xh.jwt.dto.SysOrgRoleDTO;
-import com.xh.jwt.dto.SysUserDTO;
+import com.xh.common.jwt.dto.SysMenuDTO;
+import com.xh.common.jwt.dto.SysOrgRoleDTO;
+import com.xh.common.jwt.dto.SysUserDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

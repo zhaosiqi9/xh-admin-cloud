@@ -1,7 +1,7 @@
 package com.xh.system.infrastructure.mysql.mapper;
 
 import com.github.yulichang.base.MPJBaseMapper;
-import com.xh.jwt.dto.SysOrgRoleDTO;
+import com.xh.common.jwt.dto.SysOrgRoleDTO;
 import com.xh.system.infrastructure.mysql.po.SysUserPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

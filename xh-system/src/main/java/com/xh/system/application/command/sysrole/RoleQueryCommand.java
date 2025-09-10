@@ -7,7 +7,7 @@ import com.xh.system.api.request.RoleQueryRequest;
 import com.xh.system.domain.entity.SysRole;
 import com.xh.system.infrastructure.mysql.po.SysRolePO;
 
-import static com.xh.mybatis.util.MybatisUtil.wrapperConditionList;
+import static com.xh.common.mybatis.util.MybatisUtil.wrapperConditionList;
 
 public class RoleQueryCommand {
     

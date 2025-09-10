@@ -17,17 +17,9 @@
 
 
         <!-- Sa-Token 权限认证，在线文档：https://sa-token.cc -->
-        <!-- sa-token-jakarta-servlet -->
 		<dependency>
 			<groupId>cn.dev33</groupId>
-			<artifactId>sa-token-jakarta-servlet</artifactId>
-            <version>1.44.0</version>
-		</dependency>
-		
-		<!-- sa-token-spring-boot-autoconfig -->
-		<dependency>
-			<groupId>cn.dev33</groupId>
-			<artifactId>sa-token-spring-boot-autoconfig</artifactId>
+			<artifactId>sa-token-spring-boot3-starter</artifactId>
             <version>1.44.0</version>
 		</dependency>
         <!-- Sa-Token 整合 Redis （使用 jackson 序列化方式） -->

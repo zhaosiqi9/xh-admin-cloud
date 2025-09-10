@@ -6,7 +6,7 @@ import com.xh.common.base.web.PageQuery;
 import com.xh.common.base.web.PageResult;
 import com.xh.common.base.web.RestResponse;
 import com.xh.common.core.annotation.Log;
-import com.xh.jwt.dto.OnlineUserDTO;
+import com.xh.common.jwt.dto.OnlineUserDTO;
 import com.xh.system.api.contract.RemoteSysUserContract;
 import com.xh.system.api.request.*;
 import com.xh.system.api.request.user.UserQueryUserGroupListRequest;

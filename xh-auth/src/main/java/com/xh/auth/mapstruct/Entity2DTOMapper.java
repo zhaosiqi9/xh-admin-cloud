@@ -1,7 +1,7 @@
 package com.xh.auth.mapstruct;
 
-import com.xh.jwt.dto.SysMenuDTO;
-import com.xh.jwt.dto.SysOrgRoleDTO;
+import com.xh.common.jwt.dto.SysMenuDTO;
+import com.xh.common.jwt.dto.SysOrgRoleDTO;
 import com.xh.system.api.response.GetUserInfoResponseJob;
 import com.xh.system.api.response.UserPermissionResponse;
 import org.mapstruct.Mapper;
