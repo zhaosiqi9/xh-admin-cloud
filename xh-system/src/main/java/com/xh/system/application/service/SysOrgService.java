@@ -15,6 +15,8 @@ import com.xh.system.infrastructure.mysql.po.SysOrgPO;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SysOrgService {
     @Resource
@@ -24,5 +26,21 @@ public class SysOrgService {
         MPJLambdaWrapper<SysOrgPO> lambdaWrapper = OrgQueryCommand.initQueryWrapper(query);
         Page<SysOrg> orgPage = SysUserDomainService.getRepository(SysUserConstant.SysUserRootType.ORG).sysOrgPageQuery(query.getCurrentPage(), query.getPageSize(), lambdaWrapper);
         return SysOrgEntity2ResponseMapper.INSTANCE.pageEntity2PageResult(orgPage);
+    }
+
+    public PageResult<SysOrg> queryOrgTree(String name) {
+        return null;
+    }
+
+    public void del(List<Long> ids) {
+        
+    }
+
+    public SysOrg save(SysOrg sysOrg) {
+        return null;
+    }
+
+    public SysOrg getById(Long id) {
+        return null;
     }
 }
