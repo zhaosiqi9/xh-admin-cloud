@@ -1,5 +1,7 @@
 package com.xh.system.application.service;
 
+import com.xh.common.base.web.PageQuery;
+import com.xh.common.base.web.PageResult;
 import com.xh.common.core.constants.SystemRedisConstant;
 import com.xh.common.jwt.dto.RolePermissionsDTO;
 import com.xh.redis.service.RedisService;
@@ -7,12 +9,14 @@ import com.xh.system.api.request.user.UserPermissionRequest;
 import com.xh.system.api.response.UserPermissionResponse;
 import com.xh.system.application.mapstract.SysMenuEntity2ResponseMapper;
 import com.xh.system.domain.aggregate.SysMenuAggregate;
+import com.xh.system.domain.entity.SysMenu;
 import com.xh.system.domain.service.SysMenuDomainService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author : gr
@@ -47,5 +51,25 @@ public class SysMenuService {
         redisService.setCacheObject(SystemRedisConstant.ROLE_PERMISSIONS_PREFIX.getValue() + request.getRoleId(), rolePermissions);
 
         return SysMenuEntity2ResponseMapper.INSTANCE.toUserPermissionResponse(root);
+    }
+
+    public PageResult<SysMenu> query(PageQuery<Map<String, Object>> pageQuery) {
+        return null;
+    }
+
+    public void switchMenuProp(Map<String, Object> param) {
+        
+    }
+
+    public SysMenu save(SysMenu sysMenu) {
+        return null;
+    }
+
+    public SysMenu getById(Long id) {
+        return null;
+    }
+
+    public void del(List<Long> ids) {
+        
     }
 }
