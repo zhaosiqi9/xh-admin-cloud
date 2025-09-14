@@ -16,7 +16,7 @@ import com.xh.auth.service.dto.ImageCaptchaDTO;
 import com.xh.auth.service.dto.LoginUserInfoVO;
 import com.xh.auth.util.RequestUtil;
 import com.xh.common.base.constant.SysUserConstant;
-import com.xh.common.base.exception.MyException;
+import com.xh.common.base.exception.ServiceException;
 import com.xh.common.core.constants.SystemRedisConstant;
 import com.xh.common.jwt.constant.JwtConstant;
 import com.xh.common.jwt.dto.*;
@@ -105,8 +105,8 @@ public class TokenService {
         if (session == null && StrUtil.isNotBlank(username)) {
 
             if (request.isDemo()) {
-                if (StrUtil.isBlank(captchaKey)) throw new MyException("非法登录");
-                if (StrUtil.isBlank(captchaCode)) throw new MyException("请输入图形验证码");
+                if (StrUtil.isBlank(captchaKey)) throw new ServiceException("非法登录");
+                if (StrUtil.isBlank(captchaCode)) throw new ServiceException("请输入图形验证码");
 
                 //验证图形验证码
                 ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
@@ -114,19 +114,19 @@ public class TokenService {
                 AbstractCaptcha captcha = (AbstractCaptcha) valueOperations.get(key);
                 //删除验证码
                 redisTemplate.delete(key);
-                if (captcha == null) throw new MyException("验证码已失效");
+                if (captcha == null) throw new ServiceException("验证码已失效");
                 boolean verify = captcha.verify(captchaCode);
-                if (!verify) throw new MyException("验证码错误");
+                if (!verify) throw new ServiceException("验证码错误");
             }
 
 
-            if (sysUser == null) throw new MyException("账号不存在");
+            if (sysUser == null) throw new ServiceException("账号不存在");
             if (sysUser.getStatus() == 2)
-                throw new MyException(sysUser.getLockMsg());
+                throw new ServiceException(sysUser.getLockMsg());
             boolean matches = BCrypt.checkpw(password, sysUser.getPassword());
             if (!matches) {
                 if (Boolean.TRUE.equals(sysUser.getIsDemo())) {
-                    throw new MyException("密码错误！");
+                    throw new ServiceException("密码错误！");
                 }
                 try {
                     //最大尝试次数
@@ -140,9 +140,9 @@ public class TokenService {
                     if (failuresNum >= maxTryNum) {
                         sysUser.setStatus(2);
                         sysUser.setLockMsg("用户登录失败次数超过%s次，账号已锁定，请联系管理员处理。".formatted(maxTryNum));
-                        throw new MyException(sysUser.getLockMsg());
+                        throw new ServiceException(sysUser.getLockMsg());
                     }
-                    throw new MyException("密码错误！您还可以尝试%s次。".formatted(maxTryNum - failuresNum));
+                    throw new ServiceException("密码错误！您还可以尝试%s次。".formatted(maxTryNum - failuresNum));
                 } finally {
                     remoteUserContract.loginFailUpdateInfo(new UpdateUserInfoRequest().initFromResponse(sysUser, SysUserConstant.SysUserRootType.DEFAULT));
                 }
@@ -154,7 +154,7 @@ public class TokenService {
             //获取用户岗位角色
             List<GetUserInfoResponseJob> roles = userInfoResponse.getJobList();
             if (roles.isEmpty()) {
-                throw new MyException("该用户未分配角色，无法登录!");
+                throw new ServiceException("该用户未分配角色，无法登录!");
             }
 
             SaLoginParameter loginParameter = new SaLoginParameter();

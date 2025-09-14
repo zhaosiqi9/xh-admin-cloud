@@ -18,6 +18,7 @@
         <module>xh-common-core-api</module>
         <module>xh-common-bom</module>
         <module>xh-common-base</module>
+        <module>xh-common-idempotent</module>
     </modules>
 
     <artifactId>xh-common</artifactId>

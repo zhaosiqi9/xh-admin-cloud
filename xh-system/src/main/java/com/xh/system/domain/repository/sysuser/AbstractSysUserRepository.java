@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.xh.common.base.constant.SysUserConstant;
 import com.xh.common.core.utils.AssertUtil;
-import com.xh.common.base.exception.MyException;
+import com.xh.common.base.exception.ServiceException;
 import com.xh.common.jwt.dto.SysOrgRoleDTO;
 import com.xh.system.domain.aggregate.SysUserAggregate;
 import com.xh.system.domain.entity.*;
@@ -161,7 +161,7 @@ public abstract class AbstractSysUserRepository {
     protected Long saveSysUser(SysUser sysUser) {
         return Optional.of(sysUser).map(t -> {
             if (Optional.ofNullable(findByLoginAccount(sysUser.getCode(), sysUser.getEnabled())).isPresent()) {
-                throw new MyException("用户账号%s已存在！".formatted(sysUser.getCode()));
+                throw new ServiceException("用户账号%s已存在！".formatted(sysUser.getCode()));
             }
             AssertUtil.notBlank(sysUser.getCode(), "用户账号不能为空！");
             AssertUtil.notBlank(sysUser.getPassword(), "用户密码不能为空！");

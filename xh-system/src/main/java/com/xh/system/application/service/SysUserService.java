@@ -9,7 +9,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xh.common.base.constant.SysUserConstant;
 import com.xh.common.base.constant.SysUserGroupConstant;
-import com.xh.common.base.exception.MyException;
+import com.xh.common.base.exception.ServiceException;
 import com.xh.common.base.web.PageQuery;
 import com.xh.common.base.web.PageResult;
 import com.xh.common.core.utils.AssertUtil;
@@ -78,8 +78,8 @@ public class SysUserService {
 
         AssertUtil.equals(sysUser.getId(), StpUtil.getLoginId(), "非法请求！");
         SysUserAggregate root =
-                Optional.ofNullable(sysUserDomainService.getRoot(sysUser.getId(), SysUserConstant.SysUserRootType.DEFAULT)).orElseThrow(() -> new MyException("用户不存在"));
-        SysUser sysUser1 = Optional.ofNullable(root.getSysUser()).orElseThrow(() -> new MyException("用户不存在"));
+                Optional.ofNullable(sysUserDomainService.getRoot(sysUser.getId(), SysUserConstant.SysUserRootType.DEFAULT)).orElseThrow(() -> new ServiceException("用户不存在"));
+        SysUser sysUser1 = Optional.ofNullable(root.getSysUser()).orElseThrow(() -> new ServiceException("用户不存在"));
         sysUser1.setName(sysUser.getName());
         sysUser1.setPassword(sysUser.getPassword());
         sysUser1.setAvatar(sysUser.getAvatar());
@@ -144,7 +144,7 @@ public class SysUserService {
                 return null;
             }
         }
-        throw new MyException("角色切换异常，请重新登录后操作！");
+        throw new ServiceException("角色切换异常，请重新登录后操作！");
     }
 
     /**
@@ -204,10 +204,10 @@ try {
 
     public void switchMenuProp(UserSwitchMenuPropRequest param) {
         SysUserAggregate root =
-                Optional.ofNullable(sysUserDomainService.getRoot(param.getId(), SysUserConstant.SysUserRootType.DEFAULT)).orElseThrow(() -> new MyException("用户不存在"));
-        SysUser menu = Optional.ofNullable(root.getSysUser()).orElseThrow(() -> new MyException("用户不存在"));
+                Optional.ofNullable(sysUserDomainService.getRoot(param.getId(), SysUserConstant.SysUserRootType.DEFAULT)).orElseThrow(() -> new ServiceException("用户不存在"));
+        SysUser menu = Optional.ofNullable(root.getSysUser()).orElseThrow(() -> new ServiceException("用户不存在"));
         if ("enabled".equals(param.getProp())) menu.setEnabled(param.isValue());
-        else throw new MyException("参数异常，检查后重试！");
+        else throw new ServiceException("参数异常，检查后重试！");
         sysUserDomainService.saveSysUser(menu);
     }
 
@@ -218,14 +218,14 @@ try {
 
     public void resetPassword(SysUser sysUsers) {
         SysUserAggregate root =
-                Optional.ofNullable(sysUserDomainService.getRoot(sysUsers.getId(), SysUserConstant.SysUserRootType.DEFAULT)).orElseThrow(() -> new MyException("用户不存在"));
-        SysUser user = Optional.ofNullable(root.getSysUser()).orElseThrow(() -> new MyException("用户不存在"));
+                Optional.ofNullable(sysUserDomainService.getRoot(sysUsers.getId(), SysUserConstant.SysUserRootType.DEFAULT)).orElseThrow(() -> new ServiceException("用户不存在"));
+        SysUser user = Optional.ofNullable(root.getSysUser()).orElseThrow(() -> new ServiceException("用户不存在"));
         sysUserDomainService.resetPassword(root, user.getId(), sysUsers.getPassword());
     }
 
     public PageResult<SysUserGroup> queryUserGroupList(PageQuery<UserQueryUserGroupListRequest> pageQuery) {
-        String code = Optional.ofNullable(pageQuery.getParam().getCode()).orElseThrow(() -> new MyException("参数异常，检查后重试！"));
-        String name = Optional.ofNullable(pageQuery.getParam().getName()).orElseThrow(() -> new MyException("参数异常，检查后重试！"));
+        String code = Optional.ofNullable(pageQuery.getParam().getCode()).orElseThrow(() -> new ServiceException("参数异常，检查后重试！"));
+        String name = Optional.ofNullable(pageQuery.getParam().getName()).orElseThrow(() -> new ServiceException("参数异常，检查后重试！"));
 
         Page<SysUserGroup> page =
                 Optional.ofNullable(SysUserGroupDomainService.getRepository(SysUserGroupConstant.UserGroupMemberRootType.DEFAULT).queryUserGroupPage(pageQuery.getCurrentPage(),
@@ -237,7 +237,7 @@ try {
         List<SysUserGroup> groupList =
                 Optional.ofNullable(SysUserGroupDomainService.getRepository(SysUserGroupConstant.UserGroupMemberRootType.DEFAULT).queryUserGroupSaveQuery(sysUserGroup)).orElse(List.of());
         if (CollUtil.isNotEmpty(groupList)) {
-            throw new MyException("用户组%s已存在，不能新增重复的用户组！".formatted(sysUserGroup.getName()));
+            throw new ServiceException("用户组%s已存在，不能新增重复的用户组！".formatted(sysUserGroup.getName()));
         }
 
         if (sysUserGroup.getId() == null) {
@@ -249,7 +249,7 @@ try {
     }
 
     public SysUserGroup getUserGroupById(Long id) {
-        return Optional.ofNullable(SysUserGroupDomainService.getRepository(SysUserGroupConstant.UserGroupMemberRootType.DEFAULT).queryUserGroupById(id)).orElseThrow(() -> new MyException("用户组不存在"));
+        return Optional.ofNullable(SysUserGroupDomainService.getRepository(SysUserGroupConstant.UserGroupMemberRootType.DEFAULT).queryUserGroupById(id)).orElseThrow(() -> new ServiceException("用户组不存在"));
     }
 
     public boolean delUserGroup(List<Long> ids) {
@@ -258,7 +258,7 @@ try {
     }
 
     public List<SysUserJob> getUserJobs(SysUserJob param) {
-        SysUserAggregate root = Optional.ofNullable(sysUserDomainService.getRoot(param.getUserId(), SysUserConstant.SysUserRootType.JOB)).orElseThrow(() -> new MyException("用户不存在"));
+        SysUserAggregate root = Optional.ofNullable(sysUserDomainService.getRoot(param.getUserId(), SysUserConstant.SysUserRootType.JOB)).orElseThrow(() -> new ServiceException("用户不存在"));
         List<SysUserJob> sysUserJobs = Optional.ofNullable(root.getSysUserJobList()).orElse(List.of());
         if (param.getType() != null) {
             sysUserJobs = sysUserJobs.stream().filter(job -> Objects.equals(job.getType(), param.getType())).toList();
@@ -267,8 +267,8 @@ try {
     }
 
     public boolean saveUserJobs(UserSaveUserJobsRequest sysUserJobDTO) {
-        Long userId = Optional.ofNullable(sysUserJobDTO.getUserId()).orElseThrow(() -> new MyException("参数异常，检查后重试！"));
-        Integer type = Optional.ofNullable(sysUserJobDTO.getType()).orElseThrow(() -> new MyException("参数异常，检查后重试！"));
+        Long userId = Optional.ofNullable(sysUserJobDTO.getUserId()).orElseThrow(() -> new ServiceException("参数异常，检查后重试！"));
+        Integer type = Optional.ofNullable(sysUserJobDTO.getType()).orElseThrow(() -> new ServiceException("参数异常，检查后重试！"));
         AssertUtil.isNotEmpty(sysUserJobDTO.getJobData(), "参数异常，检查后重试！");
         List<SysUserJob> userJobList = SysUserEntity2ResponseMapper.INSTANCE.toSysUserJobList(sysUserJobDTO.getJobData());
         sysUserDomainService.saveUserJobs(userId, type, userJobList, SysUserConstant.SysUserRootType.JOB);
@@ -322,7 +322,7 @@ try {
                         }
                     } catch (ReflectiveOperationException e) {
                         log.error("比较错误", e);
-                        throw new MyException(e.getMessage());
+                        throw new ServiceException(e.getMessage());
                     }
                     return 0;
                 })
@@ -348,7 +348,7 @@ try {
 
     public void roleSort(String roleSorter) {
         Long userId = (Long) StpUtil.getLoginId();
-        SysUserAggregate root = Optional.ofNullable(sysUserDomainService.getRoot(userId, SysUserConstant.SysUserRootType.DEFAULT)).orElseThrow(() -> new MyException("用户不存在"));
+        SysUserAggregate root = Optional.ofNullable(sysUserDomainService.getRoot(userId, SysUserConstant.SysUserRootType.DEFAULT)).orElseThrow(() -> new ServiceException("用户不存在"));
         SysUser sysUser = root.getSysUser();
         sysUser.setRoleSorter(roleSorter);
         sysUserDomainService.roleSort(root, sysUser);
