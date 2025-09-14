@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_dict_data")
-public class SysDictData extends BaseEntityPO {
+public class SysDictDataPO extends BaseEntityPO {
 
     /**
      * 字典编码

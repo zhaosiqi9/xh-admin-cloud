@@ -6,24 +6,24 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
- * 用户和角色关联 sys_user_role
+ * 角色和菜单关联 sys_role_menu
  *
  * @author Lion Li
  */
 
 @Data
-@TableName("sys_user_role")
-public class SysUserRole {
-
-    /**
-     * 用户ID
-     */
-    @TableId(type = IdType.INPUT)
-    private Long userId;
+@TableName("sys_role_menu")
+public class SysRoleMenuPO {
 
     /**
      * 角色ID
      */
+    @TableId(type = IdType.INPUT)
     private Long roleId;
+
+    /**
+     * 菜单ID
+     */
+    private Long menuId;
 
 }

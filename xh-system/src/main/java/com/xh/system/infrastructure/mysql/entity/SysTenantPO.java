@@ -18,7 +18,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_tenant")
-public class SysTenant extends BaseEntityPO {
+public class SysTenantPO extends BaseEntityPO {
 
     @Serial
     private static final long serialVersionUID = 1L;

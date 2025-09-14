@@ -13,7 +13,7 @@ import lombok.Data;
 
 @Data
 @TableName("sys_user_post")
-public class SysUserPost {
+public class SysUserPostPO {
 
     /**
      * 用户ID

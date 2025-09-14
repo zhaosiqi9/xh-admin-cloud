@@ -18,7 +18,7 @@ import java.util.Date;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_user")
-public class SysUser extends BaseEntityPO {
+public class SysUserPO extends BaseEntityPO {
 
     /**
      * 用户ID
@@ -103,7 +103,7 @@ public class SysUser extends BaseEntityPO {
     private String remark;
 
 
-    public SysUser(Long userId) {
+    public SysUserPO(Long userId) {
         this.userId = userId;
     }
     

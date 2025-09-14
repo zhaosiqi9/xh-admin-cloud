@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_config")
-public class SysConfig extends BaseEntityPO {
+public class SysConfigPO extends BaseEntityPO {
 
     /**
      * 参数主键

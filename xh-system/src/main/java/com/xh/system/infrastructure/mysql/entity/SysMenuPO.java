@@ -19,7 +19,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_menu")
-public class SysMenu extends BaseEntityPO {
+public class SysMenuPO extends BaseEntityPO {
 
     /**
      * 菜单ID
@@ -107,7 +107,7 @@ public class SysMenu extends BaseEntityPO {
      * 子菜单
      */
     @TableField(exist = false)
-    private List<SysMenu> children = new ArrayList<>();
+    private List<SysMenuPO> children = new ArrayList<>();
 
    
 }

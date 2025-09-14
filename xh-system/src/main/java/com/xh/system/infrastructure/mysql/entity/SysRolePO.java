@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_role")
-public class SysRole extends BaseEntityPO {
+public class SysRolePO extends BaseEntityPO {
 
     /**
      * 角色ID
@@ -72,7 +72,7 @@ public class SysRole extends BaseEntityPO {
      */
     private String remark;
 
-    public SysRole(Long roleId) {
+    public SysRolePO(Long roleId) {
         this.roleId = roleId;
     }
 

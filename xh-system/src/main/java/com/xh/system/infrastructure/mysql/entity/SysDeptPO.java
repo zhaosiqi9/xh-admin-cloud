@@ -22,7 +22,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_dept")
-public class SysDept extends BaseEntityPO {
+public class SysDeptPO extends BaseEntityPO {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -88,6 +88,6 @@ public class SysDept extends BaseEntityPO {
      * 子菜单
      */
     @TableField(exist = false)
-    private List<SysDept> children = new ArrayList<>();
+    private List<SysDeptPO> children = new ArrayList<>();
 
 }

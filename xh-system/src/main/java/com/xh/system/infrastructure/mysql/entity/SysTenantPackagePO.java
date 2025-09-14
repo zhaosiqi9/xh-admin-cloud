@@ -17,7 +17,7 @@ import java.io.Serial;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_tenant_package")
-public class SysTenantPackage extends BaseEntityPO {
+public class SysTenantPackagePO extends BaseEntityPO {
 
     @Serial
     private static final long serialVersionUID = 1L;

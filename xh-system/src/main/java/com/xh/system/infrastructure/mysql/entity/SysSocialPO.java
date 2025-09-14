@@ -16,7 +16,7 @@ import java.io.Serial;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_social")
-public class SysSocial extends BaseEntityPO {
+public class SysSocialPO extends BaseEntityPO {
 
     @Serial
     private static final long serialVersionUID = 1L;

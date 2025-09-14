@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_post")
-public class SysPost extends BaseEntityPO {
+public class SysPostPO extends BaseEntityPO {
 
     /**
      * 岗位序号

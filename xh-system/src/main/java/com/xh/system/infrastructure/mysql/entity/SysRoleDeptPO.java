@@ -13,7 +13,7 @@ import lombok.Data;
 
 @Data
 @TableName("sys_role_dept")
-public class SysRoleDept {
+public class SysRoleDeptPO {
 
     /**
      * 角色ID

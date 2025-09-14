@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_notice")
-public class SysNotice extends BaseEntityPO {
+public class SysNoticePO extends BaseEntityPO {
 
     /**
      * 公告ID
