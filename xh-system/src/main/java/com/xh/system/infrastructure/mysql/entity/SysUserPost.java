@@ -1,4 +1,4 @@
-package com.xh.system.entity;
+package com.xh.system.infrastructure.mysql.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -6,24 +6,24 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
- * 角色和部门关联 sys_role_dept
+ * 用户和岗位关联 sys_user_post
  *
  * @author Lion Li
  */
 
 @Data
-@TableName("sys_role_dept")
-public class SysRoleDept {
+@TableName("sys_user_post")
+public class SysUserPost {
 
     /**
-     * 角色ID
+     * 用户ID
      */
     @TableId(type = IdType.INPUT)
-    private Long roleId;
+    private Long userId;
 
     /**
-     * 部门ID
+     * 岗位ID
      */
-    private Long deptId;
+    private Long postId;
 
 }

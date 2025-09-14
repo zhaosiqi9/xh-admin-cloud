@@ -1,4 +1,4 @@
-package com.xh.system.entity;
+package com.xh.system.infrastructure.mysql.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;

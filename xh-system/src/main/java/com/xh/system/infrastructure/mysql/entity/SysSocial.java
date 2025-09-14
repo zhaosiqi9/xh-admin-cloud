@@ -1,8 +1,8 @@
-package com.xh.system.entity;
+package com.xh.system.infrastructure.mysql.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.xh.common.core.entity.BaseEntity;
+import com.xh.common.core.entity.BaseEntityPO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,7 +16,7 @@ import java.io.Serial;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_social")
-public class SysSocial extends BaseEntity {
+public class SysSocial extends BaseEntityPO {
 
     @Serial
     private static final long serialVersionUID = 1L;

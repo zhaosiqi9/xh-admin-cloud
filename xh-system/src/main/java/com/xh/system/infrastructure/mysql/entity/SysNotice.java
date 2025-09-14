@@ -1,8 +1,8 @@
-package com.xh.system.entity;
+package com.xh.system.infrastructure.mysql.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.xh.common.core.entity.BaseEntity;
+import com.xh.common.core.entity.BaseEntityPO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_notice")
-public class SysNotice extends BaseEntity {
+public class SysNotice extends BaseEntityPO {
 
     /**
      * 公告ID

@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-public class BaseEntity implements Serializable {
+public class BaseEntityPO implements Serializable {
 
     @Schema(title = "主键ID")
     @TableId

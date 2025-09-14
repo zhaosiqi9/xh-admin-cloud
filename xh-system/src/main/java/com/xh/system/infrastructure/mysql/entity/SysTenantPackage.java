@@ -1,11 +1,11 @@
-package com.xh.system.entity;
+package com.xh.system.infrastructure.mysql.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import com.xh.common.core.entity.BaseEntity;
+import com.xh.common.core.entity.BaseEntityPO;
 
 import java.io.Serial;
 
@@ -17,7 +17,7 @@ import java.io.Serial;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_tenant_package")
-public class SysTenantPackage extends BaseEntity {
+public class SysTenantPackage extends BaseEntityPO {
 
     @Serial
     private static final long serialVersionUID = 1L;

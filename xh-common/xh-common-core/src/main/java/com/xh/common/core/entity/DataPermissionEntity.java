@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @since : 2025/8/22 12:10
  */
 @Data
-public class DataPermissionEntity extends BaseEntity implements Serializable {
+public class DataPermissionEntity extends BaseEntityPO implements Serializable {
 
     @Schema(title = "机构ID")
     protected Integer sysOrgId;
