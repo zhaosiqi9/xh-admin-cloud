@@ -1,11 +1,16 @@
 package com.xh.common.idempotent.aspect;
 
+import cn.dev33.satoken.SaManager;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
+import com.alibaba.fastjson.JSON;
 import com.xh.common.base.constant.GlobalConstants;
 import com.xh.common.base.exception.ServiceException;
+import com.xh.common.base.web.RestResponse;
 import com.xh.common.idempotent.annotation.RepeatSubmit;
+import com.xh.redis.service.RedisUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.aspectj.lang.JoinPoint;
@@ -14,6 +19,8 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
@@ -39,14 +46,19 @@ public class RepeatSubmitAspect {
         if (interval < 1000) {
             throw new ServiceException("重复提交间隔时间不能小于'1'秒");
         }
-        HttpServletRequest request = ServletUtils.getRequest();
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes == null) {
+            return;
+        }
+
+        HttpServletRequest request = attributes.getRequest();
         String nowParams = argsArrayToString(point.getArgs());
 
         // 请求地址（作为存放cache的key值）
         String url = request.getRequestURI();
 
         // 唯一值（没有消息头则使用请求地址）
-        String submitKey = StringUtils.trimToEmpty(request.getHeader(SaManager.getConfig().getTokenName()));
+        String submitKey = StrUtil.trimToEmpty(request.getHeader(SaManager.getConfig().getTokenName()));
 
         submitKey = SecureUtil.md5(submitKey + ":" + nowParams);
         // 唯一标识（指定key + url + 消息头）
@@ -55,8 +67,8 @@ public class RepeatSubmitAspect {
             KEY_CACHE.set(cacheRepeatKey);
         } else {
             String message = repeatSubmit.message();
-            if (StringUtils.startsWith(message, "{") && StringUtils.endsWith(message, "}")) {
-                message = MessageUtils.message(StringUtils.substring(message, 1, message.length() - 1));
+            if (StrUtil.startWith(message, "{") && StrUtil.endWith(message, "}")) {
+                message = StrUtil.sub(message, 1, message.length() - 1);
             }
             throw new ServiceException(message);
         }
@@ -69,10 +81,10 @@ public class RepeatSubmitAspect {
      */
     @AfterReturning(pointcut = "@annotation(repeatSubmit)", returning = "jsonResult")
     public void doAfterReturning(JoinPoint joinPoint, RepeatSubmit repeatSubmit, Object jsonResult) {
-        if (jsonResult instanceof R<?> r) {
+        if (jsonResult instanceof RestResponse<?> r) {
             try {
                 // 成功则不删除redis数据 保证在有效时间内无法重复提交
-                if (r.getCode() == R.SUCCESS) {
+                if (r.getStatus().equals("200")) {
                     return;
                 }
                 RedisUtils.deleteObject(KEY_CACHE.get());
@@ -104,7 +116,7 @@ public class RepeatSubmitAspect {
         }
         for (Object o : paramsArray) {
             if (ObjectUtil.isNotNull(o) && !isFilterObject(o)) {
-                params.add(JsonUtils.toJsonString(o));
+                params.add(JSON.toJSONString(o));
             }
         }
         return params.toString();
