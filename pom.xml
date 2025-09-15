@@ -19,6 +19,7 @@
         <module>xh-gateway</module>
         <module>xh-middleware</module>
         <module>xh-system</module>
+        <module>xh-gen</module>
     </modules>
 
     <properties>
