@@ -1,166 +1,60 @@
 package com.xh.common.base.web;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
- * 页面查询
- * sunxh 2023/3/16
+ * 分页查询实体类
+ *
+ * @author Lion Li
  */
 @Data
-public class PageQuery<T> {
+@NoArgsConstructor
+public class PageQuery implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
-     * 是否分页
+     * 分页大小
      */
-    private Boolean isPage = true;
+    private Integer pageSize;
 
     /**
-     * 当前页
+     * 当前页数
      */
-    private int currentPage = 1;
+    private Integer pageNum;
 
     /**
-     * 页面大小
+     * 排序列
      */
-    private int pageSize = 20;
+    private String orderByColumn;
 
     /**
-     * 可以携带自定义参数
+     * 排序的方向desc或者asc
      */
-    private T param;
+    private String isAsc;
 
     /**
-     * 高级组合查询
+     * 当前记录起始索引 默认值
      */
-    private List<FilterRow> filters = new ArrayList<>();
+    public static final int DEFAULT_PAGE_NUM = 1;
 
     /**
-     * 排序字段
+     * 每页显示记录数 默认值 默认查全部
      */
-    private String orderProp;
-
-    /**
-     * 排序方向
-     */
-    private OrderDirection orderDirection;
-
-    /**
-     * 查询基础sql
-     */
-    @Schema(hidden = true)
-    private String baseSql;
-
-    /**
-     * 查询sql的占位符参数
-     */
-    @Schema(hidden = true)
-    private LinkedList<Object> args = new LinkedList<>();
-
-    /**
-     * 尾部添加参数
-     */
-    public void addArg(Object... arg) {
-        this.args.addAll(Arrays.asList(arg));
-    }
-
-    /**
-     * 头部添加参数
-     */
-    public void addFirstArg(Object... arg) {
-        this.args.addAll(0, Arrays.asList(arg));
-    }
+    public static final int DEFAULT_PAGE_SIZE = Integer.MAX_VALUE;
     
-
-
-    public enum ComparatorEnum {
-        /**
-         * 等于
-         */
-        eq,
-        /**
-         * 不等于
-         */
-        ne,
-        /**
-         * 大于
-         */
-        gt,
-        /**
-         * 大于等于
-         */
-        ge,
-        /**
-         * 小于
-         */
-        lt,
-        /**
-         * 小于等于
-         */
-        le,
-        /**
-         * 含哪几个值
-         */
-        in,
-        /**
-         * not like
-         */
-        nct,
-        /**
-         * like
-         */
-        ct,
-        /**
-         * between ... and ...
-         */
-        bt
+    public PageQuery(Integer pageSize, Integer pageNum) {
+        this.pageSize = pageSize;
+        this.pageNum = pageNum;
     }
 
-
-    /**
-     * 排序方向
-     */
-    public enum OrderDirection {
-        asc,
-        desc
-    }
-
-    @Data
-    public static class FilterRow {
-        private Boolean enabled;
-
-        private String type;
-
-        private String logic;
-
-        private String prop;
-
-        private String alias;
-
-        private ComparatorEnum condition;
-
-        private Object value1;
-
-        private Object value2;
-
-        private List<FilterRow> children;
-
-        private Object getValue(int flag) {
-            Object value = this.value1;
-            if (flag == 2) {
-                value = this.value2;
-            }
-            if (value == null) return "null";
-            if ("number".equals(type) || value instanceof Boolean) {
-                return value;
-            }
-            return "'" + value + "'";
-        }
-
-    }
 }

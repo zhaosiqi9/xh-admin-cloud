@@ -8,7 +8,7 @@ import cn.hutool.crypto.SecureUtil;
 import com.alibaba.fastjson.JSON;
 import com.xh.common.base.constant.GlobalConstants;
 import com.xh.common.base.exception.ServiceException;
-import com.xh.common.base.web.RestResponse;
+import com.xh.common.base.web.R;
 import com.xh.common.idempotent.annotation.RepeatSubmit;
 import com.xh.redis.service.RedisUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -81,7 +81,7 @@ public class RepeatSubmitAspect {
      */
     @AfterReturning(pointcut = "@annotation(repeatSubmit)", returning = "jsonResult")
     public void doAfterReturning(JoinPoint joinPoint, RepeatSubmit repeatSubmit, Object jsonResult) {
-        if (jsonResult instanceof RestResponse<?> r) {
+        if (jsonResult instanceof R<?> r) {
             try {
                 // 成功则不删除redis数据 保证在有效时间内无法重复提交
                 if (r.getStatus().equals("200")) {
