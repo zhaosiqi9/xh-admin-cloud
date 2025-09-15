@@ -1,18 +1,12 @@
 package com.xh.system.interfaces;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.xh.common.base.constant.BusinessType;
+import com.xh.common.base.web.PageQuery;
+import com.xh.common.base.web.R;
+import com.xh.common.core.annotation.Log;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.dromara.common.core.domain.R;
-import org.dromara.common.excel.utils.ExcelUtil;
-import org.dromara.common.log.annotation.Log;
-import org.dromara.common.log.enums.BusinessType;
-import org.dromara.common.mybatis.core.page.PageQuery;
-import org.dromara.common.mybatis.core.page.TableDataInfo;
-import org.dromara.common.web.core.BaseController;
-import org.dromara.system.domain.bo.SysConfigBo;
-import org.dromara.system.domain.vo.SysConfigVo;
-import org.dromara.system.service.ISysConfigService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/config")
-public class SysConfigController extends BaseController {
+public class SysConfigController {
 
     private final ISysConfigService configService;
 

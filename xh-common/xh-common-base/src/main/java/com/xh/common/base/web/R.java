@@ -24,7 +24,7 @@ public class R<T> implements Serializable {
      /**
      * 响应成功信息
      */
-    public static <T> R<T> success() {
+    public static <T> R<T> ok() {
         R<T> r = new R<>();
         r.httpCode = HttpStatus.OK.value();
         r.status = "success";
@@ -34,7 +34,7 @@ public class R<T> implements Serializable {
     /**
      * 响应成功信息，携带data
      */
-    public static <T> R<T> success(T data) {
+    public static <T> R<T> ok(T data) {
         R<T> r = new R<>();
         r.httpCode = HttpStatus.OK.value();
         r.status = "success";

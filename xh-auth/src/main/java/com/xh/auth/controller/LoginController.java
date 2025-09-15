@@ -28,7 +28,7 @@ public class LoginController {
     @Operation(description = "获取图形验证码")
     @GetMapping("/captcha")
     public R<ImageCaptchaDTO> getImageCaptcha(@Parameter(description = "验证码key") String captchaKey) {
-        return R.success(tokenService.getImageCaptcha(captchaKey));
+        return R.ok(tokenService.getImageCaptcha(captchaKey));
     }
 
     @Log
@@ -37,7 +37,7 @@ public class LoginController {
     @PostMapping("/login")
     public R<LoginUserInfoVO> login(HttpServletRequest request, @RequestBody LoginRequest loginRequest) {
         loginRequest.setUserAgent(request.getHeader(Header.USER_AGENT.toString()));
-        return R.success(tokenService.login(loginRequest));
+        return R.ok(tokenService.login(loginRequest));
     }
 
     @Log
@@ -45,21 +45,21 @@ public class LoginController {
     @Operation(description = "刷新token")
     @PostMapping("/refreshToken")
     public R<LoginUserInfoVO> refreshToken(HttpServletRequest request) {
-        return R.success(tokenService.refreshToken(request));
+        return R.ok(tokenService.refreshToken(request));
     }
 
     @Log
     @Operation(description = "注销")
     @PostMapping("/logout")
     public R<?> logout() {
-        return R.success(tokenService.logout());
+        return R.ok(tokenService.logout());
     }
 
     @Log
     @Operation(description = "踢人下线")
     @PostMapping("/kickOut")
     public R<?> kickOut() {
-        return R.success(tokenService.kickOut());
+        return R.ok(tokenService.kickOut());
     }
 
 }

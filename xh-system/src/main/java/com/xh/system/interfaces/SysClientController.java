@@ -40,7 +40,7 @@ public class SysClientController {
     @SaCheckPermission("system:client:list")
     @GetMapping("/list")
     public R<PageResult<SysClientVo>> list(SysClientBo bo, PageQuery pageQuery) {
-        return R.success(sysClientService.queryPageList(bo, pageQuery));
+        return R.ok(sysClientService.queryPageList(bo, pageQuery));
     }
 
     /**
@@ -62,7 +62,7 @@ public class SysClientController {
     @SaCheckPermission("system:client:query")
     @GetMapping("/{id}")
     public R<SysClientVo> getInfo(@NotNull(message = "主键不能为空") @PathVariable Long id) {
-        return R.success(sysClientService.queryById(id));
+        return R.ok(sysClientService.queryById(id));
     }
 
     /**
@@ -73,7 +73,7 @@ public class SysClientController {
     @RepeatSubmit()
     @PostMapping()
     public R<Void> add(@Validated(AddGroup.class) @RequestBody SysClientBo bo) {
-        return R.success(sysClientService.insertByBo(bo));
+        return R.ok(sysClientService.insertByBo(bo));
     }
 
     /**
@@ -84,7 +84,7 @@ public class SysClientController {
     @RepeatSubmit()
     @PutMapping()
     public R<Void> edit(@Validated(EditGroup.class) @RequestBody SysClientBo bo) {
-        return R.success(sysClientService.updateByBo(bo));
+        return R.ok(sysClientService.updateByBo(bo));
     }
 
     /**
@@ -94,7 +94,7 @@ public class SysClientController {
     @Log(title = "客户端管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
     public R<Void> changeStatus(@RequestBody SysClientBo bo) {
-        return R.success(sysClientService.updateByBo(bo.getClientId(), bo.getStatus()));
+        return R.ok(sysClientService.updateByBo(bo.getClientId(), bo.getStatus()));
     }
 
     /**
@@ -106,6 +106,6 @@ public class SysClientController {
     @Log(title = "客户端管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public R<Void> remove(@NotEmpty(message = "主键不能为空") @PathVariable Long[] ids) {
-        return R.success(sysClientService.deleteWithValidByIds(List.of(ids), true));
+        return R.ok(sysClientService.deleteWithValidByIds(List.of(ids), true));
     }
 }
